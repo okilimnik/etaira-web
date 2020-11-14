@@ -9,18 +9,18 @@ WORKDIR /usr/src/app
 COPY shadow-cljs.edn ./
 COPY deps.edn ./
 RUN clojure -P
-COPY --from=0 /usr/src/app/node_modules node_modules/
 COPY . .
 
 FROM clojure:tools-deps
 WORKDIR /usr/src/app
+COPY --from=0 /usr/src/app/node_modules node_modules/
 COPY --from=1 /usr/src/app .
-COPY src ./
+COPY . .
 RUN clojure -M:shadow-cljs release app
 RUN clojure -e "(compile 'com.example.components.server)"
 RUN clojure -M:app --aliases package --main-class com.example.components.server --level debug
 EXPOSE 8080
-CMD ["java", "-jar", "target/workspace.jar"]
+CMD ["java", "-jar", "target/app.jar"]
 
 #FROM openjdk:11.0.9.1-jre
 #COPY . .
