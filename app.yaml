@@ -1,0 +1,20 @@
+runtime: java11
+env: standard
+instance_class: F2
+automatic_scaling: 
+  max_instances: 2
+entrypoint: java -jar target/workspace.jar
+
+env_variables:
+  FIRE: "{
+    \"type\": \"service_account\",
+    \"project_id\": \"hetaira-gcp\",
+    \"private_key_id\": \"69ea5f65254f1557be50ac313a6161e2ff8affec\",
+    \"private_key\": \"-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDNK4ebJwIFtKLK\nv/M6Xgtj2tZs6s/m6rq6EquMf9IfNSrgvjlQRk6GvuWlQ2bT442JVMKGV/ijOPn7\nXBWf5ATcQ47Q7WlrpswPWFFHqhHGmmJ9OTRL2o6RiN8RX2ftJEEJtJFGBJ+09i+k\n4sD/lLu1efMmlzhxu/XhScZE3Zi9jpyKO6UZ18DEkxoJDiPn6CImXAwyU5OMEYUP\nhU6qR/6oxWbgN6tPgM26lwtWekETXs8RaaW5SdZ3V0w1YfeUtwDDYC/qecHZ4bLR\nSi43n7v5GcQijvnF6/gEmpOjX+ciPMq8283Q4EJ06KtigEx8ZJ5iXcAmmIUObiYP\nNBquedQHAgMBAAECggEACru2veamA+9lvs6Y5lpKJUCrDAqisrVf7GESqWh8cRaC\ndjxtWiY7cHAnKmSiyf3zBxawkH+kqcFOzpgMJ4+xs2YzX/mzlKamsTzRD7s1b9re\nwSdPdZJq9/EdnlaL5MuLPXs9SFjwk/J3HpygNR6uTTmif0fU85o+LDmETlD7bxsh\nNY4XkAMNYsYNELlfPNpkUV2ns++e1CrGIA/te7SA+Xht3+ADBl+BDy3V4Zh3gsAD\n+U23nTeZYnkPsWYcONSUjVs4pbrhGNCtCckT2RaUkDu2ZSRkGGd0vk0fPT6QozVO\nL1EIwqOl3f3fh/2lSUOefyh1YKHOO3cEGb68XWRE2QKBgQD/cYtv0xKyonbv06FD\ntwRnxyYZxDQoL1P07ssQKb279uO9d3GNFs0ddnmS61ZOoQC1HfrTy63gRoJyvSMY\nOKdm4x696+eHez+a/BoQu1qu1MQIsx0+sS2vfo94oe7RsQMnle8Wyz55b97yD0WJ\nvmNj9bLPlyeJ/qCd5IevssB9qQKBgQDNnfLXOVu0uyWydSjH+04xL+kSKEinX8HC\niodHmgpNmSxqjaGTT1L/jM//YvAxrK53CdGv2NXliMttzRVZEsBjCXO762q0QEKa\nd7tmFoCWgg9sJgYnSmN5yRFzAxlbf320k/YUfmCZchKuse7W++ltSklO7yb+oCfD\neJodsTHyLwKBgE9uZFiKfwbzRB7BZSUkVQdcQvnCLCHOzcGdO6G0CR7Y3+p7qOCh\nlXiy7Y0FBxp+MDUhtGyFqnTSGCBLtg0DGPMCbv3JzH4xkg7Ek+peCA3TdX3rDI4B\nFF688Som2Jd1/rAhjG4/Fxc19VK58vqpLEjaDxdEPnRHrHRMqvC0mey5AoGBAI7v\nO77tuphaeIwj8aODSQncWlMq+caQRGtuTTgzFvJ2hm/T4Pw8amAHjRfluT9u4SET\nDFcHjzmu7Gt541s2M9Mk4PVDY7vF6AblMLp47g6yfvIZRLHPfnNMmPqwrtHyQHpl\nWO1KJPDGYcJbIsMD/3Lf7zIWAa+DueCiV9BIO4Y1AoGAZXmf1IkL/QLlpqJi943q\n+BiUz8uP/XMVHdqWZlC4e+SpWHsvqAuTaEsfn5egs98RAzGxFjaTW23XFwLkJ6Nz\nCWGRqZx+oqodaahg+3X+a4Y4bFsPaJaeLduUv93ugC4ZE7Z1iriExCLBsO3XAHcw\nVCWoZ8Bbqb0PGK7gqcmqLwY=\n-----END PRIVATE KEY-----\n\",
+    \"client_email\": \"firebase-adminsdk-mgxd8@hetaira-gcp.iam.gserviceaccount.com\",
+    \"client_id\": \"117332600767539269809\",
+    \"auth_uri\": \"https://accounts.google.com/o/oauth2/auth\",
+    \"token_uri\": \"https://oauth2.googleapis.com/token\",
+    \"auth_provider_x509_cert_url\": \"https://www.googleapis.com/oauth2/v1/certs\",
+    \"client_x509_cert_url\": \"https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-mgxd8%40hetaira-gcp.iam.gserviceaccount.com\"
+}"
