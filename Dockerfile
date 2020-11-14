@@ -18,7 +18,7 @@ COPY --from=1 /usr/src/app .
 COPY src ./
 RUN clojure -M:shadow-cljs release app
 RUN clojure -e "(compile 'com.example.components.server)"
-RUN -M:app --aliases package --main-class com.example.components.server --level debug
+RUN clojure -M:app --aliases package --main-class com.example.components.server --level debug
 EXPOSE 8080
 CMD ["java", "-jar", "target/workspace.jar"]
 
