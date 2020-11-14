@@ -9,10 +9,6 @@ WORKDIR /usr/src/app
 COPY shadow-cljs.edn ./
 COPY deps.edn ./
 RUN clojure -P
-COPY . .
-
-FROM clojure:tools-deps
-WORKDIR /usr/src/app
 COPY --from=0 /usr/src/app/node_modules node_modules/
 COPY --from=1 /usr/src/app .
 COPY . .
