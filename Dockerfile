@@ -10,7 +10,6 @@ COPY shadow-cljs.edn ./
 COPY deps.edn ./
 RUN clojure -P
 COPY --from=0 /usr/src/app/node_modules node_modules/
-COPY --from=1 /usr/src/app .
 COPY . .
 RUN clojure -M:shadow-cljs release app
 RUN clojure -e "(compile 'com.example.components.server)"
