@@ -29,5 +29,6 @@
 (defn -main [& args]
   (mount/start-with-args {:config "config/dev.edn"})
   (seed!)
+  (println "GOOGLE_APPLICATION_CREDENTIALS: " (System/getenv "GOOGLE_APPLICATION_CREDENTIALS"))
   (kube/init)
   :ok)
