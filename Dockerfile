@@ -18,5 +18,7 @@ RUN clojure -M:app --aliases package --main-class com.example.components.server 
 
 FROM openjdk:11.0.9.1-jre
 COPY --from=1 /usr/src/app/target .
+COPY --from=1 /usr/src/app/gsa-key.json gsa-key.json
+RUN export GOOGLE_APPLICATION_CREDENTIALS=gsa-key.json
 EXPOSE 8080
 CMD ["java", "-jar", "app.jar"]
