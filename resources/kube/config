@@ -1,0 +1,26 @@
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURLakNDQWhLZ0F3SUJBZ0lRVXlPTHVsaXEwYnVVY2tlSUJ3ekV3ekFOQmdrcWhraUc5dzBCQVFzRkFEQXYKTVMwd0t3WURWUVFERXlRd01qQXdNamM1TlMweU1UQXpMVFF5TXpjdE9Ea3paQzB6T0RSaU9UQTBObVk0Wm1ZdwpIaGNOTWpBeE1URTBNVGMwTURVMFdoY05NalV4TVRFek1UZzBNRFUwV2pBdk1TMHdLd1lEVlFRREV5UXdNakF3Ck1qYzVOUzB5TVRBekxUUXlNemN0T0RrelpDMHpPRFJpT1RBME5tWTRabVl3Z2dFaU1BMEdDU3FHU0liM0RRRUIKQVFVQUE0SUJEd0F3Z2dFS0FvSUJBUURDRkFWbVBDQnVpb1VDMnR1ZjB3dXhlczNxc1NKdVU1bmZOazdhRjhoQQpzb2E3cmZtTEZRRURpU2pHUzFuTWx6UEFFWEp5NXhsVDVJOVN2WjBVV3JTNXZZNERERVc5NjJNUlBPYnNtMmtECnd1dEJ6a25Tc1p0TWVKa2lVbW84cW5HUEVVRXFxZm1heEhpUG8vMzRONVdQdE52S3IzZVJpNWtGeTJubmNtOTQKYWpXei91MHRzR3oySm9oM1RCTTdEZFRPazY1eXJ5c0ZSbWFTN0JQUnY3RlJGSmYyckMvdzVXYk9qK2gzSFVvRwpuczZqWEwxZUdlY0VrcFl0V2FrYkVHYlNDai9JY1VYRDJpK24vZ1NtQjNSbzlqZys1TGNHZ2pwVXVSQ2psRW5JCmNwWEhqaDVyNnE0dVZZL0g0ZHpKeFJ6bFlheHB3OU42bkxGenVlSWFmeE1iQWdNQkFBR2pRakJBTUE0R0ExVWQKRHdFQi93UUVBd0lDQkRBUEJnTlZIUk1CQWY4RUJUQURBUUgvTUIwR0ExVWREZ1FXQkJRYW1UanF0ZEcvNlNMUAp0S01lQXNzWnhzTW9GVEFOQmdrcWhraUc5dzBCQVFzRkFBT0NBUUVBRFZGN0pNWkR1ZllidHhlVjdWZ3JhZ2lXCkRNdkM0T2JMWW1FenBrajZSTW5wMkVTcFdOZ0ViaytZMm5CZ3VJVlJDSWVVQ3FFbVRaM05oK3JhMGxHZEhuT1IKUndBY1YxS2tzQ2dhZExSVFlad0wwQ0FZVmpoZnpBNjgydFIxOVJUS1U3dmhEWUY0VTdkWklxeVkwUEZGVHprWgplOFNTalh4TEtwbWsyOXVkOTdiZnFyd0N5UFZMelhNQTF6eWRxVGVWZDdma0pyYUVZV2FCdmpWeVRkOERUZEJMCk12R216MVBRSHNHRjd0bEFUM0l0c2g2c01sVml5OW5jVjNORmtyRkM5VE1nRXI3RHZHVVBRVHJqeHQ5elFiaEgKQytRaUpscno0TEYvTGE1empQZ0NPVVV5dWdUQnhwMUFRY3pnakFHYjB0SGZwUkNFUW1kbm04d2VEa2pRN1E9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg==
+    server: https://35.231.71.212
+  name: gke_hetaira-dev_us-east1_hetaira-gke-cluster
+contexts:
+- context:
+    cluster: gke_hetaira-dev_us-east1_hetaira-gke-cluster
+    user: gke_hetaira-dev_us-east1_hetaira-gke-cluster
+  name: gke_hetaira-dev_us-east1_hetaira-gke-cluster
+current-context: gke_hetaira-dev_us-east1_hetaira-gke-cluster
+kind: Config
+preferences: {}
+users:
+- name: gke_hetaira-dev_us-east1_hetaira-gke-cluster
+  user:
+    auth-provider:
+      config:
+        access-token: ya29.A0AfH6SMArGeZtFFEZzNChbyd8JB2xdg3OKAhjCW1zH57IMq6Cx4BCHNVGkmKmBKhA9LRWUvXiaAibQQvLYCNCxujTbiVhj_1Ffq74JM1NcZ3wlUyZ_FEyqheh4M7o-ItU9Xb5umDm0YppRFKZS4u1lKbdP5sQUZbG5KOJoOwr0F-M3P5DBwfw
+        cmd-args: config config-helper --format=json
+        cmd-path: /Users/okilimnik/google-cloud-sdk/bin/gcloud
+        expiry: "2020-11-15T11:20:42Z"
+        expiry-key: '{.credential.token_expiry}'
+        token-key: '{.credential.access_token}'
+      name: gcp
