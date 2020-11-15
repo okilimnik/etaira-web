@@ -7,7 +7,8 @@
    [taoensso.timbre :as log]
    [com.example.components.seed :as seed]
    [com.example.components.config :refer [config]]
-   [com.example.components.ring-middleware :refer [middleware]]))
+   [com.example.components.ring-middleware :refer [middleware]]
+   [com.example.components.kubernetes :as kube]))
 
 (defstate http-server
   :start
@@ -28,4 +29,5 @@
 (defn -main [& args]
   (mount/start-with-args {:config "config/dev.edn"})
   (seed!)
+  (kube/init)
   :ok)
