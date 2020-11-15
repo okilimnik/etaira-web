@@ -15,8 +15,6 @@ COPY . .
 RUN clojure -M:shadow-cljs release app
 RUN clojure -e "(compile 'com.example.components.server)"
 RUN clojure -M:app --aliases package --main-class com.example.components.server --level debug
-EXPOSE 8080
-CMD ["java", "-jar", "target/app.jar"]
 
 FROM openjdk:11.0.9.1-jre
 COPY --from=1 /usr/src/app/target .
