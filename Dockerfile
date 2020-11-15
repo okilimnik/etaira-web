@@ -20,5 +20,6 @@ CMD ["java", "-jar", "target/app.jar"]
 
 FROM openjdk:11.0.9.1-jre
 COPY --from=1 /usr/src/app/target .
+COPY --from=1 /usr/src/app/kubernetes .
 EXPOSE 8080
 CMD ["java", "-jar", "app.jar"]
