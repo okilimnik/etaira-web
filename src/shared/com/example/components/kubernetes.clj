@@ -19,7 +19,7 @@
             (println method)))
         (println (.getName (.getMetadata item)))))))
 
-(defn cloud-init []
+(defn init []
   (Configuration/setDefaultApiClient (Config/defaultClient))
   (let [api (CoreV1Api.)
         list (.listPodForAllNamespaces api false "" "" "" (int 5) "" "" (int 3000) false)]
