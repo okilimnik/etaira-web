@@ -18,7 +18,7 @@ RUN clojure -M:app --aliases package --main-class com.example.components.server 
 EXPOSE 8080
 CMD ["java", "-jar", "target/app.jar"]
 
-#FROM openjdk:11.0.9.1-jre
-#COPY . .
-#EXPOSE 8080
-#CMD ["java", "-jar", "target/workspace.jar"]
+FROM openjdk:11.0.9.1-jre
+COPY --from=1 /usr/src/app/target .
+EXPOSE 8080
+CMD ["java", "-jar", "app.jar"]
