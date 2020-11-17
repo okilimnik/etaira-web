@@ -2,31 +2,42 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   labels:
-    app: web-server
-  name: web-server
+    app: hetaira-web
+  name: hetaira-web
 spec:
   minReadySeconds: 300
   progressDeadlineSeconds: 600
   replicas: 1
-  revisionHistoryLimit: 10
   selector:
     matchLabels:
-      app: web-server
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
+      app: hetaira-web
   template:
     metadata:
       labels:
-        app: web-server
+        app: hetaira-web
     spec:
       containers:
       - image: gcr.io/hetaira-dev/hetaira-web:latest
-        imagePullPolicy: Always
         name: hetaira-web
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
-      schedulerName: default-scheduler
-      terminationGracePeriodSeconds: 30
+        ports:
+        - containerPort: 8080
+        env:
+        - name: FIREBASE
+          valueFrom: 
+            secretKeyRef:
+              name: firebase
+              key: credentials
+---
+apiVersion: v1             
+kind: Service
+metadata:
+  name: hetaira-web-service
+spec:
+  selector:
+    app: hetaira-web
+  type: LoadBalancer
+  ports: 
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30000
