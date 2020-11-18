@@ -41,3 +41,46 @@ spec:
       port: 8080
       targetPort: 8080
       nodePort: 30000
+---
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: hetaira-web-certificate
+spec:
+  domains:
+    - kylymnyk.com     
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: hetaira-web-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: hetaira-web-address
+    networking.gke.io/managed-certificates: hetaira-web-certificate
+spec:
+  tls:
+  - hosts:
+      - kylymnyk.com
+    secretName: web-server-certificate
+  rules:
+  - http:
+      host: kylymnyk.com
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: hetaira-web-service
+            port: 
+              number: 30000 
+  - https:
+      host: kylymnyk.com
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service: 
+            name: hetaira-web-service
+            port: 
+              number: 30000                
+
