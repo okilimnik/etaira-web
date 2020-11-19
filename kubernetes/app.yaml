@@ -56,6 +56,7 @@ metadata:
   annotations:
     kubernetes.io/ingress.global-static-ip-name: hetaira-web-address
     networking.gke.io/managed-certificates: hetaira-web-certificate
+    ingress.kubernetes.io/force-ssl-redirect: true
 spec:
   backend:
     serviceName: hetaira-web-service
