@@ -33,6 +33,7 @@ kind: Service
 metadata:
   name: hetaira-web-service
 spec:
+  type: NodePort
   selector:
     app: hetaira-web
   ports: 
