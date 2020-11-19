@@ -35,12 +35,10 @@ metadata:
 spec:
   selector:
     app: hetaira-web
-  type: LoadBalancer
   ports: 
     - protocol: TCP
       port: 8080
       targetPort: 8080
-      nodePort: 30000
 ---
 apiVersion: networking.gke.io/v1beta2
 kind: ManagedCertificate
@@ -60,5 +58,5 @@ metadata:
 spec:
   backend:
     serviceName: hetaira-web-service
-    servicePort: 30000             
+    servicePort: 8080             
 
