@@ -49,24 +49,13 @@ spec:
   domains:
     - kylymnyk.com     
 ---
-apiVersion: networking.gke.io/v1beta1
-kind: FrontendConfig
-metadata:
-  name: ingress-security-config
-spec:
-  sslPolicy: hetaira-gke-ssl-policy
-  redirectToHttps:
-    enabled: true
----
 apiVersion: networking.k8s.io/v1beta1
 kind: Ingress
 metadata:
   name: hetaira-web-ingress
   annotations:
-    kubernetes.io/ingress.class: "gce"
     kubernetes.io/ingress.global-static-ip-name: hetaira-web-address
     networking.gke.io/managed-certificates: hetaira-web-certificate
-    networking.gke.io/v1beta1.FrontendConfig: ingress-security-config
 spec:
   backend:
     serviceName: hetaira-web-service
