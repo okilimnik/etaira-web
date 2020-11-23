@@ -49,7 +49,7 @@ spec:
   domains:
     - kylymnyk.com     
 ---
-apiVersion: networking.gke.io/v1beta1
+apiVersion: networking.gke.io/v1beta3
 kind: FrontendConfig
 metadata:
   name: ingress-security-config
