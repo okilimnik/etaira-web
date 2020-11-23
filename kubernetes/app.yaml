@@ -20,7 +20,7 @@ spec:
       - image: gcr.io/hetaira-dev/hetaira-web:latest
         name: hetaira-web
         ports:
-        - containerPort: 8080
+        - containerPort: 3000
         env:
         - name: FIREBASE
           valueFrom: 
@@ -39,7 +39,7 @@ spec:
   ports: 
     - protocol: TCP
       port: 80
-      targetPort: 8080
+      targetPort: 3000
 ---
 apiVersion: networking.gke.io/v1beta2
 kind: ManagedCertificate
