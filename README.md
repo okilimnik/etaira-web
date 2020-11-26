@@ -1,7 +1,5 @@
 = Fulcro RAD Demo (Firebase Version)
 
-IMPORTANT: Login is `tony@example.com` with password `letmein`.
-
 == Building the SPA
 
 You must compile the CLJS source to run the client. If you want to be
