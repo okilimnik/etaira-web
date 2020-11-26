@@ -7,6 +7,7 @@
    [com.example.components.save-middleware :as save]
    [com.example.model :refer [all-attributes]]
    [com.example.model.account :as account]
+   [com.example.model.cryptopair :as cryptopair]
    [com.example.model.invoice :as invoice]
    [com.example.model.timezone :as timezone]
    [com.fulcrologic.rad.attributes :as attr]
@@ -40,6 +41,7 @@
    [automatic-resolvers
     form/resolvers
     account/resolvers
+    cryptopair/resolvers
     invoice/resolvers
     item/resolvers
     sales/resolvers

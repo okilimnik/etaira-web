@@ -6,6 +6,7 @@
     #?(:clj  [com.fulcrologic.fulcro.dom-server :as dom :refer [div label input]]
        :cljs [com.fulcrologic.fulcro.dom :as dom :refer [div label input]])
     [com.example.ui.account-forms :refer [AccountForm AccountList]]
+    [com.example.ui.cryptopairs-forms :refer [CryptopairForm CryptopairList]]
     [com.example.ui.invoice-forms :refer [InvoiceForm InvoiceList AccountInvoices]]
     [com.example.ui.item-forms :refer [ItemForm InventoryReport]]
     [com.example.ui.line-item-forms :refer [LineItemForm]]
@@ -32,7 +33,7 @@
 ;; This will just be a normal router...but there can be many of them.
 (defrouter MainRouter [this {:keys [current-state route-factory route-props]}]
   {:always-render-body? true
-   :router-targets      [LandingPage ItemForm InvoiceForm InvoiceList AccountList AccountForm AccountInvoices
+   :router-targets      [LandingPage ItemForm InvoiceForm InvoiceList AccountList AccountForm CryptopairList CryptopairForm AccountInvoices
                          sales-report/SalesReport InventoryReport
                          sales-report/RealSalesReport
                          dashboard/Dashboard]}
@@ -71,6 +72,10 @@
                  (ui-dropdown-menu {}
                    (ui-dropdown-item {:onClick (fn [] (rroute/route-to! this AccountList {}))} "View All")
                    (ui-dropdown-item {:onClick (fn [] (form/create! this AccountForm))} "New")))
+              (ui-dropdown {:className "item" :text "Cryptopair"}
+                           (ui-dropdown-menu {}
+                                             (ui-dropdown-item {:onClick (fn [] (rroute/route-to! this CryptopairList {}))} "View All")
+                                             (ui-dropdown-item {:onClick (fn [] (form/create! this CryptopairForm))} "New")))
                (ui-dropdown {:className "item" :text "Inventory"}
                  (ui-dropdown-menu {}
                    (ui-dropdown-item {:onClick (fn [] (rroute/route-to! this InventoryReport {}))} "View All")

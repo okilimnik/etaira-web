@@ -27,6 +27,12 @@
            (filter :account/active?)
            (mapv #(select-keys % [:account/id]))))))
 
+(defn get-all-cryptopairs
+  [env query-params]
+  (when-let [key-store (kv-pathom/env->key-store env)]
+    (<!!
+     (queries/get-all-cryptopairs key-store query-params))))
+
 (def get-all-accounts get-all-accounts-1)
 
 (defn get-all-items

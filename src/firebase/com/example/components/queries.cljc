@@ -16,6 +16,17 @@
            (filter :account/active?)
            (mapv #(select-keys % [:account/id]))))))
 
+(defn get-all-cryptopairs
+  [{::kv-key-store/keys [store]}
+   query-params]
+  (go
+    (if (:show-inactive? query-params)
+      (->> (keys (<! (k/get-in store [:cryptopair/id])))
+           (mapv (fn [id] {:cryptopair/id id})))
+      (->> (vals (<! (k/get-in store [:cryptopair/id])))
+           (filter :cryptopair/active?)
+           (mapv #(select-keys % [:cryptopair/id]))))))
+
 (defn get-all-items
   [{::kv-key-store/keys [store]}
    {:category/keys [id] :as query-params}]
