@@ -7,8 +7,7 @@
    [taoensso.timbre :as log]
    [com.example.components.seed :as seed]
    [com.example.components.config :refer [config]]
-   [com.example.components.ring-middleware :refer [middleware]]
-   [com.example.components.kubernetes :as kube]))
+   [com.example.components.ring-middleware :refer [middleware]]))
 
 (defstate http-server
   :start
