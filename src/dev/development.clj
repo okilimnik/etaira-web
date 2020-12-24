@@ -5,16 +5,11 @@
    [etaira.components.ring-middleware]
    [etaira.components.server]
    [etaira.components.seed :as seed]
-   [com.fulcrologic.rad.ids :refer [new-uuid]]
    [mount.core :as mount]
    [taoensso.timbre :as log]
    [com.fulcrologic.rad.type-support.date-time :as dt]))
 
-(set-refresh-dirs "src/main" "src/firebase" "src/dev" "src/shared")
-
-(comment
-  (let [db (d/db (:main kv-connections))]
-    (d/pull db '[*] [:account/id (new-uuid 100)])))
+(set-refresh-dirs "src/clj" "src/cljc" "src/dev")
 
 (defn seed! []
   (dt/set-timezone! "America/Los_Angeles")
