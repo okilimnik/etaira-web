@@ -18,8 +18,9 @@ node_modules
 out
 resources/public/js
 *.class
-.cpcache
+.cpcache/
 .shadow-cljs
-.clj-kondo/.cache
+.clj-kondo/
 log.txt
 yarn.lock
+.lsp/
