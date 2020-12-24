@@ -3,6 +3,8 @@
 
  :aleph.server/config         {:port 3000}
 
+ :firebase/config         {:url "https://hetaira-dev.firebaseio.com/"}
+ 
  :com.fulcrologic.rad.database-adapters.key-value/databases
  {:main      {:key-value/kind             :firebase
               :key-value/dont-store-nils? true

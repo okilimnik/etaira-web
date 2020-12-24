@@ -23,7 +23,7 @@
 (defn seed! []
   (let [connection (:main kv-connections)]
     (when connection
-      (seed/seed! connection))))
+      (seed/migrate! connection))))
 
 (defn -main [& args]
   (mount/start-with-args {:config "config/dev.edn"})

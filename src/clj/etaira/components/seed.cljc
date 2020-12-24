@@ -54,7 +54,7 @@
        [::key-value/key-store => any?]
        (println "Running migrations for " instance-name)
        (let [applied-migrations (query-applied-migrations-names key-store)
-             new-migrations (filterv #(not (contains? applied-migrations (:name %))) migrations)]
+             new-migrations (filterv #(not (contains? applied-migrations (:name %))) (migrations))]
          (doseq [migration new-migrations]
            (doseq [entity (:entities migration)]
              (kv-write/write-tree key-store entity))

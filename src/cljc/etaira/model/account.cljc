@@ -3,8 +3,8 @@
   (:require
     #?@(:clj
         [[com.wsscode.pathom.connect :as pc :refer [defmutation]]
-         [com.example.model.authorization :as exauth]
-         [com.example.components.database-queries :as queries]]
+         [etaira.model.authorization :as exauth]
+         [etaira.components.database-queries :as queries]]
         :cljs
         [[com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]])
     [clojure.string :as str]

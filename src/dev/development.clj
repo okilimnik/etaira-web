@@ -5,6 +5,7 @@
    [etaira.components.ring-middleware]
    [etaira.components.server]
    [etaira.components.seed :as seed]
+   [konserve.protocols]
    [mount.core :as mount]
    [taoensso.timbre :as log]
    [com.fulcrologic.rad.type-support.date-time :as dt]))
@@ -15,7 +16,7 @@
   (dt/set-timezone! "America/Los_Angeles")
   (let [connection (:main kv-connections)]
     (when connection
-      (seed/seed! connection))))
+      (seed/migrate! connection))))
 
 (defn start []
   (mount/start-with-args {:config "config/dev.edn"})
