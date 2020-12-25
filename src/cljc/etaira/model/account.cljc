@@ -1,26 +1,29 @@
 (ns etaira.model.account
   (:refer-clojure :exclude [name])
   (:require
-    #?@(:clj
-        [[com.wsscode.pathom.connect :as pc :refer [defmutation]]
-         [etaira.model.authorization :as exauth]
-         [etaira.components.database-queries :as queries]]
-        :cljs
-        [[com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]])
-    [clojure.string :as str]
-    [etaira.model.timezone :as timezone]
-    [com.wsscode.pathom.connect :as pc]
-    [com.fulcrologic.rad.form :as form]
-    [com.fulcrologic.rad.form-options :as fo]
-    [com.fulcrologic.rad.report :as report]
-    [com.fulcrologic.rad.attributes :as attr :refer [defattr]]
-    [com.fulcrologic.rad.attributes-options :as ao]
-    [com.fulcrologic.rad.authorization :as auth]
-    [com.fulcrologic.rad.middleware.save-middleware :as save-middleware]
-    [com.fulcrologic.rad.blob :as blob]
-    [taoensso.timbre :as log]
-    [com.fulcrologic.fulcro.ui-state-machines :as uism]
-    [com.fulcrologic.rad.type-support.date-time :as datetime]))
+   #?@(:clj
+       [[com.wsscode.pathom.connect :as pc :refer [defmutation]]
+        [etaira.model.authorization :as exauth]
+        [etaira.components.database-queries :as queries]]
+       :cljs
+       [[com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]
+        [com.fulcrologic.rad.routing :as routing]
+        [etaira.ui.home :refer [HomePage]]
+        [etaira.ui.landing :refer [LandingPage]]])
+   [clojure.string :as str]
+   [etaira.model.timezone :as timezone]
+   [com.wsscode.pathom.connect :as pc]
+   [com.fulcrologic.rad.form :as form]
+   [com.fulcrologic.rad.form-options :as fo]
+   [com.fulcrologic.rad.report :as report]
+   [com.fulcrologic.rad.attributes :as attr :refer [defattr]]
+   [com.fulcrologic.rad.attributes-options :as ao]
+   [com.fulcrologic.rad.authorization :as auth]
+   [com.fulcrologic.rad.middleware.save-middleware :as save-middleware]
+   [com.fulcrologic.rad.blob :as blob]
+   [taoensso.timbre :as log]
+   [com.fulcrologic.fulcro.ui-state-machines :as uism]
+   [com.fulcrologic.rad.type-support.date-time :as datetime]))
 
 (defattr id :account/id :uuid
   {ao/identity?                                     true
@@ -33,8 +36,7 @@
   {ao/identities                                                   #{:account/id}
    ao/required?                                                    true
    ao/schema                                                       :production
-   :com.fulcrologic.rad.database-adapters.datomic/attribute-schema {:db/unique :db.unique/value}
-   })
+   :com.fulcrologic.rad.database-adapters.datomic/attribute-schema {:db/unique :db.unique/value}})
 
 
 (defattr active? :account/active? :boolean
@@ -97,7 +99,7 @@
    :cljs
    (defmutation logout [_]
      (remote [env]
-       true)))
+             true)))
 
 #?(:clj
    (defmutation login [env params]
@@ -106,20 +108,23 @@
    :cljs
    (defmutation login [params]
      (ok-action [{:keys [app state]}]
-       (let [{:time-zone/keys [zone-id]
-              ::auth/keys     [status]} (some-> state deref ::auth/authorization :local)]
-         (if (= status :success)
-           (do
-             (when zone-id
-               (log/info "Setting UI time zone" zone-id)
-               (datetime/set-timezone! zone-id))
-             (auth/logged-in! app :local))
-           (auth/failed! app :local))))
+                (let [{:time-zone/keys [zone-id]
+                       ::auth/keys     [status]} (some-> state deref ::auth/authorization :local)]
+                  (if (= status :success)
+                    (do
+                      (when zone-id
+                        (log/info "Setting UI time zone" zone-id)
+                        (datetime/set-timezone! zone-id))
+                      (auth/logged-in! app :local)
+                      (routing/route-to! app HomePage {}))
+                    (do (auth/failed! app :local)
+                        (routing/route-to! app LandingPage {})))))
      (error-action [{:keys [app]}]
-       (log/error "Login failed.")
-       (auth/failed! app :local))
+                   (log/error "Login failed.")
+                   (auth/failed! app :local)
+                   (routing/route-to! app LandingPage {}))
      (remote [env]
-       (m/returning env auth/Session))))
+             (m/returning env auth/Session))))
 
 #?(:clj
    (defmutation check-session [env _]
@@ -128,16 +133,17 @@
    :cljs
    (defmutation check-session [_]
      (ok-action [{:keys [state app result]}]
-       (let [{::auth/keys [provider]} (get-in result [:body `check-session])
-             {:time-zone/keys [zone-id]
-              ::auth/keys     [status]} (some-> state deref ::auth/authorization (get provider))]
-         (when (= status :success)
-           (when zone-id
-             (log/info "Setting UI time zone" zone-id)
-             #_(datetime/set-timezone! time-zone)))
-         (uism/trigger! app auth/machine-id :event/session-checked {:provider provider})))
+                (let [{::auth/keys [provider]} (get-in result [:body `check-session])
+                      {:time-zone/keys [zone-id]
+                       ::auth/keys     [status]} (some-> state deref ::auth/authorization (get provider))]
+                  (when (= status :success)
+                    (routing/route-to! app HomePage {})
+                    (when zone-id
+                      (log/info "Setting UI time zone" zone-id)
+                      #_(datetime/set-timezone! time-zone)))
+                  (uism/trigger! app auth/machine-id :event/session-checked {:provider provider})))
      (remote [env]
-       (m/returning env auth/Session))))
+             (m/returning env auth/Session))))
 
 #?(:clj
    (defmethod save-middleware/rewrite-value :account/id
@@ -157,7 +163,7 @@
    :cljs
    (defmutation set-account-active [{:account/keys [id active?]}]
      (action [{:keys [state]}]
-       (swap! state assoc-in [:account/id id :account/active?] active?))
+             (swap! state assoc-in [:account/id id :account/active?] active?))
      (remote [_] true)))
 
 (def attributes [id name role email password password-iterations password-salt active?
