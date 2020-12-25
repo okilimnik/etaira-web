@@ -38,7 +38,7 @@
               (.setValue ref json)))
      :cljs (let [ref (ocall db :ref path)]
              (ocall ref :push data #(do
-                                      (async/put! (:async options) %)))))
+                                      (async/put! (:async options) %))))))
 
   (defn delete!
     "Deletes data from Firebase database at a given path"
@@ -48,7 +48,7 @@
                 (.removeValueAsync ref #(async/put! (:async options) %))
                 (.removeValue ref)))
        :cljs (let [ref (ocall db :ref path)]
-               (ocall ref :remove #(async/put! (:async options) %))))))
+               (ocall ref :remove #(async/put! (:async options) %)))))
 
 (defn read
   "Retrieves data from Firebase database at a given path"
