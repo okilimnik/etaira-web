@@ -1,7 +1,7 @@
 (ns firebase.core
   (:refer-clojure :exclude [read])
   (:require 
-   #?(:clj [clojure.walk :refer [stringify-keys keywordize-keys walk]])
+   #?(:clj [clojure.walk :refer [stringify-keys walk]])
    #?(:clj  [clojure.core.async :as async]
                :cljs [cljs.core.async :as async])
             #?(:cljs [oops.core :refer [ocall]]))
