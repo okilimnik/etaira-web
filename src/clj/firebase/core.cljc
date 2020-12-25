@@ -28,7 +28,6 @@
   [db path data & [options]]
   #?(:clj (let [ref (.getReference db path)
                 stringified (stringify-keys data)]
-            (println "data to update: " stringified)
             (if (:async options)
               (.updateChildren ref stringified (reify DatabaseReference$CompletionListener
                                               (onComplete [this error ref']
@@ -77,7 +76,6 @@
             (.addListenerForSingleValueEvent ref (reify ValueEventListener
                                                    (^void onDataChange [_ ^DataSnapshot snapshot]
                                                      (let [result (->map (.getValue snapshot))]
-                                                       (println "read result: " result)
                                                        (async/put! (:async options) result)))
                                                    (onCancelled [_ error]
                                                      (async/put! (:async options) error)))))
