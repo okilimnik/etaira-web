@@ -1,27 +1,21 @@
 (ns etaira.ui
   (:require
-   [com.fulcrologic.fulcro.dom :as dom :refer [div label input]]
+   [com.fulcrologic.fulcro.dom :refer [div button]]
    [etaira.ui.login-dialog :refer [LoginForm]]
    [com.fulcrologic.fulcro.application :as app]
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
    [com.fulcrologic.fulcro.dom.html-entities :as ent]
    [com.fulcrologic.fulcro.routing.dynamic-routing :refer [defrouter]]
    [com.fulcrologic.rad.authorization :as auth]
-   [com.fulcrologic.rad.form :as form]
-   [com.fulcrologic.rad.ids :refer [new-uuid]]
    [com.fulcrologic.rad.routing :as rroute]
    [etaira.ui.home :refer [HomePage]]
-   [etaira.ui.landing :refer [LandingPage]]
-   [taoensso.timbre :as log]))
+   [etaira.ui.landing :refer [LandingPage]]))
 
-;; This will just be a normal router...but there can be many of them.
 (defrouter MainRouter [this {:keys [current-state route-factory route-props]}]
   {:always-render-body? true
    :router-targets      [HomePage LandingPage]}
-  ;; Normal Fulcro code to show a loader on slow route change (assuming Semantic UI here, should
-  ;; be generalized for RAD so UI-specific code isn't necessary)
-  (dom/div
-   (dom/div :.ui.loader {:classes [(when-not (= :routed current-state) "active")]})
+  (div
+   (div :.ui.loader {:classes [(when-not (= :routed current-state) "active")]})
    (when route-factory
      (route-factory route-props))))
 
@@ -43,7 +37,7 @@
   (let [logged-in? (= :success (some-> authorization :local ::auth/status))
         busy?      (seq active-remotes)
         username   (some-> authorization :local :account/name)]
-    (dom/div
+    (div
      (div :.ui.top.menu
           (div :.ui.item "Etaira")
           (div :.right.menu
@@ -55,14 +49,13 @@
                   (div :.ui.item
                        (str "Logged in as " username))
                   (div :.ui.item
-                       (dom/button :.ui.button {:onClick (fn []
-                                                    ;; TODO: check if we can change routes...
-                                                           (rroute/route-to! this LandingPage {})
-                                                           (auth/logout! this :local))}
-                                   "Logout")))
+                       (button :.ui.button {:onClick (fn []
+                                                       (rroute/route-to! this LandingPage {})
+                                                       (auth/logout! this :local))}
+                               "Logout")))
                  (div :.ui.item
-                      (dom/button :.ui.primary.button {:onClick #(auth/authenticate! this :local nil)}
-                                  "Login")))))
+                      (button :.ui.primary.button {:onClick #(auth/authenticate! this :local nil)}
+                              "Login")))))
      (div :.ui.container.segment
           (ui-authenticator authenticator)
           (ui-main-router router)))))
