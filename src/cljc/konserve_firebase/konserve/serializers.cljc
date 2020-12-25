@@ -16,7 +16,7 @@
    (defrecord FressianSerializer [serializer custom-read-handlers custom-write-handlers]
      PStoreSerializer
      (-deserialize [_ read-handlers bytes]
-       (let [res (fress/read (fress/byte-stream)
+       (let [res (fress/read bytes
                              :handlers (-> (merge fress/clojure-read-handlers
                                                   custom-read-handlers
                                                   (incognito-read-handlers read-handlers))
@@ -25,17 +25,18 @@
            (-deserialize serializer read-handlers res)
            res)))
      (-serialize [_ bytes write-handlers val]
-       (let [buf (fress/byte-stream)
-             w (fress/create-writer buf :handlers (-> (merge
-                                                       fress/clojure-write-handlers
-                                                       custom-write-handlers
-                                                       (incognito-write-handlers write-handlers))
-                                                      fress/associative-lookup
-                                                      fress/inheritance-lookup))]
+       (let [w (fress/create-writer bytes :handlers (-> (merge
+                                                         fress/clojure-write-handlers
+                                                         custom-write-handlers
+                                                         (incognito-write-handlers write-handlers))
+                                                        fress/associative-lookup
+                                                        fress/inheritance-lookup))]
+        ; (println "writer: " w)
+         (prn (prn-str val))
          (fress/write-object w val)
          (if serializer
-           (-serialize serializer bytes write-handlers @buf)
-           @buf)))))
+           (-serialize serializer bytes write-handlers bytes)
+           bytes)))))
 
 #?(:cljs
    (defrecord FressianSerializer [serializer custom-read-handlers custom-write-handlers]

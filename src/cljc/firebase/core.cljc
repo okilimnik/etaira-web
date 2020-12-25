@@ -2,7 +2,8 @@
   (:refer-clojure :exclude [read])
   (:require #?(:clj  [clojure.core.async :as async]
                :cljs [cljs.core.async :as async])
-            #?(:cljs [oops.core :refer [ocall]]))
+            #?(:cljs [oops.core :refer [ocall]])
+            #?(:clj [cheshire.core :refer [generate-string]]))
   (:import #?(:clj (com.google.firebase.database ValueEventListener))))
 
 (defn write!
@@ -19,22 +20,22 @@
 (defn update!
   "Updates data in a Firebase database at a given path via destructively merging."
   [db path data & [options]]
-  #?(:clj (let [ref (.getReference db path)]
+  #?(:clj (let [ref (.getReference db path)
+                json (generate-string data)]
             (if (:async options)
-              (.updateChildrenAsync ref data #(async/put! (:async options) %))
-              (.updateChildren ref data)))
+              (.setValueAsync ref json #(async/put! (:async options) %))
+              (.setValue ref json)))
      :cljs (let [ref (ocall db :ref path)]
-             (ocall ref :update (clj->js data) #(do
-
-                                                  (async/put! (:async options) (or % [])))))))
+             (ocall ref :update (clj->js data) #(async/put! (:async options) (or % []))))))
 
 (defn push!
   "Appends data to a list in a Firebase db at a given path."
   [db path data & [options]]
-  #?(:clj (let [ref (.push (.getReference db path))]
+  #?(:clj (let [ref (.push (.getReference db path))
+                json (generate-string data)]
             (if (:async options)
-              (.setValueAsync ref data #(async/put! (:async options) %))
-              (.setValue ref data)))
+              (.setValueAsync ref json #(async/put! (:async options) %))
+              (.setValue ref json)))
      :cljs (let [ref (ocall db :ref path)]
              (ocall ref :push data #(do
                                       (async/put! (:async options) %)))))

@@ -9,11 +9,14 @@
            com.taoensso/encore                    {:mvn/version "2.120.0"}
            com.fulcrologic/guardrails             {:mvn/version "0.0.12"}
 
-          ; com.fulcrologic/fulcro-rad-kvstore     {:mvn/version "1.0.0-RC2" :exclusions [io.replikativ/konserve com.fulcrologic/fulcro-rad]}
-           io.replikativ/konserve                 {:mvn/version "0.6.0-alpha2"}
+          ; io.replikativ/konserve                 {:mvn/version "0.6.0-alpha1"}
+           org.lz4/lz4-java                       {:mvn/version "1.7.1"}
+           io.replikativ/hasch                    {:mvn/version "0.3.7"}
+           io.replikativ/superv.async             {:mvn/version "0.2.11"}
            com.google.firebase/firebase-admin     {:mvn/version "7.1.0" :exclusions [com.google.guava/guava]}
            io.replikativ/incognito                {:mvn/version "0.2.6"}
            org.clojure/data.fressian              {:mvn/version "1.0.0"}
+           cheshire/cheshire                      {:mvn/version "5.10.0"}
 
            ;; Performance checks
            com.taoensso/tufte                     {:mvn/version "2.1.0"}

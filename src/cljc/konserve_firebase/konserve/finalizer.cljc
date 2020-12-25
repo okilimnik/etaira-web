@@ -6,7 +6,7 @@
   #?(:clj (:import [java.io ByteArrayOutputStream ByteArrayInputStream])))
 
 (defn to-byte-array [data]
-  #?(:clj (byte-array data)
+  #?(:clj (.toByteArray data)
      :cljs (js/Int8Array. data)))
 
 (defn header [store-layout serializer compressor encryptor]
@@ -14,7 +14,8 @@
             (.write mbaos ^byte store-layout)
             (.write mbaos ^byte serializer)
             (.write mbaos ^byte compressor)
-            (.write mbaos ^byte encryptor))
+            (.write mbaos ^byte encryptor)
+            mbaos)
      :cljs (js/Int8Array. #js [store-layout serializer compressor encryptor])))
 
 (defn concat-buffers [buffer1 buffer2]

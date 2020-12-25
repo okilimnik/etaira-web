@@ -2,8 +2,7 @@
   "Address globally aggregated immutable key-value store(s)."
   (:require #?(:clj [clojure.core.async :as async]
                :cljs [cljs.core.async :as async])
-            #?(:clj [konserve.serializers :as ser]
-               :cljs [konserve-firebase.konserve.serializers :as ser])
+            [konserve-firebase.konserve.serializers :as ser]
             #?(:clj [konserve.compressor :as comp]
                :cljs [konserve-firebase.konserve.compressor :as comp])
             #?(:clj [konserve.encryptor :as encr]
