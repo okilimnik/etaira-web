@@ -20,8 +20,8 @@
   #?(:clj (.encodeToString b64encoder ^"[B" (.toByteArray ^ByteArrayOutputStream data))
      :cljs (ocall data :toString "base64")))
 
-(defn decode [data]
-  #?(:clj (.decode b64decoder ^bytes data)
+(defn decode [^String data]
+  #?(:clj (.decode b64decoder data)
      :cljs (ocall Buffer :from data "base64")))
 
 (defn chunk-str [string]

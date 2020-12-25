@@ -1,4 +1,4 @@
-(ns konserve.compressor
+(ns konserve-firebase.konserve.compressor
   (:require [konserve.protocols :refer [PStoreSerializer -serialize -deserialize]]
             [konserve.utils :refer [invert-map]])
   (:import [net.jpountz.lz4 LZ4FrameOutputStream LZ4FrameInputStream]))
@@ -6,9 +6,9 @@
 (defrecord NullCompressor [serializer]
   PStoreSerializer
   (-deserialize [_ read-handlers bytes]
-      (-deserialize serializer read-handlers bytes))
+    (-deserialize serializer read-handlers bytes))
   (-serialize [_ bytes write-handlers val]
-      (-serialize serializer bytes write-handlers val)))
+    (-serialize serializer bytes write-handlers val)))
 
 (defrecord Lz4Compressor [serializer]
   PStoreSerializer

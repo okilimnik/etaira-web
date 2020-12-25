@@ -3,7 +3,7 @@
     [com.fulcrologic.rad.database-adapters.key-value.key-store :as kv-key-store]
     [taoensso.timbre :as log]
     [konserve.core :as k]
-    [clojure.core.async :refer [<! go]]))
+    [clojure.core.async :refer [<! <!! go]]))
 
 (defn get-all-accounts
   [{::kv-key-store/keys [store]}
@@ -20,7 +20,11 @@
   "Get the account name, time zone, and password info via a username (email)."
   [{::kv-key-store/keys [store]}
    username]
+  (println (->> (vals (<!! (k/get-in store [:account/id])))
+                (filter #(= username (:account/email %)))
+                first))
   (go
+    (println "getting login info")
     (let [account (->> (vals (<! (k/get-in store [:account/id])))
                        (filter #(= username (:account/email %)))
                        first)]

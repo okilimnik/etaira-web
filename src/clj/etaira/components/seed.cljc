@@ -33,7 +33,8 @@
 
 (defn query-applied-migrations-names
   "Queries migrations that were already run."
-  [store]
+  [{::kv-key-store/keys [store]}]
+  (println "migrations: " (<!! (k/get-in store [:migration/id])))
   (set (mapv :migration/name (vals (<!! (k/get-in store [:migration/id]))))))
 
 (defn new-migration

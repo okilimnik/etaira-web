@@ -3,10 +3,8 @@
   (:require #?(:clj [clojure.core.async :as async]
                :cljs [cljs.core.async :as async])
             [konserve-firebase.konserve.serializers :as ser]
-            #?(:clj [konserve.compressor :as comp]
-               :cljs [konserve-firebase.konserve.compressor :as comp])
-            #?(:clj [konserve.encryptor :as encr]
-               :cljs [konserve-firebase.konserve.encryptor :as encr])
+            [konserve-firebase.konserve.compressor :as comp]
+            [konserve-firebase.konserve.encryptor :as encr]
             #?(:cljs ["buffer" :refer [Buffer]])
             #?(:cljs [oops.core :refer [ocall oget]])
             [konserve-firebase.konserve.finalizer :as fin]
@@ -100,7 +98,6 @@
   (-update-in
     [this key-vec meta-up-fn up-fn args]
     (let [res-ch (async/chan 1)]
-      (println "updaeting something")
       (async/go
         (let [[fkey & rkey] key-vec
               [[mheader ometa'] [vheader oval']] (async/<! (io/get-it store (str-uuid fkey)))

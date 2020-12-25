@@ -16,6 +16,8 @@
    (defrecord FressianSerializer [serializer custom-read-handlers custom-write-handlers]
      PStoreSerializer
      (-deserialize [_ read-handlers bytes]
+                   (println "hello from FressianSerializer")
+                   (println bytes)
        (let [res (fress/read bytes
                              :handlers (-> (merge fress/clojure-read-handlers
                                                   custom-read-handlers
