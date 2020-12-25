@@ -20,13 +20,12 @@
   "Get the account name, time zone, and password info via a username (email)."
   [{::kv-key-store/keys [store]}
    username]
-  (println (->> (vals (<!! (k/get-in store [:account/id])))
-                (filter #(= username (:account/email %)))
-                first))
   (go
-    (println "getting login info")
-    (let [account (->> (vals (<! (k/get-in store [:account/id])))
-                       (filter #(= username (:account/email %)))
-                       first)]
-      (log/warn "account (TZ is key and s/be string)" (:time-zone/zone-id account))
-      account)))
+    (let [res (<! (k/get-in store [:account/id]))]
+      (println "get-login-info: " res)
+      (when res
+        (let [account (->> (vals res)
+                           (filter #(= username (:account/email %)))
+                           first)]
+          (log/warn "account (TZ is key and s/be string)" (:time-zone/zone-id account))
+          account)))))

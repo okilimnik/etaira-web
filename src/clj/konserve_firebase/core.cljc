@@ -72,13 +72,11 @@
     [this key]
     (let [res-ch (async/chan 1)]
       (async/go
-        (try
-          (let [[header res] (async/<! (io/get-it-only store (str-uuid key)))]
-            (if (some? res)
-              (async/put! res-ch (read-data header res read-handlers))
-              (async/close! res-ch)))
-          (catch #?(:clj Exception
-                    :cljs js/Error) e (async/put! res-ch (prep-ex "Failed to retrieve value from store" e)))))
+      
+        (let [[header res] (async/<! (io/get-it-only store (str-uuid key)))]
+          (if (some? res)
+            (async/put! res-ch (read-data header res read-handlers))
+            (async/close! res-ch))))
       res-ch))
 
   (-get-meta

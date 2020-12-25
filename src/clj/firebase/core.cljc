@@ -75,11 +75,13 @@
   #?(:clj (let [ref (.getReference db path)]
             (.addListenerForSingleValueEvent ref (reify ValueEventListener
                                                    (^void onDataChange [_ ^DataSnapshot snapshot]
-                                                     (let [result (->map (.getValue snapshot))]
-                                                       (async/put! (:async options) result)))
+                                                     (if-let [v (.getValue snapshot)]
+                                                       (let [result (->map v)]
+                                                         (async/put! (:async options) result))
+                                                       (async/put! (:async options) [])))
                                                    (onCancelled [_ error]
                                                      (async/put! (:async options) error)))))
      :cljs (let [ref (ocall db :ref path)]
              (ocall ref :once "value" #(let [val (js->clj (or (ocall % :val) []) :keywordize-keys true)]
-                                  
+
                                          (async/put! (:async options) val))))))

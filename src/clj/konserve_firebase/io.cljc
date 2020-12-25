@@ -6,9 +6,11 @@
             #?(:clj [clojure.core.async :as async]
                :cljs [cljs.core.async :as async])
             #?(:cljs ["buffer" :refer [Buffer]])
-            #?(:cljs [oops.core :refer [ocall]]))
+            #?(:cljs [oops.core :refer [ocall]])
+            #?(:clj [clojure.java.io :as io]))
   (:import  #?@(:clj [[java.util Base64 Base64$Decoder Base64$Encoder]
-                      [java.io ByteArrayOutputStream]])))
+                      [java.io ByteArrayOutputStream]
+                      [java.nio ByteBuffer]])))
 
 
 #?(:clj (set! *warn-on-reflection* 1))
@@ -17,7 +19,7 @@
 #?(:clj (def ^Base64$Decoder b64decoder (. Base64 getDecoder)))
 
 (defn encode-to-string [data]
-  #?(:clj (.encodeToString b64encoder ^"[B" (.toByteArray ^ByteArrayOutputStream data))
+  #?(:clj (.encodeToString b64encoder (.toByteArray data))
      :cljs (ocall data :toString "base64")))
 
 (defn decode [^String data]
@@ -77,7 +79,7 @@
     (let [ch (async/chan)]
       (fire/read (:db store) (str (:root store) "/" id "/data") {:async ch})
       (let [resp (async/<! ch)]
-
+ 
         (when (seq resp) (->> resp combine-str decode finalizer/split-header))))))
 
 (defn get-meta

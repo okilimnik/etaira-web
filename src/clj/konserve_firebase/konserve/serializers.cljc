@@ -10,7 +10,8 @@
                        [incognito.fressian :refer [incognito-read-handlers incognito-write-handlers]]])
             [incognito.edn :refer [read-string-safe]])
   #?(:clj (:import [java.io FileOutputStream FileInputStream DataInputStream DataOutputStream]
-                   [org.fressian.handlers WriteHandler ReadHandler])))
+                   [org.fressian.handlers WriteHandler ReadHandler]
+                   [java.io ByteArrayOutputStream])))
 
 #?(:clj
    (defrecord FressianSerializer [serializer custom-read-handlers custom-write-handlers]
@@ -27,18 +28,17 @@
            (-deserialize serializer read-handlers res)
            res)))
      (-serialize [_ bytes write-handlers val]
-       (let [w (fress/create-writer bytes :handlers (-> (merge
+       (let [baos (ByteArrayOutputStream.)
+             w (fress/create-writer baos :handlers (-> (merge
                                                          fress/clojure-write-handlers
                                                          custom-write-handlers
                                                          (incognito-write-handlers write-handlers))
                                                         fress/associative-lookup
                                                         fress/inheritance-lookup))]
-        ; (println "writer: " w)
-         (prn (prn-str val))
          (fress/write-object w val)
          (if serializer
-           (-serialize serializer bytes write-handlers bytes)
-           bytes)))))
+           (-serialize serializer bytes write-handlers baos)
+           baos)))))
 
 #?(:cljs
    (defrecord FressianSerializer [serializer custom-read-handlers custom-write-handlers]

@@ -4,7 +4,7 @@
    #?@(:cljs [["buffer" :refer [Buffer]]
               [oops.core :refer [ocall oget]]])
    #?(:clj [clojure.java.io :as io]))
-  #?(:clj (:import [java.io ByteArrayOutputStream BufferedInputStream]
+  #?(:clj (:import [java.io ByteArrayOutputStream ByteArrayInputStream]
                    (java.nio ByteBuffer))))
 
 (defn to-byte-array [data]
@@ -30,7 +30,7 @@
              new-buffer)))
 
 (defn to-vec [bytes]
-  #?(:clj bytes
+  #?(:clj (vec bytes)
      :cljs (js/Int8Array. bytes 0 (oget bytes :length))))
 
 (defn to-byte-array-input-stream [data]
@@ -38,22 +38,16 @@
      :cljs (ocall Buffer :from data)))
 
 (defn split-at! [index data]
-  #?(:clj (let [buf (ByteBuffer/wrap data)
-                first' (byte-array index)
-                rest' (byte-array (- (count data) index))]
-            (.get buf first' 0 (count first'))
-            (.get buf rest' 0 (count rest'))
-            [first' rest'])
+  #?(:clj (split-at index data)
      :cljs [(ocall data :subarray 0 index)
             (ocall data :subarray index (oget data :length))]))
 
 (defn split-header [bytes]
-  (println "split-header: " bytes)
   (when bytes
     (let [data (->> bytes to-vec (split-at! 4))
           streamer (fn [header res] (list #?(:clj (vec header)
                                              :cljs (vec header))
-                                          #?(:clj (-> res to-byte-array-input-stream)
+                                          #?(:clj (-> res byte-array io/input-stream)
                                              :cljs (ocall Buffer :from res))))
           res (apply streamer data)]
       res)))
