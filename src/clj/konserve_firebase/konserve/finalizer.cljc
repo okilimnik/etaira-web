@@ -4,8 +4,7 @@
    #?@(:cljs [["buffer" :refer [Buffer]]
               [oops.core :refer [ocall oget]]])
    #?(:clj [clojure.java.io :as io]))
-  #?(:clj (:import [java.io ByteArrayOutputStream ByteArrayInputStream]
-                   (java.nio ByteBuffer))))
+  #?(:clj (:import [java.io ByteArrayOutputStream])))
 
 (defn to-byte-array [data]
   #?(:clj (.toByteArray data)
