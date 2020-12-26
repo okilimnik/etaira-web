@@ -9,10 +9,10 @@ WORKDIR /usr/src/app
 COPY shadow-cljs.edn ./
 COPY deps.edn ./
 RUN clojure -P
-RUN clojure -M:shadow-cljs classpath
+RUN clojure -M:cljs classpath
 COPY --from=0 /usr/src/app/node_modules node_modules/
 COPY . .
-RUN clojure -M:shadow-cljs release app
+RUN clojure -M:cljs release app
 RUN clojure -e "(compile 'com.example.components.server)"
 RUN clojure -M:app --aliases package --main-class com.example.components.server --level debug
 

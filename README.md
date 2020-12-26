@@ -19,8 +19,6 @@ Replace 'your-firebase-secret' with your firebase credentials.
 -----
 $ export FIREBASE=your-firebase-secret
 $ clojure -M:dev
-user=> (clojure.core/require 'development)
-user=> (development/go)
 -----
 
 == Restarting
