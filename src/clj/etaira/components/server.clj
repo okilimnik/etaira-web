@@ -13,6 +13,7 @@
   :start
   (let [cfg     (get config :aleph.server/config)
         server (start-server middleware cfg)]
+    (println "starting")
     (log/info "Starting webserver with config " cfg)
     {:stop #(.close server)})
   :stop

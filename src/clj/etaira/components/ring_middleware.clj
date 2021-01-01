@@ -27,7 +27,7 @@
               :rel  "stylesheet"}]
       [:link {:href "/css/main.css"
               :rel  "stylesheet"}]
-      [:link {:rel "shortcut icon" :href "data:image/x-icon;," :type "image/x-icon"}]
+      [:link {:rel "shortcut icon" :href "data:image/x-icon;" :type "image/x-icon"}]
       [:script (str "var fulcro_network_csrf_token = '" csrf-token "';")]]
      [:body
       [:div#app]

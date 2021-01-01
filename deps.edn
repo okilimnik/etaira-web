@@ -38,7 +38,7 @@
 
            :package {:extra-paths ["resources"]}
 
-           :clj       {:extra-paths ["src/dev"]
+           :clj       {:extra-paths ["src/dev" "resources"]
                        :extra-deps {org.clojure/tools.namespace         {:mvn/version "1.0.0"}}}
 
            :cljs       {:replace-paths ["src/cljs" "src/cljc" "src/css"]

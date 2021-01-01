@@ -31,7 +31,7 @@
     {:margin [(px 5) 0]
      :font-weight "300"
      :font-size (px 18)}]
-   
+
    [:h3
     {:margin [(px 10) 0]}]
 
@@ -100,20 +100,20 @@
      :color "#666"
      :transition "background-color 0.3s, color 0.3s"}]
 
-   [:.button 
-    [:&:hover 
+   [:.button
+    [:&:hover
      {:background-color "rgba(0,0,0,0.1)"}]]
 
-   [:.button 
+   [:.button
     [:&:active
      {:background-color "rgba(0,0,0,0.15)"
       :color "#333"}]]
 
-   [:.button 
+   [:.button
     [:i
      {:font-size (px 16)}]]
-   
-   [:.hide-button 
+
+   [:.hide-button
     {:cursor "pointer"
      :padding [(px 6) (px 4) (px 8) (px 4)]
      :border-left [(px 1) "solid" "#2c2c2c"]
@@ -124,10 +124,66 @@
      :color "#eee"
      :font [(px 11) "'Lucida Grande'" "sans-serif"]
      :display "table"}]
-   
-   ;;Header
-   
-   
 
+   ;;Header
+
+   [:.github-link
+    {:width (px 60)
+     :height (px 60)
+     :position "absolute"
+     :display "block"
+     :top 0
+     :right 0
+     :z-index 1000}]
+
+   [:.github-link
+    [:.icon
+     {:fill "#fff"
+      :fill-opacity 0.6}]]
+
+   [:.github-link
+    [:&:hover
+     [:.icon
+      {:fill-opacity 0.7}]]]
+
+   [:header
+    {:border-bottom ["solid" (px 1) "rgba(0,0,0,0.4)"]
+     :background-color "#183D4E"
+     :color "white"
+     :overflow "hidden"
+     :box-shadow [(px 0) (px 2) (px 4) "rgba(0,0,0,0.2)"]
+     :position "relative"}]
+
+   [:header
+    [:h1
+     [:.optional
+      {:display "none"}]]]
+
+   (at-media
+    {:min-width (px 1064)}
+    [:header
+     [:h1
+      [:.optional
+       {:display "inline"}]]])
+
+   (at-media
+    {:min-height (px 700)}
+    [:header
+     [:h1
+      {:margin-top (px 40)
+       :margin-bottom (px 40)}]])
+
+   (at-media
+    {:min-height (px 800)}
+    [:header
+     [:h1
+      {:font-size (px 34)
+       :margin-top (px 60)
+       :margin-bottom (px 60)}]])
+   
+   ;;Top Controls
+
+   [:#top-controls]
+   
    ;;------------------------------------
    ))
