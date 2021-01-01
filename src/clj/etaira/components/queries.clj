@@ -22,7 +22,6 @@
    username]
   (go
     (let [res (<! (k/get-in store [:account/id]))]
-      (println "get-login-info: " res)
       (when res
         (let [account (->> (vals res)
                            (filter #(= username (:account/email %)))

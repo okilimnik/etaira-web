@@ -13,7 +13,6 @@
   [db path data & [options]]
   #?(:clj (let [ref (.getReference db path)
                 stringified (stringify-keys data)]
-            (println "data to write: " stringified)
             (if (:async options)
               (.updateChildren ref stringified (reify DatabaseReference$CompletionListener
                                                  (onComplete [this error ref']
