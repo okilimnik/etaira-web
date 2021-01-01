@@ -37,16 +37,20 @@
                  :main-opts ["-m" "uberdeps.uberjar"]}
 
            :package {:extra-paths ["resources"]}
-           
+
            :clj       {:extra-paths ["src/dev"]
                        :extra-deps {org.clojure/tools.namespace         {:mvn/version "1.0.0"}}}
 
-           :cljs       {:replace-paths ["src/cljs" "src/cljc"]
+           :cljs       {:replace-paths ["src/cljs" "src/cljc" "src/css"]
                         :extra-deps  {thheller/shadow-cljs                {:mvn/version "2.11.4"}
                                       com.fulcrologic/semantic-ui-wrapper {:mvn/version "1.0.1"}
                                       org.clojure/tools.namespace         {:mvn/version "1.0.0"}
                                       org.clojure/clojurescript           {:mvn/version "1.10.773"}}
                         :main-opts ["-m" "shadow.cljs.devtools.cli"]}
+
+           :css       {:replace-paths ["src/css"]
+                       :extra-deps  {lambdaisland/garden-watcher         {:mvn/version "1.0.27"}}
+                       :main-opts ["-m" "garden-watcher.main" "etaira.css"]}
 
            :test      {:extra-paths ["src/shared-tests"]
                        :extra-deps  {fulcrologic/fulcro-spec {:mvn/version "3.1.6"}}}
