@@ -5,4 +5,4 @@
    [etaira.components.server :refer [-main]]))
 
 (alter-var-root #'s/*explain-out* (constantly expound/printer))
-(-main)
+(-main nil)

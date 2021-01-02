@@ -25,7 +25,7 @@
     (when connection
       (seed/migrate! connection))))
 
-(defn -main [& args]
+(defn -main [& _]
   (mount/start-with-args {:config "config/dev.edn"})
   (seed!)
   :ok)
