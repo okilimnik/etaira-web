@@ -22,7 +22,7 @@ spec:
         ports:
         - containerPort: 3000
         env:
-        - name: GOOGLE_APPLICATION_CREDENTIALS
+        - name: FIREBASE_CONFIG
           valueFrom: 
             secretKeyRef:
               name: firebase
