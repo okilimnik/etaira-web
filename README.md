@@ -17,6 +17,6 @@ if you don't have `yarn`, use `npm install` instead.
 [source, bash]
 Replace 'your-firebase-secret' with your firebase credentials.
 -----
-$ export FIREBASE=your-firebase-secret
+$ export FIREBASE_CONFIG=your-firebase-secret
 $ clojure -M:clj
 -----
