@@ -1,5 +1,6 @@
 (ns etaira.components.seeded-connection
   (:require
+   [clojure.string :refer [trim-newline]]
    [mount.core :refer [defstate]]
    [konserve-firebase.core :refer [new-firebase-store]]
    [clojure.core.async :refer [<!!]]
@@ -15,7 +16,7 @@
           :start
           {:main
            (do (FirebaseApp/initializeApp (.build (doto (FirebaseOptions/builder)
-                                                    (.setCredentials (GoogleCredentials/fromStream (ByteArrayInputStream. (.getBytes (:firebase/config config)))))
+                                                    (.setCredentials (GoogleCredentials/fromStream (ByteArrayInputStream. (.getBytes (trim-newline (:firebase/config config))))))
                                                     (.setDatabaseUrl (:firebase/database-url config)))))
                (make-key-store (<!! (new-firebase-store {:db   (FirebaseDatabase/getInstance)
                                                          :root "/hetaira-test"}))
