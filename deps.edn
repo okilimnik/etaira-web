@@ -13,6 +13,8 @@
            io.replikativ/konserve                 {:mvn/version "0.6.0-alpha2"}
            com.google.firebase/firebase-admin     {:mvn/version "7.1.0" :exclusions [com.google.guava/guava]}
 
+           cheshire/cheshire                      {:mvn/version "5.10.0"}
+           
            ;; Performance checks
            com.taoensso/tufte                     {:mvn/version "2.1.0"}
 
