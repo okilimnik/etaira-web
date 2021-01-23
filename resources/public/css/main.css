@@ -186,3 +186,11 @@ header h1 .optional {
   }
 
 }
+
+#top-controls {
+  class: material-icons;
+}
+
+svg text {
+  dominant-baseline: middle;
+}

@@ -183,7 +183,8 @@
    
    ;;Top Controls
 
-   [:#top-controls]
+   [:#top-controls {:class "material-icons"}]
    
+   [:svg [:text {:dominant-baseline "middle"}]]
    ;;------------------------------------
    ))
