@@ -13,6 +13,7 @@ RUN clojure -M:cljs classpath
 COPY --from=0 /usr/src/app/node_modules node_modules/
 COPY . .
 RUN clojure -M:cljs release app
+RUN clojure -M:css
 RUN clojure -e "(compile 'etaira.components.server)"
 RUN clojure -M:app --aliases package --main-class etaira.components.server --level debug
 
