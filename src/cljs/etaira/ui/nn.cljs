@@ -5,12 +5,16 @@
                                                option h4 p canvas input]]
    [etaira.ui.nn.top-controls :refer [top-controls]]
    [etaira.ui.nn.data-column :refer [data-column]]
-   [etaira.ui.nn.features-column :refer [features-column]]))
+   [etaira.ui.nn.features-column :refer [features-column]]
+   [etaira.ui.nn.hidden-layers-column :refer [hidden-layers-column]]
+   [etaira.ui.nn.output-column :refer [output-column]]))
 
 (defn main-view []
   (div :#main-part.l--page
        (data-column)
-       (features-column)))
+       (features-column)
+       (hidden-layers-column)
+       (output-column)))
 
 (defsc NeuralNetwork [this {}]
   {}
