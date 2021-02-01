@@ -25,3 +25,4 @@ log.txt
 yarn.lock
 .lsp/
 resources/public/css/main.css
+firebase.json
