@@ -28,7 +28,9 @@
       #_[:link {:href "/css/main.css"
               :rel  "stylesheet"}]
       [:link {:rel "shortcut icon" :href "data:image/x-icon;" :type "image/x-icon"}]
-      [:script (str "var fulcro_network_csrf_token = '" csrf-token "';")]]
+      [:script (str "var fulcro_network_csrf_token = '" csrf-token "';")]
+      ;;[:script {:src "https://d3js.org/d3.v6.min.js"}]
+      ]
      [:body
       [:div#app]
       [:script {:src "/js/main/main.js"}]]]))

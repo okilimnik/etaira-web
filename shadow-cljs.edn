@@ -2,37 +2,49 @@
  :nrepl    {:port 9000}
  :jvm-opts ["-Xmx2G"]
  :builds   {:app     {:target     :browser
-                       :output-dir "resources/public/js/main"
-                       :asset-path "/js/main"
-                       :dev        {:compiler-options {:external-config {:guardrails {:emit-spec? true :throw? false}}}}
-                       :modules    {:main {:init-fn etaira.client/init}}
-                       :js-options {:resolve
-                                    {
-                                     ;; for performance checking during dev
+                      :output-dir "resources/public/js/main"
+                      :asset-path "/js/main"
+                      :dev        {:compiler-options {:external-config {:guardrails {:emit-spec? true :throw? false}}}}
+                      :modules    {:main {:init-fn etaira.client/init}}
+                      :js-options {:resolve
+                                   {;; for performance checking during dev
                                      ;;"react-dom" {:target  :npm
                                      ;;:require "react-dom/cjs/react-dom.production.min.js"}
                                      ;;"react"     {:target  :npm
                                      ;;:require "react/cjs/react.production.min.js"}
 
                                      ;; Make js-joda-timezone a reasonable build size
-                                     "js-joda-timezone"
-                                     {:target  :npm
-                                      :require "js-joda-timezone/dist/js-joda-timezone-10-year-range.min.js"}}}
-                       :devtools   {:preloads   [com.fulcrologic.fulcro.inspect.preload]
-                                    :after-load etaira.client/refresh}}
+                                    "js-joda-timezone"
+                                    {:target  :npm
+                                     :require "js-joda-timezone/dist/js-joda-timezone-10-year-range.min.js"}}}
+                      :devtools   {:preloads   [com.fulcrologic.fulcro.inspect.preload]
+                                   :after-load etaira.client/refresh}}
 
-            :test     {:target           :browser-test
-                       :test-dir         "resources/public/js/test"
-                       :ns-regexp        "-spec$"
-                       :compiler-options {:static-fns      false
-                                          :external-config {:guardrails {:throw? true :emit-spec? true}}}
-                       :js-options       {:resolve {"react-dom" {:target  :npm
-                                                                 :require "react-dom/cjs/react-dom.production.min.js"}
-                                                    "react"     {:target  :npm
-                                                                 :require "react/cjs/react.production.min.js"}}}
-                       :devtools         {:http-port          8081
-                                          :http-resource-root "public"
-                                          :http-root          "resources/public/js/test"}}
+            :test {:target     :node-test
+                   :output-to "test/cljs/etaira_web/node-tests.js"
+                   :compiler-options {:output-feature-set :es6
+                                      :static-fns false}} ; Allows re-defs in testing
+                                     ; Need a separate build for :autorun b/c when that is set, the process code is not returned, and thus the buildspec can't detect failure
+            :test-auto {:target     :node-test
+                        :autorun true
+                        :output-to "test/cljs/etaira_web/node-tests.js"
+                        :compiler-options {:output-feature-set :es6
+                                           :static-fns false}} ; Allows re-defs in testing
+
+
+            ;:test     
+            #_{:target           :browser-test
+               :test-dir         "resources/public/js/test"
+               :ns-regexp        "-spec$"
+               :compiler-options {:static-fns      false
+                                  :external-config {:guardrails {:throw? true :emit-spec? true}}}
+               :js-options       {:resolve {"react-dom" {:target  :npm
+                                                         :require "react-dom/cjs/react-dom.production.min.js"}
+                                            "react"     {:target  :npm
+                                                         :require "react/cjs/react.production.min.js"}}}
+               :devtools         {:http-port          8081
+                                  :http-resource-root "public"
+                                  :http-root          "resources/public/js/test"}}
 
             :ci-tests {:target           :karma
                        :js-options       {:js-provider :shadow}
@@ -41,3 +53,13 @@
                        :output-to        "target/ci.js"
                        :ns-regexp        "-spec$"}}}
 
+:test {:target     :node-test
+       :output-to "test/cljs/videra_web/node-tests.js"
+       :compiler-options {:output-feature-set :es6
+                          :static-fns false}} ; Allows re-defs in testing
+  ; Need a separate build for :autorun b/c when that is set, the process code is not returned, and thus the buildspec can't detect failure
+:test-auto {:target     :node-test
+            :autorun true
+            :output-to "test/cljs/videra_web/node-tests.js"
+            :compiler-options {:output-feature-set :es6
+                               :static-fns false}} ; Allows re-defs in testing
