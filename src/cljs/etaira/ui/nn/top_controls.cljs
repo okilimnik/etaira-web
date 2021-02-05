@@ -2,7 +2,8 @@
   (:require
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
    [com.fulcrologic.fulcro.dom :as dom :refer [div button i span label select
-                                               option h4 p canvas input]]))
+                                               option h4 p canvas input]]
+   [etaira.nn.dataset :refer [shuffle!]]))
 
 (def learning-rates
   [{:value "0.00001" :label "0.00001"}
@@ -33,6 +34,8 @@
    {:value "regression" :label "Regression"}])
 
 (defn top-controls []
+  (js/console.log "d3:" js/d3)
+  (println (shuffle! [1 2 3 4 5]))
   (div :#top-controls
        (div :.container.l--page
             (div :.timeline-controls

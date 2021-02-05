@@ -8,6 +8,7 @@
            edn-query-language/eql                 {:mvn/version "1.0.1"}
            com.taoensso/encore                    {:mvn/version "3.1.0"}
            com.fulcrologic/guardrails             {:mvn/version "0.0.12"}
+           binaryage/oops                         {:mvn/version "0.7.0"}
 
            com.fulcrologic/fulcro-rad-kvstore     {:mvn/version "1.0.0-RC1"}
            io.replikativ/konserve                 {:mvn/version "0.6.0-alpha2"}
@@ -51,7 +52,7 @@
                        :extra-deps  {lambdaisland/garden-watcher         {:mvn/version "1.0.27"}}
                        :main-opts ["-m" "garden-watcher.main" "etaira.css"]}
 
-           :test      {:extra-paths ["src/shared-tests"]
+           :test      {
                        :extra-deps  {fulcrologic/fulcro-spec {:mvn/version "3.1.6"}}}
 
            :run-tests {:main-opts  ["-m" "kaocha.runner"]
