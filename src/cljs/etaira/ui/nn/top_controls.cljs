@@ -34,8 +34,6 @@
    {:value "regression" :label "Regression"}])
 
 (defn top-controls []
-  (js/console.log "d3:" js/d3)
-  (println (shuffle! [1 2 3 4 5]))
   (div :#top-controls
        (div :.container.l--page
             (div :.timeline-controls
