@@ -27,8 +27,6 @@ spec:
             secretKeyRef:
               name: firebase
               key: credentials
-        - name: GOOGLE_APPLICATION_CREDENTIALS
-          value: "./firebase.json"
 ---
 apiVersion: v1             
 kind: Service

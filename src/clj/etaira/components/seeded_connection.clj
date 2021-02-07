@@ -15,6 +15,7 @@
           :start
           {:main
            (do 
+             (println (:firebase/config config))
              (spit "./firebase.json" (:firebase/config config))
              (FirebaseApp/initializeApp (.build (doto (FirebaseOptions/builder)
                                                     (.setCredentials (GoogleCredentials/fromStream (FileInputStream. "./firebase.json")))
