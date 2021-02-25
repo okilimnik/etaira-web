@@ -99,31 +99,31 @@
                    ())
 
          update-circles (fn [container points]
-          (let [x-domain (-> x-scale
-                             (ocall :domain))
-                y-domain (-> y-scale
-                             (ocall :domain))
-                points (-> points
-                           (ocall :filter (fn [p]
-                                            (and (>= (get p :x) (aget x-domain 0)) (<= (get p :x) (aget x-domain 1))
-                                                 (>= (get p :y) (aget y-domain 0)) (<= p (aget y-domain 1))))))
-                selection (-> container
-                              (ocall :selectAll "circle")
-                              (ocall :data points))
-                _       (-> selection
-                            (ocall :enter)
-                            (ocall :append "circle")
-                            (ocall :attr "r" 3))
-                _       (-> selection
-                            (ocall :attr #js {:cx (fn [d]
-                                                    (x-scale (oget d :x)))
-                                              :cy (fn [d]
-                                                    (y-scale (oget d :y)))})
-                            (ocall :style "fill" (fn [d]
-                                                   (color (oget d :label)))))
-                _        (-> selection
-                             (ocall :exit)
-                             (ocall :remove))]))
+                          (let [x-domain (-> x-scale
+                                             (ocall :domain))
+                                y-domain (-> y-scale
+                                             (ocall :domain))
+                                points (-> points
+                                           (ocall :filter (fn [p]
+                                                            (and (>= (get p :x) (aget x-domain 0)) (<= (get p :x) (aget x-domain 1))
+                                                                 (>= (get p :y) (aget y-domain 0)) (<= p (aget y-domain 1))))))
+                                selection (-> container
+                                              (ocall :selectAll "circle")
+                                              (ocall :data points))
+                                _       (-> selection
+                                            (ocall :enter)
+                                            (ocall :append "circle")
+                                            (ocall :attr "r" 3))
+                                _       (-> selection
+                                            (ocall :attr #js {:cx (fn [d]
+                                                                    (x-scale (oget d :x)))
+                                                              :cy (fn [d]
+                                                                    (y-scale (oget d :y)))})
+                                            (ocall :style "fill" (fn [d]
+                                                                   (color (oget d :label)))))
+                                _        (-> selection
+                                             (ocall :exit)
+                                             (ocall :remove))]))
 
         update-test-points (fn [points]
                              (if (get settings :no-svg)
@@ -177,7 +177,8 @@
                     :svg svg
                     :update-test-points update-test-points
                     :update-points update-points
-                    :update-background update-background})))
+                    :update-background update-background
+                    :update-circles update-circles})))
 
 
   
