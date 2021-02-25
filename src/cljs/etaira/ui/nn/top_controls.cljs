@@ -3,7 +3,7 @@
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
    [com.fulcrologic.fulcro.dom :as dom :refer [div button i span label select
                                                option h4 p canvas input]]
-   [etaira.nn.dataset :refer [shuffle!]]))
+   #_[etaira.nn.dataset :refer [shuffle!]]))
 
 (def learning-rates
   [{:value "0.00001" :label "0.00001"}
