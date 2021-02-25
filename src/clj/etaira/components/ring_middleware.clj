@@ -25,12 +25,10 @@
               :rel  "stylesheet"}]
       [:link {:href "https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons"
               :rel  "stylesheet"}]
-      #_[:link {:href "/css/main.css"
+      [:link {:href "/css/main.css"
               :rel  "stylesheet"}]
       [:link {:rel "shortcut icon" :href "data:image/x-icon;" :type "image/x-icon"}]
-      [:script (str "var fulcro_network_csrf_token = '" csrf-token "';")]
-      ;;[:script {:src "https://d3js.org/d3.v6.min.js"}]
-      ]
+      [:script (str "var fulcro_network_csrf_token = '" csrf-token "';")]]
      [:body
       [:div#app]
       [:script {:src "/js/main/main.js"}]]]))

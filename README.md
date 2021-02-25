@@ -9,9 +9,11 @@ able to edit it, just start a shadow-cljs watch:
 -----
 $ yarn
 $ clojure -M:cljs watch app
+$ clojure -M:css
 -----
 
 if you don't have `yarn`, use `npm install` instead.
+
 
 
 [source, bash]
