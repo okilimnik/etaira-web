@@ -22,11 +22,8 @@ spec:
         ports:
         - containerPort: 3000
         env:
-        - name: FIREBASE_CONFIG
-          valueFrom: 
-            secretKeyRef:
-              name: firebase
-              key: credentials
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: ./firebase.json
 ---
 apiVersion: v1             
 kind: Service

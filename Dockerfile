@@ -19,5 +19,6 @@ RUN clojure -M:app --aliases package --main-class etaira.components.server --lev
 
 FROM openjdk:11.0.9.1-jre
 COPY --from=1 /usr/src/app/target .
+COPY --from=1 /usr/src/app/firebase.json ./
 EXPOSE 3000
 CMD ["java", "-jar", "app.jar"]
