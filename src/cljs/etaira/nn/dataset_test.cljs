@@ -1,7 +1,7 @@
 (ns etaira.nn.dataset-test
   (:require [cljs.test :refer-macros [deftest is testing run-tests]]
             [etaira.nn.dataset :refer [rand-uniform shuffle! normal-random dist regress-plane classify-two-gauss-data regress-gaussian 
-                                       classify-spiral-data classify-circle-data classify-x-o-r-data]]))
+                                       classify-spiral-data classify-circle-data classify-xor-data testo tr rt]]))
 
 (deftest test-numbers
   (is (= 1 1)))
@@ -45,10 +45,9 @@
 (deftest classify-circle-data-test
   (println (classify-circle-data 4 1)))
 
-(deftest classify-x-o-r-data-test
-  (println (classify-x-o-r-data 4 8)))
+(deftest classify-xor-data-test
+  (println (classify-xor-data 4 8)))
 
-(deftest test-operator
-  (println (- 8 nil))
-  (is (number? (- nil 9)))
-  (println (str nil "hi" nil "bro")))
+(deftest testo-test
+  (println (testo 1 (if true tr rt)))
+  )

@@ -151,8 +151,8 @@
          (gen-points-in-out-circle (rand-uniform 0 (* radius 0.5)))
          (gen-points-in-out-circle (rand-uniform (* radius 0.7) radius)))))
 
-(defn classify-x-o-r-data [num-samples noise]
-  (let [get-x-o-r-label (fn [p]
+(defn classify-xor-data [num-samples noise]
+  (let [get-xor-label (fn [p]
                           (if (>= (* (get p :x) (get p :y)) 0)
                             1
                             -1))]
@@ -170,10 +170,15 @@
         (if (> @y 0)
           (reset! y (+ @y padding))
           (reset! y (- @y padding)))
-        (reset! label (get-x-o-r-label {:x (+ @x noise-x) :y (+ @y noise-y)}))
+        (reset! label (get-xor-label {:x (+ @x noise-x) :y (+ @y noise-y)}))
         (if (< i num-samples)
           (recur (inc i) (conj result {:x @x :y @y :label @label}))
           result)))))
 
 
+(def tr 5)
+(def rt 1)
 
+(defn testo [x y]
+  (let [xy (* x y)]
+    xy))
