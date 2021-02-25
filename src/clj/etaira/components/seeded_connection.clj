@@ -16,7 +16,7 @@
           {:main
            (do
              (FirebaseApp/initializeApp (.build (doto (FirebaseOptions/builder)
-                                                  (.setCredentials (GoogleCredentials/fromStream (FileInputStream. "firebase.json")))
+                                                  (.setCredentials (GoogleCredentials/getApplicationDefault))
                                                   (.setDatabaseUrl (:firebase/database-url config)))))
              (make-key-store (<!! (new-firebase-store {:db   (FirebaseDatabase/getInstance)
                                                        :root "/hetaira-test"}))
