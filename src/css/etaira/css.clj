@@ -28,12 +28,12 @@
       :color "rgba(255, 255, 255, 1)"}]]
 
    [:h2
-    {:margin [(px 5) 0]
+    {:margin "5px 0"
      :font-weight "300"
      :font-size (px 18)}]
 
    [:h3
-    {:margin [(px 10) 0]}]
+    {:margin "10px 0"}]
 
    [:p
     [:a
@@ -104,7 +104,7 @@
      :height (px 24)
      :font-size (px 18)
      :border-radius "50%"
-     :margin [0 (px 1)]
+     :margin "0 1px"
      :background-color "rgba(0,0,0,0.05)"
      :outline "none"
      :border "none"
@@ -127,14 +127,14 @@
 
    [:.hide-button
     {:cursor "pointer"
-     :padding [(px 6) (px 4) (px 8) (px 4)]
-     :border-left [(px 1) "solid" "#2c2c2c"]
-     :border-bottom [(px 1) "solid" "#2c2c2c"]
+     :padding "6px 4px 8px 4px"
+     :border-left "1 px  solid #2c2c2c"
+     :border-bottom "1px solid #2c2c2c"
      :position "fixed"
      :right (px 0)
      :background "#1a1a1a"
      :color "#eee"
-     :font [(px 11) "'Lucida Grande'" "sans-serif"]
+     :font "11 px  'Lucida Grande'  sans-serif"
      :display "table"}]
 
    ;;Header
@@ -693,7 +693,7 @@
     [:#network
      [:.core
       [:.link
-       {:stroke-dasharray ["9" "1"]
+       {:stroke-dasharray "9 1"
         :stroke-dashoffset "1"}]]] ;;;;;;;;/*-webkit-animation: 0.5s linear 0s infinite flowing;*/
     
     [:#network
@@ -754,7 +754,7 @@
     
     [:.hidden-layers
      [:#num-layers
-      {:margin [0 (px 10)]
+      {:margin "0  10px"
        :width (px 10)
        :display "inline-block"}]]
     
@@ -896,7 +896,7 @@
      [:.mdl-slider.is-upgraded
       [(s/& (s/focus (s/not s/active)))
        [::-webkit-slider-thumb
-        {:box-shadow [0 0 0 (px 10) "rgba(0,0,0, 0.12)"]}]]]]
+        {:box-shadow "0 0 0 10px rgba(0,0,0, 0.12)"}]]]]
     
 
    ;;------------------------------------
