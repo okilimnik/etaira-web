@@ -50,19 +50,19 @@
      :margin-right "auto"}]
    
    [:.l--page
-    {:width (px 944)
+    {:width "90%"
      :margin-left "auto"
      :margin-right "auto"}]
    
-   (at-media
+   #_(at-media
     {:min-width (px 1180)}
     [:.l--page
-     {:width (px 1100)}])
+     {:width "90%"}])
 
-   (at-media
+   #_(at-media
     {:min-width (px 1400)}
     [:.l--page
-     {:width (px 1220)}])
+     {:width "90%"}])
 
    ;;Buttons
    
@@ -94,7 +94,7 @@
       {:font-size (px 20)
        :color "rgba(0, 0, 0, 0.7)"}]]]
 
-   [:.button
+   #_[:.button
     {:cursor "pointer"
      :display "-webkit-box -moz-box -ms-flexbox -webkit-flex flex"
      :align-items "center"
@@ -226,7 +226,7 @@
    
    [:#top-controls
     [:.container
-     {:display "-webkit-box -moz-box -ms-flexbox -webkit-flex flex"
+     {:display "flex" ;;-webkit-box -moz-box -ms-flexbox -webkit-flex
       :-webkit-justify-content "space-betweenspace-between"
       :justify-content "space-between"}]]
    
@@ -241,28 +241,28 @@
     [:.material-icons
      {:color "white"
       :font-size (px 36)
-      :transform "translate(-18px, -12px)"}]]
+      :transform "translate(0px, 0px)"}]] ;;;;transform: translate(-18px,-12px);
    
- #_[:#play-pause-button
+ [:#play-pause-button
    [:.material-icons
-    [:&:nth-of-type(2)
+    ["&:nth-of-type(2)"
      {:display "none"}]]]
    
-  #_ [:#play-pause-button
+   [:#play-pause-button
     [:.playing
      [:.material-icons
-      [:&:nth-of-type(1)
+      ["&:nth-of-type(1)"
        {:display "none"}]]]]
    
-  #_ [:#play-pause-button
+   [:#play-pause-button
     [:.playing
      [:.material-icons
-      [:&:nth-of-type(2)
+      ["&:nth-of-type(2)"
        {:display "inherit"}]]]]
 
    [:#top-controls
     [:.control
-     {:flex-grow "1"
+     {:flex-grow 1
       :max-width (px 180)
       :min-width (px 110)
       :margin-left (px 30)
@@ -315,7 +315,7 @@
    [:#top-controls
     [:.control
      [:.select
-      [:&:after
+      ["&::after"
        {:class "\"material-icons\"";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;????????????
         :content "\"arrow_drop_down\""
         :color "#999"
@@ -323,7 +323,7 @@
         :font-weight "normal"
         :font-style "normal"
         :font-size (px 18)
-        :line-height "1"
+        :line-height 1
         :letter-spacing "normal"
         :text-transform "none"
         :display "inline-block"
@@ -357,7 +357,7 @@
     ;;;;;;;main part
     
     [:#main-part
-     {:display "-webkit-box -moz-box -ms-flexbox -webkit-flex flex"
+     {:display "flex" ;;-webkit-box -moz-box -ms-flexbox -webkit-flex
       :-webkit-justify-content "space-between"
       :justify-content "space-between"
       :margin-top (px 30)
@@ -372,7 +372,7 @@
     
     [:#main-part
      [:h4
-      {:display "-webkit-box -moz-box -ms-flexbox -webkit-flex flex"
+      {:display "flex" ;;-webkit-box -moz-box -ms-flexbox -webkit-flex
        :align-items "center"
        :font-weight "400"
        :font-size (px 16)
@@ -447,15 +447,15 @@
        {:fill "#bbb"
         :dominant-baseline "auto"}]]]
     
-    #_[:#heatmap
+    [:#heatmap
      [:.tick
-      [:&:nth-child(7)
+      ["&:nth-child(7)"
        [:text
         {:fill "#333"}]]]]
     
-    #_[:#heatmap
+    [:#heatmap
      [:.tick
-      [:&:nth-child(7)
+      ["&:nth-child(7)"
        [:line
         {:stroke "#999"}]]]]
     
@@ -481,10 +481,10 @@
         :height (px 34)
         :margin "0 14px 14px 0"}]]
     
-    #_[:.data
+    [:.data
      [:.column
       [:.dataset
-       [:&:nth-of-type(2);;;;;;;;;;;;;;;;;;;;;2n
+       ["&:nth-of-type(2n)"
         {:margin-right 0}]]]]
     
     [:.data.column
@@ -867,27 +867,27 @@
     
     [:#main-part
      [:.mdl-slider.is-upgraded
-      [:&:&:-webkit-slider-thumb
+      ["&::-webkit-slider-thumb"
       {:background-color "#183D4E"}]]]
     
     [:#main-part
      [:.mdl-slider.is-upgraded
-      [:&:&:-moz-range-thumb
+      ["&::-moz-range-thumb"
       {:background-color "#183D4E"}]]]
     
     [:#main-part
      [:.mdl-slider.is-upgraded
-      [:&:&:-ms-thumb
+      ["&::-ms-thumb"
       {:background-color "#183D4E"}]]]
     
     [:#main-part
      [:.mdl-slider.is-upgraded.is-lowest-value
-      [:&:&:-webkit-slider-thumb
+      ["&::-webkit-slider-thumb"
       {:border-color "#183D4E"}]]]
     
     [:#main-part
      [:.mdl-slider.is-upgraded.is-lowest-value
-      [::-moz-range-thumb
+      ["&::-moz-range-thumb"
       {:border-color "#183D4E"}]]]
     
     ;;;;;;;;;;;Keep grey focus circle for non-start values
@@ -895,7 +895,7 @@
     [:#main-part
      [:.mdl-slider.is-upgraded
       [(s/& (s/focus (s/not s/active)))
-       [::-webkit-slider-thumb
+       ["&::-webkit-slider-thumb"
         {:box-shadow "0 0 0 10px rgba(0,0,0, 0.12)"}]]]]
     
 
