@@ -51,25 +51,25 @@
                  (span :.label "Epoch")
                  (span :#iter-number.value))
             (div :.control.ui-learningRate
-                 (label {:for "learningRate"} "Learning rate")
+                 (label {:htmlFor "learningRate"} "Learning rate")
                  (div :.select
                       (select :#learningRate
                               (for [{:keys [value label]} learning-rates]
                                 (option {:value value} label)))))
             (div :.control.ui-activation
-                 (label {:for "activations"} "Activation")
+                 (label {:htmlFor "activations"} "Activation")
                  (div :.select
                       (select :#activations
                               (for [{:keys [value label]} activations]
                                 (option {:value value} label)))))
             (div :.control.ui-regularization
-                 (label {:for "regularizations"} "Regularization")
+                 (label {:htmlFor "regularizations"} "Regularization")
                  (div :.select
                       (select :#regularizations
                               (for [{:keys [value label]} regularizations]
                                 (option {:value value} label)))))
             (div :.control.ui-problem
-                 (label {:for "problem"} "Problem type")
+                 (label {:htmlFor "problem"} "Problem type")
                  (div :.select
                       (select :#problem
                               (for [{:keys [value label]} problems]

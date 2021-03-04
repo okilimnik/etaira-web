@@ -36,8 +36,8 @@
     (+ mean (* (js/Math.sqrt variance) result))))
 
 (defn dist [a b]
-  (let [dx (- (get a :x) (get b :x))
-        dy (- (get a :y) (get b :y))]
+  (let [dx (- (:x a) (:x b))
+        dy (- (:y a) (:y b))]
     (js/Math.sqrt (+ (* dx dx) (* dy dy)))))
 
 (defn regress-plane [num-samples noise]
@@ -135,21 +135,27 @@
                            (if (< (dist p center) (* radius 0.5))
                              1
                              -1))
-        gen-points-in-out-circle (fn [r points]
-                                   (loop [i 0
-                                          result points]
-                                     (let [angle (rand-uniform 0 (* 2 js/Math.PI))
-                                           x (* r (js/Math.sin angle))
-                                           y (* r (js/Math.cos angle))
-                                           noise-x (* (rand-uniform (- radius) radius) noise)
-                                           noise-y (* (rand-uniform (- radius) radius) noise)
-                                           label (get-circle-label {:x (+ x noise-x) :y (+ y noise-y)} {:x 0 :y 0})]
-                                       (if (< i (/ num-samples 2))
-                                         (recur (inc i) (conj result {:x x :y y :label label}))
-                                         result))))]
-    (->> []
-         (gen-points-in-out-circle (rand-uniform 0 (* radius 0.5)))
-         (gen-points-in-out-circle (rand-uniform (* radius 0.7) radius)))))
+        ;; Generate positive points inside the circle.
+        inside-points (for [i (range (/ num-samples 2))]
+                        (let [r (rand-uniform 0 (* radius 0.5))
+                              angle (rand-uniform 0 (* 2 js/Math.PI))
+                              x (* r (js/Math.sin angle))
+                              y (* r (js/Math.cos angle))
+                              noise-x (* (rand-uniform (- radius) radius) noise)
+                              noise-y (* (rand-uniform (- radius) radius) noise)
+                              label (get-circle-label {:x (+ x noise-x) :y (+ y noise-y)} {:x 0 :y 0})]
+                          {:x x :y y :label label}))
+        ;; Generate negative points outside the circle.
+        outside-points (for [i (range (/ num-samples 2))]
+                         (let [r (rand-uniform (* radius 0.7) radius)
+                               angle (rand-uniform 0 (* 2 js/Math.PI))
+                               x (* r (js/Math.sin angle))
+                               y (* r (js/Math.cos angle))
+                               noise-x (* (rand-uniform (- radius) radius) noise)
+                               noise-y (* (rand-uniform (- radius) radius) noise)
+                               label (get-circle-label {:x (+ x noise-x) :y (+ y noise-y)} {:x 0 :y 0})]
+                           {:x x :y y :label label}))]
+    (vec (concat inside-points outside-points))))
 
 (defn classify-xor-data [num-samples noise]
   (let [get-xor-label (fn [p]

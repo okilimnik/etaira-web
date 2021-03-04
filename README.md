@@ -8,17 +8,13 @@ able to edit it, just start a shadow-cljs watch:
 [source, bash]
 -----
 $ yarn
-$ clojure -M:cljs watch app
-$ clojure -M:css
+$ clj -M:cljs watch app
+$ clj -M:css
 -----
-
-if you don't have `yarn`, use `npm install` instead.
-
-
 
 [source, bash]
 Replace 'your-firebase-secret' with your firebase credentials.
 -----
 $ export FIREBASE_CONFIG=your-firebase-secret
-$ clojure -M:clj
+$ clj -M:clj
 -----

@@ -23,7 +23,7 @@
                         (canvas :.data-thumbnail {:data-dataset dataset})))))
        (div
         (div :.ui-percTrainData
-             (label {:for "percTrainData"} "Ratio of training to test data:  "
+             (label {:htmlFor "percTrainData"} "Ratio of training to test data:  "
                     (span :.value "XX") "%")
              (p :.slider
                 (input :#percTrainData.mdl-slider.mdl-js-slider
@@ -32,7 +32,7 @@
                         :max "90"
                         :step "10"})))
         (div :.ui-noise
-             (label {:for "noise"} "Noise:  "
+             (label {:htmlFor "noise"} "Noise:  "
                     (span :.value "XX"))
              (p :.slider
                 (input :#noise.mdl-slider.mdl-js-slider
@@ -41,7 +41,7 @@
                         :max "50"
                         :step "5"})))
         (div :.ui-batchSize
-             (label {:for "batchSize"} "Batch size:  "
+             (label {:htmlFor "batchSize"} "Batch size:  "
                     (span :.value "XX"))
              (p :.slider
                 (input :#batchSize.mdl-slider.mdl-js-slider

@@ -24,16 +24,16 @@
        (div :#heatmap)
        (div {:style
              {:float "left"
-              :margin-top "20px"}}
+              :marginTop "20px"}}
             (div {:style
                   {:display "flex"
-                   :align-items "center"}}
+                   :alignItems "center"}}
                  ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;Gradient color scale
 
                  (div :.label
                       {:style
                        {:width "105px"
-                        :margin-right "10px"}}
+                        :marginRight "10px"}}
                       "Colors shows data, neuron and weight values.")
                  (svg :#colormap
                       {:width "150"
@@ -55,15 +55,15 @@
         (div {:style
               {:display "flex"}}
              (label :.ui-showTestData.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect
-                    {:for "show-test-data"}
+                    {:htmlFor "show-test-data"}
                     (input :#show-test-data.mdl-checkbox__input
                            {:type "checkbox"
-                            :checked "true"})
+                            :checked true})
                     (span :.mdl-checkbox__label.label "Show test data"))
              (label :.ui-discretize.mdl-checkbox.mdl-js-checkbox.mdl-js-ripple-effect
-                    {:for "discretize"}
+                    {:htmlFor "discretize"}
                     (input :#discretize.mdl-checkbox__input
                            {:type "checkbox"
-                            :checked "true"})
+                            :checked true})
                     (span :.mdl-checkbox__label.label "Discretize output")))))
   )
