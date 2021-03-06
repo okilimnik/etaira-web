@@ -114,14 +114,16 @@
     (-> (ocall d3-selection :selectAll ".dataset")
         (ocall :style "display" "none"))
     (case problem
-      :classification (for [dataset (keys datasets)]
-                        (let [canvas (js/document.querySelector (str "canvas[data-dataset=" dataset "]"))
-                              data-generator (get datasets dataset)]
-                          (render-thumbnail canvas data-generator)))
-      :regression (for [reg-dataset (keys reg-datasets)]
-                    (let [canvas (js/document.querySelector (str "canvas[data-regDataset=" reg-dataset "]"))
-                          data-generator (get reg-datasets reg-dataset)]
-                      (render-thumbnail canvas data-generator)))
+      :classification (doall
+                       (for [dataset (keys datasets)]
+                         (let [canvas (js/document.querySelector (str "canvas[data-dataset=" dataset "]"))
+                               data-generator (get datasets dataset)]
+                           (render-thumbnail canvas data-generator))))
+      :regression (doall
+                   (for [reg-dataset (keys reg-datasets)]
+                     (let [canvas (js/document.querySelector (str "canvas[data-regDataset=" reg-dataset "]"))
+                           data-generator (get reg-datasets reg-dataset)]
+                       (render-thumbnail canvas data-generator))))
       "not implemented")))
 
 #_(defn draw-node [cx cy node-id is-input? container node?]
