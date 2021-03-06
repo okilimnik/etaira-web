@@ -34,10 +34,9 @@
 
 (def datasets
   {"circle" dataset/classify-circle-data
-   ;;"xor"    dataset/classify-xor-data
-   ;"gauss"  dataset/classify-two-gauss-data
-   ;"spiral" dataset/classify-spiral-data
-   })
+   "xor"    dataset/classify-xor-data
+   "gauss"  dataset/classify-two-gauss-data
+   "spiral" dataset/classify-spiral-data})
 
 (def reg-datasets
   {"reg-plane" dataset/regress-plane
