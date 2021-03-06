@@ -56,8 +56,8 @@
                  (div :.ui.item
                       (button :.ui.primary.button {:onClick #(auth/authenticate! this :local nil)}
                               "Login")))))
-     (div :.ui.container.segment
-          (ui-authenticator authenticator)
-          (ui-main-router router)))))
+     (div
+      (ui-authenticator authenticator)
+      (ui-main-router router)))))
 
 (def ui-root (comp/factory Root))
