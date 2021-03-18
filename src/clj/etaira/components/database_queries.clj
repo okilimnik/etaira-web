@@ -12,6 +12,12 @@
     (<!!
       (queries/get-all-accounts key-store query-params))))
 
+(defn get-all-neural-networks
+  [env query-params]
+  (when-let [key-store (kv-pathom/env->key-store env)]
+    (<!!
+     (queries/get-all-neural-networks key-store query-params))))
+
 (defn get-login-info
   "Get the account name, time zone, and password info via a username (email)."
   [env username]
