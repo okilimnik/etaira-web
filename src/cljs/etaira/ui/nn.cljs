@@ -11,6 +11,7 @@
    [etaira.ui.nn.output-column :refer [output-column]]
    [com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]
    [etaira.nn.dataset :as dataset]
+   ["@tensorflow/tfjs" :as tf]
    ["d3" :as d3]
    ["d3-selection" :as d3-selection]))
 
@@ -19,6 +20,14 @@
 (def ^:const NUM_SAMPLES_CLASSIFY 500)
 (def ^:const NUM_SAMPLES_REGRESS 1200)
 (def ^:const DENSITY 100)
+
+(defn INPUTS [name]
+  (case name 
+    :x (fn [x y] {:x x :label "X_1"})
+    :y (fn [x y] {:y y :label "X_2"})
+    :xSquared (fn [x y] {:x (* x x) :label "X_1^2"})
+    :ySquared (fn [x y] {:y (* y y) :label "X_2^2"})
+    :xTimesY (fn [x y] {:y (* x y) :label "X_1X_2"})))
 
 (defn main-view []
   (div :#main-part.l--page
@@ -88,7 +97,6 @@
 
 (defn draw-dataset-thumbnails [this]
   (let [problem (::problem (comp/get-initial-state this))
-        _ (println "problem: " problem)
         render-thumbnail (fn [canvas data-generator]
                            (let [w 100
                                  h 100]
@@ -175,11 +183,45 @@
                                              (reset! parameters-changed? true)
                                              (reset))))))
 
-#_(defn reset [{:etaira.ui.nn/keys [num-hidden-layers problem]} on-startup?]
+(defprotocol Resetable
+  (reset [this]))
+
+(defprotocol Pausable
+  (pause [this]))
+
+(defrecord Player []
+  Pausable
+  (pause [this] nil))
+
+(defrecord LineChart []
+  Resetable
+  (reset [this] nil))
+
+(defn construct-input [x y]
+  )
+
+(defn build-model [num-features]
+  (let [input-shape #js [1 num-features]
+        layers (oget tf :layers)]
+    (doto (.sequential tf)
+      ;(.add (.layerNormalization layers #js {:inputShape input-shape}))
+      (.add (.dense layers #js {:inputShape input-shape}))
+      (.add (.dense layers #js {:units 1}))
+      (.compile #js {:loss "meanSquaredError" :optimizer "rmsprop"})
+      (.summary))))
+
+(defn draw-network [])
+
+(defn reset [this on-startup?]
+  (let [state (comp/get-initial-state this)
+        num-hidden-layers  (::num-hidden-layers state)
+        problem (::problem state)
+        player (::player state)
+        line-chart (::line-chart state)]
     (.reset line-chart)
     (when-not on-startup?
       (user-has-interacted))
-    (pause player)
+    (.pause player)
 
     (let [suffix (if (= num-hidden-layers 1) "" "s")]
       (-> (ocall d3 :select "#layers-label")
@@ -187,18 +229,15 @@
       (-> (ocall d3 :select "#num-layers")
           (ocall :text num-hidden-layers)))
 
-  ;; Make a simple network.
-    (let [iter 0
-          numInputs (oget (construct-input 0 0) :length)
-          shape 1
-          outputActivation (if (= problem :regression)
-                             :linear
-                             :tanh)
-          network (build-network)
+    (let [num-features (oget (construct-input 0 0) :length)
+          output-activation (if (= problem :regression)
+                              :linear
+                              :tanh)
+          model (build-model num-features)
           lossTrain (get-loss network train-data)
           lossTest (get-loss network test-data)]
       (draw-network network)
-      (update-ui true)))
+      (update-ui true))))
 
 
 
@@ -233,13 +272,15 @@
       ::initZero           false
       ::hideText           false
       ::num-hidden-layers    1
-      ::hiddenLayerControls []})
+      ::hiddenLayerControls []
+      ::player              (Player.)
+      ::line-chart          (LineChart.)})
    :componentDidMount
    (fn [this]
      (draw-dataset-thumbnails this)
      #_(make-gui this)
      #_(generate-data true)
-     #_(reset this true)
+     (reset this true)
      #_(hide-controls true))}
   (div
    (top-controls)

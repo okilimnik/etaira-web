@@ -1,11 +1,16 @@
 (ns etaira.ui
   (:require
    [com.fulcrologic.fulcro.dom :refer [div button]]
+   [com.fulcrologic.semantic-ui.modules.dropdown.ui-dropdown :refer [ui-dropdown]]
+   [com.fulcrologic.semantic-ui.modules.dropdown.ui-dropdown-menu :refer [ui-dropdown-menu]]
+   [com.fulcrologic.semantic-ui.modules.dropdown.ui-dropdown-item :refer [ui-dropdown-item]]
    [etaira.ui.login-dialog :refer [LoginForm]]
+   [etaira.ui.neural-network-model :refer [NeuralNetworkModelForm NeuralNetworkModelList]]
    [com.fulcrologic.fulcro.application :as app]
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
    [com.fulcrologic.fulcro.dom.html-entities :as ent]
    [com.fulcrologic.fulcro.routing.dynamic-routing :refer [defrouter]]
+   [com.fulcrologic.rad.form :as form]
    [com.fulcrologic.rad.authorization :as auth]
    [com.fulcrologic.rad.routing :as rroute]
    [etaira.ui.home :refer [HomePage]]
@@ -40,6 +45,12 @@
     (div
      (div :.ui.top.menu
           (div :.ui.item "Etaira")
+          (when logged-in?
+            (comp/fragment
+             (ui-dropdown {:className "item" :text "Neural Network Models"}
+                          (ui-dropdown-menu {}
+                                            (ui-dropdown-item {:onClick (fn [] (rroute/route-to! this NeuralNetworkModelList {}))} "View All")
+                                            (ui-dropdown-item {:onClick (fn [] (form/create! this NeuralNetworkModelForm))} "New")))))
           (div :.right.menu
                (div :.item
                     (div :.ui.tiny.loader {:classes [(when busy? "active")]})
