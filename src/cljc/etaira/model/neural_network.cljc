@@ -1,4 +1,4 @@
-(ns etaira.model.neural-network-model
+(ns etaira.model.neural-network
   (:require
    #?@(:clj
        [[com.wsscode.pathom.connect :as pc :refer [defmutation]]
@@ -34,46 +34,46 @@
 
 (defattr learning-rate :neural-network/learning-rate :enum
   {ao/identities        #{:neural-network/id}
-   ao/enumerated-values (mapv :value learning-rates)
-   ao/enumerated-labels (mapv :label learning-rates)
+   ao/enumerated-values (mapv :label learning-rates)
+   ao/enumerated-labels (mapv :value learning-rates)
    ao/schema            :production
    fo/default-value     "0.003"})
 
 (def activations
-  [{:value "relu" :label "ReLU"}
-   {:value "tanh" :label "Tanh"}
-   {:value "sigmoid" :label "Sigmoid"}
-   {:value "linear" :label "Linear"}])
+  {:relu "ReLU"
+   :tanh "Tanh"
+   :sigmoid "Sigmoid"
+   :linear "Linear"})
 
 (defattr activation :neural-network/activation :enum
   {ao/identities        #{:neural-network/id}
-   ao/enumerated-values (mapv :value activations)
-   ao/enumerated-labels (mapv :label activations)
+   ao/enumerated-values (keys activations)
+   ao/enumerated-labels activations
    ao/schema            :production
-   fo/default-value     "tanh"})
+   fo/default-value     :tanh})
 
 (def regularizations
-  [{:value "none" :label "None"}
-   {:value "L1" :label "L1"}
-   {:value "L2" :label "L2"}])
+  {:none "None"
+   :l1 "L1"
+   :l2 "L2"})
 
 (defattr regularization :neural-network/regularization :enum
   {ao/identities        #{:neural-network/id}
-   ao/enumerated-values (mapv :value regularizations)
-   ao/enumerated-labels (mapv :label regularizations)
+   ao/enumerated-values (keys regularizations)
+   ao/enumerated-labels regularizations
    ao/schema            :production
-   fo/default-value     "none"})
+   fo/default-value     :none})
 
 (def problems
-  [{:value "classification" :label "Classification"}
-   {:value "regression" :label "Regression"}])
+  {:classification "Classification"
+   :regression "Regression"})
 
 (defattr problem :neural-network/problem :enum
   {ao/identities        #{:neural-network/id}
-   ao/enumerated-values (mapv :value problems)
-   ao/enumerated-labels (mapv :label problems)
+   ao/enumerated-values (keys problems)
+   ao/enumerated-labels problems
    ao/schema            :production
-   fo/default-value     "classification"})
+   fo/default-value     :classification})
 
 (defattr layers :neural-network/layers :ref
   {ao/target      :neural-network-layer/id

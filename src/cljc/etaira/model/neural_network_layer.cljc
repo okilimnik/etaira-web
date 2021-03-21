@@ -20,22 +20,22 @@
    fo/default-value 1})
 
 (def neural-network-layer-types
-  ["dense"
-   "rnn"
-   "lstm"
-   "gru"
-   "conv1d"
-   "conv2d"
-   "conv3d"
-   "convLstm2d"
-   "dropout"])
+  {:dense "Dense"
+   :rnn "RNN"
+   :lstm "LSTM"
+   :gru "GRU"
+   :conv-1d "Conv1D"
+   :conv-2d "Conv2D"
+   :conv-3d "Conv3D"
+   :conv-lstm-2d "ConvLSTM2D"
+   :dropout "Dropout"})
 
 (defattr type :neural-network-layer/type :enum
   {ao/identities    #{:neural-network-layer/id}
-   ao/enumerated-values neural-network-layer-types
+   ao/enumerated-values (keys neural-network-layer-types)
    ao/enumerated-labels neural-network-layer-types
    ao/required?     true
    ao/schema        :production
-   fo/default-value "dense"})
+   fo/default-value :dense})
 
 (def attributes [id number number-of-neurons type])

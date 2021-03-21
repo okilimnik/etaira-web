@@ -18,7 +18,7 @@
 
 (defrouter MainRouter [this {:keys [current-state route-factory route-props]}]
   {:always-render-body? true
-   :router-targets      [HomePage LandingPage]}
+   :router-targets      [HomePage LandingPage NeuralNetworkForm NeuralNetworkList]}
   (div
    (div :.ui.loader {:classes [(when-not (= :routed current-state) "active")]})
    (when route-factory

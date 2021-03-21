@@ -2,29 +2,66 @@
   (:require
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
    [com.fulcrologic.fulcro.dom :as dom]
-   [etaira.model.neural-network-model :as neural-network-model]))
+   [com.fulcrologic.rad.picker-options :as picker-options]
+   [com.fulcrologic.rad.form :as form]
+   [com.fulcrologic.rad.form-options :as fo]
+   [com.fulcrologic.rad.report :as report]
+   [com.fulcrologic.rad.report-options :as ro]
+   [etaira.model.neural-network :as neural-network]
+   [etaira.model.neural-network-layer :as neural-network-layer]))
 
-(defsc NeuralNetworkForm [this {:neural-network/keys [name] :as props} {:keys [onDelete]}]
-  {:query         [:neural-network/id :neural-network/name]
-   :ident         (fn [] [:neural-network/id (:neural-network/id props)])
-   :initial-state {:neural-network/name "dsfsf" :neural-network/id 1}}
-  (dom/div {:className "a" :id "id" :style {:color "red"}}
-           (dom/p (str "name: " name))
-           (dom/button {:onClick #(onDelete name)} "X")))
+(form/defsc-form NeuralNetworkLayerForm [this props]
+  {fo/id            neural-network-layer/id
+   ::form/confirm (fn [message]
+                    (js/confirm message))
+   fo/attributes    [neural-network-layer/number-of-neurons neural-network-layer/type]
+   fo/route-prefix  "neural-network-layer"
+   fo/title         "Neural Network Layer"
+   fo/layout        [[:neural-network-layer/number-of-neurons :neural-network-layer/type]]})
 
-(def ui-neural-network (comp/factory NeuralNetworkForm {:keyfn :neural-network/id}))
+(form/defsc-form NeuralNetworkForm [this props]
+  {fo/id             neural-network/id
+   ::form/confirm (fn [message]
+                    (js/confirm message))
+   fo/attributes     [neural-network/name
+                      neural-network/learning-rate
+                      neural-network/activation
+                      neural-network/regularization
+                      neural-network/problem
+                      neural-network/layers]
+   fo/layout         [[:neural-network/name]
+                      [:neural-network/learning-rate]
+                      [:neural-network/activation]
+                      [:neural-network/regularization]
+                      [:neural-network/problem]
+                      [:neural-network/layers]]
+   fo/subforms       {:neural-network/layers {fo/ui          NeuralNetworkLayerForm
+                                              fo/can-delete? (fn [_ _] true)
+                                              fo/can-add?    (fn [_ _] true)}}
+   fo/route-prefix   "neural-network"
+   fo/title          "Edit Neural Network"})
 
-(defsc NeuralNetworkList [this {:list/keys [id label neural-networks] :as props}]
-  {:query [:list/id :list/label {:list/neural-networks (comp/get-query NeuralNetworkForm)}] ; (5)
-   :ident (fn [] [:list/id (:list/id props)])
-   :initial-state
-   {:list/id     1
-    :list/label  "label"
-    :list/neural-networks [{:id 1 :name "Sally"}]}}
-  (let [delete-neural-network (fn [item-id] (comp/transact! this [(neural-network-model/delete-neural-network {:list id :item item-id})]))] ; (4)
-    (dom/div
-     (dom/h4 label)
-     (dom/ul
-      (map #(ui-neural-network (comp/computed % {:onDelete delete-neural-network})) neural-networks)))))
+(report/defsc-report NeuralNetworkList [this props]
+  {ro/title               "All Neural Networks"
+   ro/source-attribute    :neural-network/all-neural-networks
+   ro/row-pk              neural-network/id
+   ro/columns             [neural-network/name]
 
-(def ui-neural-network-list (comp/factory NeuralNetworkList))
+   ;ro/row-query-inclusion [:account/id]
+   ;   
+
+   ro/column-headings     {:neural-network/name "Name"}
+
+   ro/controls            {::new-neural-network {:label  "New Neural Network"
+                                                 :type   :button
+                                                 :action (fn [this] (form/create! this NeuralNetworkForm))}}
+
+   ro/control-layout      {:action-buttons [::new-neural-network]}
+
+   ro/row-actions         [{:label  "Delete"
+                            :action (fn [this {:neural-network/keys [id] :as row}] (form/delete! this :neural-network/id id))}]
+
+  ; ro/form-links          {:invoice/total NeuralNetworkForm}
+
+   ro/run-on-mount?       true
+   ro/route               "neural-networks"})
