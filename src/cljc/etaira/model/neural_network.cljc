@@ -20,22 +20,22 @@
    ao/schema     :production})
 
 (def learning-rates
-  [{:value "0.00001" :label "0.00001"}
-   {:value "0.0001" :label "0.0001"}
-   {:value "0.001" :label "0.001"}
-   {:value "0.003" :label "0.003"}
-   {:value "0.01" :label "0.01"}
-   {:value "0.03" :label "0.03"}
-   {:value "0.1" :label "0.1"}
-   {:value "0.3" :label "0.3"}
-   {:value "1" :label "1"}
-   {:value "3" :label "3"}
-   {:value "10" :label "10"}])
+  {"0.00001" "0.00001"
+   "0.0001" "0.0001"
+   "0.001" "0.001"
+   "0.003" "0.003"
+   "0.01" "0.01"
+   "0.03" "0.03"
+   "0.1" "0.1"
+   "0.3" "0.3"
+   "1" "1"
+   "3" "3"
+   "10" "10"})
 
 (defattr learning-rate :neural-network/learning-rate :enum
   {ao/identities        #{:neural-network/id}
-   ao/enumerated-values (mapv :label learning-rates)
-   ao/enumerated-labels (mapv :value learning-rates)
+   ao/enumerated-values (keys learning-rates)
+   ao/enumerated-labels learning-rates
    ao/schema            :production
    fo/default-value     "0.003"})
 
@@ -88,14 +88,14 @@
                    #?(:clj
                       {:neural-network/all-neural-networks (queries/get-all-neural-networks env query-params)}))})
 
-(defmutation delete-neural-network
-  "Mutation: Delete the neural-network with `:neural-network/id` from the list with `:list/id`"
-  [{list-id   :list/id
-    neural-network-id :neural-network/id}]
-  (action [{:keys [state]}]
-          (swap! state merge/remove-ident* [:neural-network/id neural-network-id] [:list/id list-id :list/neural-networks])))
+#?(:cljs (defmutation delete-neural-network
+           "Mutation: Delete the neural-network with `:neural-network/id` from the list with `:list/id`"
+           [{list-id   :list/id
+             neural-network-id :neural-network/id}]
+           (action [{:keys [state]}]
+                   (swap! state merge/remove-ident* [:neural-network/id neural-network-id] [:list/id list-id :list/neural-networks]))))
 
-(defmutation add-neural-network
+#_(defmutation add-neural-network
   "Mutation: Add a neural-network with `:neural-network/id` to the list with `:list/id`"
   [{list-id   :list/id
     neural-network-id :neural-network/id}]
