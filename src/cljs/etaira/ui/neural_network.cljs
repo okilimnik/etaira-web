@@ -58,8 +58,11 @@
 
    ro/control-layout      {:action-buttons [::new-neural-network]}
 
+  
    ro/row-actions         [{:label  "Delete"
-                            :action (fn [this {:neural-network/keys [id] :as row}] (form/delete! this :neural-network/id id))}]
+                            :action (fn [this {:neural-network/keys [id] :as row}] (form/delete! this :neural-network/id id))}
+                           {:label  "Edit"
+                            :action (fn [this {:neural-network/keys [id] :as row}] (form/edit! this NeuralNetworkForm id))}]
 
   ; ro/form-links          {:invoice/total NeuralNetworkForm}
 
