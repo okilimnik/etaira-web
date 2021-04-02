@@ -1,6 +1,6 @@
 (ns etaira.ui-ico
   (:require
-   [com.fulcrologic.fulcro.dom :refer [div button a p img i span h3]]))
+   [com.fulcrologic.fulcro.dom :refer [div button a p img i svg span h3]]))
 
 (def use-cases-content
   [{:icon "fas fas-camera"
@@ -20,7 +20,7 @@
   (div {:class "two column stackable ui grid"
         :style {:background-color "#00ffff"
                 :width "100%"
-                :height "700px"
+                :height "900px"
                 :text-align "center"
                 :display "flex"
                 :justify-content "space-between"
@@ -31,7 +31,7 @@
                  {:color "#013220"
                   :font-size "250%"}}
                 "Use Cases"))
-       
+
        (for [item use-cases-content]
          (div {:class "eight wide column"}
               (div {:class "two column stackable ui grid"}
@@ -43,32 +43,7 @@
                    (div {:class "four wide column"}
                         (p ""))
                    (div {:class "twelve wide column"}
-                        (p (get item :text)))))
-         )
-       
-
-
-
-       #_(div {:class "eight wide column"}
-            (div {:class "two column stackable ui grid"}
-                 (div {:class "four wide column"}
-                      (i {:prefix "fas"
-                          :iconName "fa-camera"}))
-                 (div {:class "twelve wide column"}
-                      (p "111111111111111111111111111111111111 1111111111111111111111 11111111111111111111111111111"))
-                 (div {:class "four wide column"}
-                      (p ""))
-                 (div {:class "twelve wide column"}
-                      (p "222222222222222222 4444444444444444 55555555555555555"))
-                 ))
-       
-
-
-
-      ;;  (div {:class "eight wide column"} "11122222222222222222222222222222222222222222222222221")
-      ;;  (div {:class "eight wide column"} "111333333333333333333333333333333333333333333333331")
-      ;;  (div {:class "eight wide column"} "111444444444444444444444444444444444444444444441")
-       ))
+                        (p (get item :text))))))))
 
 (defn MainPage []
     (div (use-cases)))
