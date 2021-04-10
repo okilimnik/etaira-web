@@ -1,6 +1,5 @@
 (ns etaira.ui-ico-segments.use-cases
-
-(:require
+  (:require
    [com.fulcrologic.fulcro.dom :refer [div button a p img i svg span h3]]
    [com.fulcrologic.semantic-ui.elements.icon.ui-icon :refer [ui-icon]]))
 
@@ -38,13 +37,11 @@
          (div :.six.wide.centered.column
               (div :.two.column.ui.grid
                    (div :.right.aligned.four.wide.column
-                        
-                             (ui-icon {:name (get item :icon)})
-                        )
+                        (ui-icon {:name (:icon item)}))
                    (div :.left.aligned.twelve.wide.column
                         (p {:style {:font-size "150%"}}
-                           (get item :head)))
+                           (:head item)))
                    (div :.right.aligned.four.wide.column
                         (p ""))
                    (div :.left.aligned.twelve.wide.column
-                        (p (get item :text))))))))
+                        (p (:text item))))))))
