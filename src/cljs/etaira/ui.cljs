@@ -1,9 +1,10 @@
 (ns etaira.ui
   (:require
-   [com.fulcrologic.fulcro.dom :refer [div button]]
+   [com.fulcrologic.fulcro.dom :refer [div button a]]
    [com.fulcrologic.semantic-ui.modules.dropdown.ui-dropdown :refer [ui-dropdown]]
    [com.fulcrologic.semantic-ui.modules.dropdown.ui-dropdown-menu :refer [ui-dropdown-menu]]
    [com.fulcrologic.semantic-ui.modules.dropdown.ui-dropdown-item :refer [ui-dropdown-item]]
+   [com.fulcrologic.semantic-ui.modules.tab.ui-tab :refer [ui-tab]]
    [etaira.ui.login-dialog :refer [LoginForm]]
    [etaira.ui.neural-network :refer [NeuralNetworkForm NeuralNetworkList]]
    [com.fulcrologic.fulcro.application :as app]
@@ -45,16 +46,27 @@
     (div
      (div :.ui.top.menu
           (div :.ui.item "Etaira")
-          (when logged-in?
+          (if logged-in?
             (comp/fragment
              (ui-dropdown {:className "item" :text "Neural Networks"}
                           (ui-dropdown-menu {}
                                             (ui-dropdown-item {:onClick (fn [] (rroute/route-to! this NeuralNetworkList {}))} "View All")
-                                            (ui-dropdown-item {:onClick (fn [] (form/create! this NeuralNetworkForm))} "New")))))
+                                            (ui-dropdown-item {:onClick (fn [] (form/create! this NeuralNetworkForm))} "New"))))
+            (comp/fragment
+             (div {:class "ui tabular menu"}
+                 (a {:class "item" :data-tab "white-paper"} "White Paper")
+                  (a {:class "item" :data-tab "docs"} "docs")
+                  )
+             )
+            
+
+            )
           (div :.right.menu
-               (div :.item
+               
+               #_(div :.item
                     (div :.ui.tiny.loader {:classes [(when busy? "active")]})
-                    ent/nbsp ent/nbsp ent/nbsp ent/nbsp)
+                    "Welcome to Etaira. Please log in." ent/nbsp ent/nbsp ent/nbsp ent/nbsp)
+               
                (if logged-in?
                  (comp/fragment
                   (div :.ui.item
@@ -64,9 +76,14 @@
                                                        (rroute/route-to! this LandingPage {})
                                                        (auth/logout! this :local))}
                                "Logout")))
+
+                 (comp/fragment
+                  (div :.ui.item
+                      (str "Welcome to Etaira. Please log in."))
+
                  (div :.ui.item
                       (button :.ui.primary.button {:onClick #(auth/authenticate! this :local nil)}
-                              "Login")))))
+                              "Login"))))))
      (div
       (ui-authenticator authenticator)
       (ui-main-router router)))))
