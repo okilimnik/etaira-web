@@ -42,9 +42,10 @@
                              (ui-icon {:name (get item :icon)})
                         )
                    (div :.left.aligned.twelve.wide.column
-                        (p {:style {:font-size "150%"}}
+                        (p {:style {:font-size "170%"}}
                            (get item :head)))
                    (div :.right.aligned.four.wide.column
                         (p ""))
                    (div :.left.aligned.twelve.wide.column
-                        (p (get item :text))))))))
+                        (p {:style {:font-size "130%"}}
+                         (get item :text))))))))
