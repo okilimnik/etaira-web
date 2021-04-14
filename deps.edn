@@ -10,9 +10,16 @@
            com.fulcrologic/guardrails             {:mvn/version "0.0.12"}
            binaryage/oops                         {:mvn/version "0.7.0"}
 
-           ;com.fulcrologic/fulcro-rad-kvstore     {:mvn/version "1.0.0-RC2"}
+           okilimnik/konserve-fire                {:git/url "https://github.com/okilimnik/konserve-fire"
+                                                   :sha     "3f41ef3df7302ca6ce5849fc177fadf0ae3ff6bc"}
+           okilimnik/fire                         {:git/url "https://github.com/okilimnik/fire"
+                                                   :sha     "73dab9295ff9f390e37826d4c69b4efea2547a43"}
+           okilimnik/fulcro-rad-kvstore           {:git/url "https://github.com/okilimnik/fulcro-rad-kvstore"
+                                                   :sha     "69a5a57e5547a81fd0c12b5924b59659e80a223f"}
+           
            io.replikativ/konserve                 {:mvn/version "0.6.0-alpha2"}
-           com.google.firebase/firebase-admin     {:mvn/version "7.1.0" :exclusions [com.google.guava/guava]}
+           com.google.firebase/firebase-admin     {:mvn/version "7.1.0"
+                                                   :exclusions  [com.google.guava/guava]}
 
            cheshire/cheshire                      {:mvn/version "5.10.0"}
 
