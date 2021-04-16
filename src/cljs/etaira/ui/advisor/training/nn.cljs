@@ -1,4 +1,4 @@
-(ns etaira.ui.neural-network
+(ns etaira.ui.advisor.training.nn
   (:require
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
    [com.fulcrologic.fulcro.dom :as dom]
@@ -16,7 +16,7 @@
                     (js/confirm message))
    fo/attributes    [neural-network-layer/number-of-neurons neural-network-layer/type]
    fo/route-prefix  "neural-network-layer"
-   fo/title         "Neural Network Layer"
+   fo/title         "Hidden Layers"
    fo/layout        [[:neural-network-layer/number-of-neurons :neural-network-layer/type]]})
 
 (form/defsc-form NeuralNetworkForm [this props]

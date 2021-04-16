@@ -23,6 +23,13 @@
     (->> (keys (<! (k/get-in store [:neural-network/id])))
          (mapv (fn [id] {:neural-network/id id})))))
 
+(defn get-all-datasets
+  [{::kv-key-store/keys [store]}
+   query-params]
+  (go
+    (->> (keys (<! (k/get-in store [:dataset/id])))
+         (mapv (fn [id] {:dataset/id id})))))
+
 (defn get-login-info
   "Get the account name, time zone, and password info via a username (email)."
   [{::kv-key-store/keys [store]}

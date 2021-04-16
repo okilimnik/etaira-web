@@ -1,4 +1,5 @@
 (ns etaira.model.neural-network
+  (:refer-clojure :exclude [name type])
   (:require
    #?@(:clj
        [[com.wsscode.pathom.connect :as pc :refer [defmutation]]

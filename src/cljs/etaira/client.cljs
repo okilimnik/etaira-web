@@ -1,5 +1,6 @@
 (ns etaira.client
   (:require
+   ["ccxt/dist/ccxt.browser"]
    [etaira.ui :as ui :refer [Root]]
    [etaira.ui.login-dialog :refer [LoginForm]]
    [com.fulcrologic.fulcro.application :as app]

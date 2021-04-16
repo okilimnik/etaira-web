@@ -33,8 +33,6 @@
 (def vstack (interop/react-factory VictoryStack))
 (def vpie (interop/react-factory VictoryPie))
 
-
-
 ;; " [ {:year 1991 :value 2345 } ...] "
 (defsc YearlyValueChart [this {:keys [label plot-data x-step]}]
   (let [start-year (apply min (map :year plot-data))

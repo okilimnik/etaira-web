@@ -4,7 +4,8 @@
  :builds   {:app     {:target     :browser
                       :output-dir "resources/public/js/main"
                       :asset-path "/js/main"
-                      :dev        {:compiler-options {:external-config {:guardrails {:emit-spec? true :throw? false}}}}
+                      :dev        {:compiler-options {:external-config {:guardrails {:emit-spec? true :throw? false}}
+                                                      :warnings {:redef false}}}
                       :modules    {:main {:init-fn etaira.client/init}}
                       :js-options {:resolve
                                    {;; for performance checking during dev

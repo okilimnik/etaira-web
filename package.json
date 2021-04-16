@@ -19,6 +19,7 @@
     "@tensorflow/tfjs": "^3.2.0",
     "big.js": "5.2.2",
     "buffer": "^6.0.3",
+    "ccxt": "^1.47.91",
     "d3-node": "^2.2.2",
     "js-joda": "1.11.0",
     "js-joda-timezone": "2.1.1",
@@ -28,6 +29,6 @@
     "semantic-ui-react": "^0.88.2",
     "string_decoder": "^1.3.0",
     "victory": "^35.4.13"
-         },
+  },
   "devDependencies": {}
 }

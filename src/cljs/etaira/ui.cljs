@@ -6,7 +6,8 @@
    [com.fulcrologic.semantic-ui.modules.dropdown.ui-dropdown-item :refer [ui-dropdown-item]]
    [com.fulcrologic.semantic-ui.modules.tab.ui-tab :refer [ui-tab]]
    [etaira.ui.login-dialog :refer [LoginForm]]
-   [etaira.ui.neural-network :refer [NeuralNetworkForm NeuralNetworkList]]
+   [etaira.ui.advisor.training.nn :refer [NeuralNetworkForm NeuralNetworkList]]
+   [etaira.ui.advisor.training.dataset :refer [DatasetForm DatasetList]]
    [com.fulcrologic.fulcro.application :as app]
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
    [com.fulcrologic.fulcro.dom.html-entities :as ent]
@@ -19,7 +20,9 @@
 
 (defrouter MainRouter [this {:keys [current-state route-factory route-props]}]
   {:always-render-body? true
-   :router-targets      [HomePage LandingPage NeuralNetworkForm NeuralNetworkList]}
+   :router-targets      [HomePage LandingPage 
+                         NeuralNetworkForm NeuralNetworkList 
+                         DatasetForm DatasetList]}
   (div
    (div :.ui.loader {:classes [(when-not (= :routed current-state) "active")]})
    (when route-factory
@@ -51,22 +54,19 @@
              (ui-dropdown {:className "item" :text "Neural Networks"}
                           (ui-dropdown-menu {}
                                             (ui-dropdown-item {:onClick (fn [] (rroute/route-to! this NeuralNetworkList {}))} "View All")
-                                            (ui-dropdown-item {:onClick (fn [] (form/create! this NeuralNetworkForm))} "New"))))
+                                            (ui-dropdown-item {:onClick (fn [] (form/create! this NeuralNetworkForm))} "New")))
+             (ui-dropdown {:className "item" :text "Datasets"}
+                          (ui-dropdown-menu {}
+                                            (ui-dropdown-item {:onClick (fn [] (rroute/route-to! this DatasetList {}))} "View All")
+                                            (ui-dropdown-item {:onClick (fn [] (form/create! this DatasetForm))} "New"))))
             (comp/fragment
              (div {:class "ui tabular menu"}
-                 (a {:class "item" :data-tab "white-paper"} "White Paper")
-                  (a {:class "item" :data-tab "docs"} "docs")
-                  )
-             )
-            
-
-            )
+                  (a {:class "item" :data-tab "white-paper"} "White Paper")
+                  (a {:class "item" :data-tab "docs"} "docs"))))
           (div :.right.menu
-               
-               #_(div :.item
-                    (div :.ui.tiny.loader {:classes [(when busy? "active")]})
-                    "Welcome to Etaira. Please log in." ent/nbsp ent/nbsp ent/nbsp ent/nbsp)
-               
+
+             
+
                (if logged-in?
                  (comp/fragment
                   (div :.ui.item
@@ -78,12 +78,15 @@
                                "Logout")))
 
                  (comp/fragment
+                  #_(div :.item
+                         (div :.ui.tiny.loader {:classes [(when busy? "active")]})
+                         "Welcome to Etaira. Please log in." ent/nbsp ent/nbsp ent/nbsp ent/nbsp)
                   (div :.ui.item
-                      (str "Welcome to Etaira. Please log in."))
+                       (str "Welcome to Etaira. Please log in."))
 
-                 (div :.ui.item
-                      (button :.ui.primary.button {:onClick #(auth/authenticate! this :local nil)}
-                              "Login"))))))
+                  (div :.ui.item
+                       (button :.ui.primary.button {:onClick #(auth/authenticate! this :local nil)}
+                               "Login"))))))
      (div
       (ui-authenticator authenticator)
       (ui-main-router router)))))
