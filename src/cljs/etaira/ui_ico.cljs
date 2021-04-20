@@ -2,6 +2,8 @@
   (:require
    [etaira.ui-ico-segments.use-cases :refer [use-cases]]
    [etaira.ui-ico-segments.tokenomics :refer [tokenomics]]
+   [etaira.ui-ico-segments.smart-page :refer [smart-page]]
+   
    [com.fulcrologic.fulcro.dom :refer [div]]))
 
 (defn MainPage []
@@ -10,6 +12,6 @@
    (use-cases)
    ;;(chart)
    (tokenomics)
-   ;;(victor)
+   (smart-page)
    )
   )
