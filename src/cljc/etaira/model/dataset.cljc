@@ -31,12 +31,21 @@
      :clj {}))
 
 (defattr exchange :dataset/exchange :enum
-  {ao/identities    #{:dataset/id}
-   ao/required?     true
+  {ao/identities        #{:dataset/id}
+   ao/required?         true
    ao/enumerated-values (keys exchanges)
    ao/enumerated-labels exchanges
    ao/schema            :production
    fo/default-value     "binance"})
+
+(def exchange-symbols (atom {}))
+
+(defattr symbols :dataset/symbols :enum
+  {ao/identities #{:dataset/id}
+   ao/required?  true
+   ao/enumerated-values (keys @exchange-symbols)
+   ao/enumerated-labels @exchange-symbols
+   ao/schema     :production})
 
 (defattr all-datasets :dataset/all-datasets :ref
   {ao/target     :dataset/id
@@ -52,4 +61,4 @@
            (action [{:keys [state]}]
                    (swap! state merge/remove-ident* [:dataset/id dataset-id] [:list/id list-id :list/datasets]))))
 
-(def attributes [id name all-datasets])
+(def attributes [id name exchange symbols all-datasets])
