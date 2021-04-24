@@ -38,7 +38,7 @@
    ao/schema            :production
    fo/default-value     "binance"})
 
-(def exchange-symbols (atom {}))
+(def exchange-symbols (atom {"loading" "Loading..."}))
 
 (defattr symbols :dataset/symbols :enum
   {ao/identities #{:dataset/id}

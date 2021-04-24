@@ -4,13 +4,20 @@
    [com.fulcrologic.rad.form-options :as fo]
    [com.fulcrologic.rad.report :as report]
    [com.fulcrologic.rad.report-options :as ro]
-   [etaira.model.dataset :as dataset]))
+   [etaira.model.dataset :as dataset]
+   [com.fulcrologic.fulcro.ui-state-machines :as uism]
+   [oops.core :refer [oget ocall]]
+   ["ccxt/dist/ccxt.browser"]
+   [etaira.interop.async :refer [async await]]))
 
-(defn fetch-symbols [exchange]
-  )
+(defn fetch-symbols [exchange-id callback]
+  (let [exchange-class (oget js/ccxt exchange-id)
+        exchange (exchange-class.)]
+    (-> (ocall exchange :loadMarkets)
+        (.then callback))))
 
-(defn on-change-exchange [exchange]
-  (reset! dataset/symbols (fetch-symbols exchange)))
+(defn on-change-exchange [exchange app-ish form-class props attribute]
+  (fetch-symbols exchange #(picker-options/load-options! app-ish form-class props attribute %))s)
 
 (form/defsc-form DatasetForm [this props]
   {fo/id             dataset/id
@@ -22,11 +29,12 @@
    fo/layout         [[:dataset/name]
                       [:dataset/exchange]
                       [:dataset/symbols]]
-   fo/triggers        {:on-change (fn [{::uism/keys [state-map] :as uism-env} _ k _ new-value]
+   fo/triggers        {:on-change (fn [{::uism/keys [state-map] :as uism-env} form-ident k _ new-value]
                                     (case k
-                                      :dataset/symbols
-                                      (let [dataset-symbols  (get-in state-map (conj new-value :dataset/symbols))]
-                                        (on-change-exchange dataset-symbols))))}
+                                      :dataset/exchange
+                                      (on-change-exchange new-value this DatasetForm props :dataset/symbols)
+                                      "do nothing")
+                                    uism-env)}
    fo/route-prefix   "dataset"
    fo/title          "Edit Dataset"})
 
