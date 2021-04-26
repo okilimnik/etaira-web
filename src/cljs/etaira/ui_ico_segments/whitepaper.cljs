@@ -1,19 +1,16 @@
 (ns etaira.ui-ico-segments.whitepaper
   (:require
    [com.fulcrologic.fulcro.dom :as dom :refer [div span br button h3 p a h2 img]]
-   [com.fulcrologic.semantic-ui.modules.accordion.ui-accordion :refer [ui-accordion]]
-   ["victory" :refer [VictoryPie]]
    [com.fulcrologic.fulcro.algorithms.react-interop :as interop]
    [oops.core :refer [oget]]
-   ["react" :refer [React]]
-   ["semantic-ui-react" :refer [Grid Image]]
    [com.fulcrologic.semantic-ui.elements.button.ui-button :refer [ui-button]]
    [com.fulcrologic.semantic-ui.elements.button.ui-button-content :refer [ui-button-content]]
    [com.fulcrologic.semantic-ui.collections.grid.ui-grid :refer [ui-grid]]
    [com.fulcrologic.semantic-ui.collections.grid.ui-grid-column :refer [ui-grid-column]]
-   [com.fulcrologic.semantic-ui.collections.grid.ui-grid-row :refer [ui-grid-row]]))
+   [com.fulcrologic.semantic-ui.collections.grid.ui-grid-row :refer [ui-grid-row]]
+   [com.fulcrologic.semantic-ui.elements.image.ui-image :refer [ui-image]]))
 
-(defn white-paper []
+#_(defn white-paper []
   (div :.ui.grid
        {:style {:backgroundColor "#00ffff"
                 :width "100%"
@@ -71,10 +68,11 @@
             :textAlign "center"}
            (ui-grid-column
             {:children
-             (img {:src "/css/themes/default/assets/images/hetaira2.jpg"
-                   :style {:width "17%"
-                           :minHeight "100%"
-                           :opacity 0.4}})}))
+             (ui-image {:src "/css/themes/default/assets/images/hetaira2.jpg"
+                        :centered true
+                        :style {:width "400px"
+                           ;;:minHeight "100%"
+                                :opacity 0.4}})}))
           (ui-grid-row
            {:columns 1
             :textAlign "center"}
@@ -89,7 +87,7 @@
             :centered true
             :textAlign "center"}
            (ui-grid-column
-            {:width 2
+            {:width 4
              :textAlign "center"
              :children (a {:href "https://google.com"}
                           (ui-button {:animated true
@@ -102,7 +100,7 @@
                                      (ui-button-content {:content (span {:style {:color "#013220"}} "Click please")
                                                          :hidden true})))})
            (ui-grid-column
-            {:width 2
+            {:width 4
              :textAlign "center"
              :children (a {:href "https://google.com"}
                           (ui-button {:animated true

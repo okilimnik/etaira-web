@@ -1,6 +1,10 @@
 (ns etaira.ui-ico-segments.smart-page
   (:require
-   [com.fulcrologic.fulcro.dom :as dom :refer [div p img h3]]))
+   [com.fulcrologic.fulcro.dom :as dom :refer [div p img h3]]
+   [com.fulcrologic.semantic-ui.collections.grid.ui-grid :refer [ui-grid]]
+   [com.fulcrologic.semantic-ui.collections.grid.ui-grid-column :refer [ui-grid-column]]
+   [com.fulcrologic.semantic-ui.collections.grid.ui-grid-row :refer [ui-grid-row]]
+   [com.fulcrologic.semantic-ui.elements.image.ui-image :refer [ui-image]]))
 
 (defn smart-page []
   (div :.stackable.three.columns.ui.grid
@@ -47,3 +51,29 @@
                                 :opacity 0.3
                                 :padding "50px 25px"}}))))))
 
+#_(defn smart-page-b []
+  (div {:style {:backgroundColor "#00ffff"
+                :padding "100px 0"
+                :display "block"
+                ;;:position "relative"
+                ;;:justifyContent "space-between"
+                :width "100%"
+                }}
+       (ui-grid {:stackable true
+                 :relaxed "very"}
+        (ui-grid-row {:columns 3
+                      :textAlign "center"}
+                     (ui-grid-column {:children (ui-image {:src "/css/themes/default/assets/images/smart.png"
+                                                           :centered true
+                                                           :style {:width "2000px"}})
+                                      :width 8})
+                     (ui-grid-column {:children (div (h3 {:style
+                                                          {:color "#013220"
+                                                           :fontSize "250%"}}
+                                                         "Supply Based Stability"))
+                                      :width 4})
+                     (ui-grid-column {:children (div (h3 {:style
+                                                          {:color "#013220"
+                                                           :fontSize "250%"}}
+                                                         "Supply Based Stability"))
+                                      :width 4})))))
