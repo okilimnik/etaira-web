@@ -13,15 +13,6 @@
    [com.fulcrologic.rad.attributes-options :as ao]
    [com.fulcrologic.rad.form-options :as fo]))
 
-(defattr id :cryptopair/id :string
-  {ao/identity? true
-   ao/schema    :production})
-
-(defattr name :cryptopair/name :string
-  {ao/identities #{:cryptopair/id}
-   ao/required?  true
-   ao/schema     :production})
-
 #?(:cljs (defmutation load-cryptopairs
            "Mutation: Loads exchange cryptopairs."
            [{:keys [cryptopairs]}]
@@ -29,10 +20,3 @@
                    (let [target-path [:com.fulcrologic.rad.picker-options/options-cache :cryptopair/all-cryptopairs :options]]
                      (swap! state assoc-in target-path cryptopairs)
                      (swap! state assoc-in [:cryptopair/id] (into {} (mapv (juxt :cryptopair/id identity) (mapv :value cryptopairs))))))))
-
-(defattr all-cryptopairs :cryptopair/all-cryptopairs :string
-  {ao/pc-output  [{:cryptopair/all-cryptopairs [:string]}]
-   ao/pc-resolve (fn [{:keys [query-params] :as env} _]
-                   {:cryptopair/all-cryptopairs []})})
-
-(def attributes [id name all-cryptopairs])

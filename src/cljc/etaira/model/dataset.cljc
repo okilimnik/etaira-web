@@ -23,11 +23,12 @@
    ao/schema     :production})
 
 (def exchanges
-  #?(:cljs  (->> (for [exchange (oget js/ccxt :exchanges)]
-                   [exchange (str (upper-case (first exchange))
-                                  (subs exchange 1 (count exchange)))])
-                 (apply concat)
-                 (apply hash-map))
+  #?(:cljs  #_(->> (for [exchange (oget js/ccxt :exchanges)]
+                     [exchange (str (upper-case (first exchange))
+                                    (subs exchange 1 (count exchange)))])
+                   (apply concat)
+                   (apply hash-map))
+     {"binance" "Binance"}
      :clj {}))
 
 (defattr exchange :dataset/exchange :enum
@@ -38,11 +39,11 @@
    ao/schema            :production
    fo/default-value     "binance"})
 
-(defattr cryptopair :dataset/cryptopair :ref
-  {ao/target      :cryptopair/id
-   ao/identities #{:dataset/id}
-   ao/required?  true
-   ao/schema     :production})
+(defattr cryptopair :dataset/cryptopair :string
+  {ao/identities    #{:dataset/id}
+   ao/required?     true
+   ao/schema        :production
+   fo/default-value "BTC/USDT"})
 
 (defattr all-datasets :dataset/all-datasets :ref
   {ao/target     :dataset/id

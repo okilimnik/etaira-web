@@ -21,14 +21,6 @@
     (-> (ocall exchange :loadMarkets)
         (.then callback))))
 
-(form/defsc-form CryptopairForm [this props]
-  {fo/id            cryptopair/id
-   ::form/confirm (fn [message]
-                    (js/confirm message))
-   fo/attributes    [cryptopair/name]
-   fo/route-prefix  "cryptopair"
-   fo/title         "Edit Cryptopair"})
-
 (form/defsc-form DatasetForm [this props]
   {fo/id             dataset/id
    ::form/confirm (fn [message]
@@ -40,31 +32,20 @@
                       [:dataset/exchange]
                       [:dataset/cryptopair]]
    fo/triggers        {:on-change (fn [{::uism/keys [state-map fulcro-app] :as uism-env} form-ident k old-value new-value]
-                                    (let [cls (comp/ident->any fulcro-app form-ident)
+                                    #_(let [cls (comp/ident->any fulcro-app form-ident)
                                           exchange-name new-value]
                                       (case k
                                         :dataset/exchange
                                         (fetch-symbols exchange-name
                                                        #(let [cryptopairs (mapv (fn [x]
                                                                                   {:text x
-                                                                                   :value {:cryptopair/id x}}) (keys (js->clj %)))]
+                                                                                   :value x}) (keys (js->clj %)))]
                                                           ;(println "cryptopair: " cryptopairs)
                                                           (comp/transact! cls [(cryptopair/load-cryptopairs {:cryptopairs cryptopairs})])))
                                         "do nothing"))
                                     uism-env)}
-   fo/field-styles  {:dataset/cryptopair :pick-one}
-   fo/field-options {:dataset/cryptopair {::picker-options/query-key        :cryptopair/all-cryptopairs
-                                          ::picker-options/query-component  CryptopairForm
-                                          ::picker-options/options-xform    (fn [_ options]
-                                                                              (mapv
-                                                                               (fn [{:cryptopair/keys [id name]}]
-                                                                                 {:text name :value {:cryptopair/id id
-                                                                                                     :cryptopair/name name}})
-                                                                               (sort-by :cryptopair/name options)))
-                                          ::picker-options/query-parameters (fn [app form-class props]
-                                                                              (let [cryptopair (get props :dataset/cryptopair)]
-                                                                                cryptopair))
-                                          ::picker-options/cache-time-ms    6000000}}
+   fo/field-styles  {:dataset/cryptopair :sorted-set}
+   fo/field-style-configs {:dataset/cryptopair {:sorted-set/valid-values #{"BTC/USDT"}}}
    fo/route-prefix   "dataset"
    fo/title          "Edit Dataset"})
 
