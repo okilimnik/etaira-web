@@ -89,7 +89,7 @@
            (ui-grid-column
             {:width 4
              :textAlign "center"
-             :children (a {:href "https://google.com"}
+             :children (a {:href "https://docs.google.com/document/d/1oh658BCoAFP_toO3uHDXoesPRiBVJmTcgpjHY8lDM9k/edit?usp=sharing"}
                           (ui-button {:animated true
                                       :circular true
                                       :fluid true
@@ -102,7 +102,7 @@
            (ui-grid-column
             {:width 4
              :textAlign "center"
-             :children (a {:href "https://google.com"}
+             :children (a {:href "https://docs.google.com/document/d/1RSea_dEQ9xBE4W6JyeQ6pltLnYb9XPSgid9GDpT8vPo/edit?usp=sharing"}
                           (ui-button {:animated true
                                       :circular true
                                       :fluid true
@@ -112,7 +112,8 @@
                                                          :visible true})
                                      (ui-button-content {:content (span {:style {:color "#013220"}} "Read more")
                                                          :hidden true})))}))
-          (ui-grid-row
+          
+          #_(ui-grid-row
            {:columns 1
             :centered true
             :textAlign "center"}
@@ -137,4 +138,6 @@
                            (ui-button {:circular true
                                        :icon "linkedin"
                                        :color "linkedin"
-                                       :size "big"})))})))))
+                                       :size "big"})))}))
+                                       
+                                       )))
