@@ -45,6 +45,52 @@
    ao/schema        :production
    fo/default-value "BTC/USDT"})
 
+(defattr date-from :dataset/date-from :instant
+  {ao/identities    #{:dataset/id}
+   ao/required?     true
+   ao/schema        :production})
+
+(defattr date-to :dataset/date-to :instant
+  {ao/identities    #{:dataset/id}
+   ao/required?     true
+   ao/schema        :production})
+
+(def intervals 
+  ["1m"
+   "3m"
+   "5m"
+   "15m"
+   "30m"
+   "1h"
+   "2h"
+   "4h"
+   "6h"
+   "8h"
+   "12h"
+   "1d"
+   "3d"
+   "1w"
+   "1M"])
+
+(defattr interval :dataset/interval :enum
+  {ao/identities    #{:dataset/id}
+   ao/required?     true
+   ao/enumerated-values intervals
+   ao/enumerated-labels (apply hash-map (mapcat (fn [i] [i i]) intervals))
+   ao/schema        :production})
+
+(defattr indicators :dataset/indicators :enum
+  {ao/identities  #{:dataset/id}
+   ao/cardinality :many
+   ao/required?   true
+   ao/schema      :production})
+
+(defattr outputs :dataset/outputs :ref
+  {ao/identities  #{:dataset/id}
+   ao/cardinality :many
+   ao/required?   true
+   ao/schema      :production})
+
 (defattr all-datasets :dataset/all-datasets :ref
   {ao/target     :dataset/id
    ao/pc-output  [{:dataset/all-datasets [:dataset/id]}]
