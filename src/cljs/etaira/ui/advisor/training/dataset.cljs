@@ -12,10 +12,10 @@
    [com.fulcrologic.fulcro.ui-state-machines :as uism]
    [com.fulcrologic.fulcro.algorithms.normalized-state :as fns]
    [oops.core :refer [oget+ ocall]]
-   ["ccxt/dist/ccxt.browser"]
+   ;["ccxt/dist/ccxt.browser"]
    [etaira.interop.async :refer [async await]]))
 
-(defn fetch-symbols [exchange-id callback]
+#_(defn fetch-symbols [exchange-id callback]
   (let [exchange-class (oget+ js/ccxt exchange-id)
         exchange (exchange-class.)]
     (-> (ocall exchange :loadMarkets)
@@ -27,10 +27,12 @@
                     (js/confirm message))
    fo/attributes     [dataset/name
                       dataset/exchange
-                      dataset/cryptopair]
+                      dataset/cryptopair
+                      dataset/indicators]
    fo/layout         [[:dataset/name]
                       [:dataset/exchange]
-                      [:dataset/cryptopair]]
+                      [:dataset/cryptopair]
+                      [:dataset/indicators]]
    fo/triggers        {:on-change (fn [{::uism/keys [state-map fulcro-app] :as uism-env} form-ident k old-value new-value]
                                     #_(let [cls (comp/ident->any fulcro-app form-ident)
                                           exchange-name new-value]

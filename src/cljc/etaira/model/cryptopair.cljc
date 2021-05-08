@@ -5,8 +5,7 @@
        [[etaira.components.database-queries :as queries]]
        :cljs
        [[com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]
-        [oops.core :refer [oget]]
-        ["ccxt/dist/ccxt.browser"]])
+        [oops.core :refer [oget]]])
    [clojure.string :refer [upper-case]]
    [com.fulcrologic.fulcro.algorithms.merge :as merge]
    [com.fulcrologic.rad.attributes :as attr :refer [defattr]]

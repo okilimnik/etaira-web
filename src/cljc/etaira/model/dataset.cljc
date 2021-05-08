@@ -6,7 +6,8 @@
        :cljs
        [[com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]
         [oops.core :refer [oget]]
-        ["ccxt/dist/ccxt.browser"]])
+        ;["ccxt/dist/ccxt.browser"]
+        ])
    [clojure.string :refer [upper-case]]
    [com.fulcrologic.fulcro.algorithms.merge :as merge]
    [com.fulcrologic.rad.attributes :as attr :refer [defattr]]
@@ -79,10 +80,17 @@
    ao/enumerated-labels (apply hash-map (mapcat (fn [i] [i i]) intervals))
    ao/schema        :production})
 
+(def available-indicators
+    #?(:cljs  (->> (js->clj (js/getAvailableIndicators))
+                   (mapcat (fn [i] [i i]))
+                   (apply hash-map))
+       :clj {}))
+
 (defattr indicators :dataset/indicators :enum
   {ao/identities  #{:dataset/id}
    ao/cardinality :many
-   ao/required?   true
+   ao/enumerated-values (keys available-indicators)
+   ao/enumerated-labels available-indicators
    ao/schema      :production})
 
 (defattr outputs :dataset/outputs :ref
@@ -105,4 +113,4 @@
            (action [{:keys [state]}]
                    (swap! state merge/remove-ident* [:dataset/id dataset-id] [:list/id list-id :list/datasets]))))
 
-(def attributes [id name exchange cryptopair all-datasets])
+(def attributes [id name exchange cryptopair indicators all-datasets])

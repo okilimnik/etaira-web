@@ -19,7 +19,7 @@
      [:head {:lang "en"}
       [:title "Application"]
       [:meta {:charset "utf-8"}]
-      [:meta {:name "viewport" :content "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"}]        
+      [:meta {:name "viewport" :content "width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"}]
       [:link {:href "https://cdn.jsdelivr.net/npm/fomantic-ui@2.7.8/dist/semantic.min.css"
               :rel  "stylesheet"}]
       [:link {:href "https://fonts.googleapis.com/css?family=Roboto:300,400,500|Material+Icons"
@@ -27,6 +27,8 @@
       [:link {:href "/css/main.css"
               :rel  "stylesheet"}]
       [:link {:rel "shortcut icon" :href "data:image/x-icon;" :type "image/x-icon"}]
+      [:script {:src "/js/third-party/polyfill.js"}]
+      [:script {:src "/js/third-party/indicators.js"}]
       [:script (str "var fulcro_network_csrf_token = '" csrf-token "';")]]
      [:body
       [:div#app]
