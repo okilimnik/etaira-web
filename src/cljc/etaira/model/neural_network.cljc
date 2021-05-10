@@ -20,6 +20,12 @@
    ao/required?  true
    ao/schema     :production})
 
+(defattr dataset :neural-network/dataset :ref
+  {ao/target      :dataset/id
+   ao/identities #{:neural-network/id}
+   ao/required?  true
+   ao/schema     :production})
+
 (def learning-rates
   {"0.00001" "0.00001"
    "0.0001" "0.0001"
@@ -103,4 +109,4 @@
   (action [{:keys [state]}]
           (swap! state merge/remove-ident* [:neural-network/id neural-network-id] [:list/id list-id :list/neural-networks])))
 
-(def attributes [id name learning-rate activation regularization problem layers all-neural-networks])
+(def attributes [id name dataset learning-rate activation regularization problem layers all-neural-networks])

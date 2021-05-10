@@ -1,7 +1,6 @@
 (ns etaira.ui.advisor.training.nn
   (:require
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
-   [com.fulcrologic.fulcro.dom :as dom]
    [com.fulcrologic.rad.picker-options :as picker-options]
    [com.fulcrologic.rad.form :as form]
    [com.fulcrologic.rad.form-options :as fo]
@@ -9,6 +8,10 @@
    [com.fulcrologic.rad.report-options :as ro]
    [etaira.model.neural-network :as neural-network]
    [etaira.model.neural-network-layer :as neural-network-layer]))
+
+(defsc DatasetQuery [_ _]
+  {:query [:dataset/id :dataset/name]
+   :ident :dataset/id})
 
 (form/defsc-form NeuralNetworkLayerForm [this props]
   {fo/id            neural-network-layer/id
@@ -24,12 +27,14 @@
    ::form/confirm (fn [message]
                     (js/confirm message))
    fo/attributes     [neural-network/name
+                      neural-network/dataset
                       neural-network/learning-rate
                       neural-network/activation
                       neural-network/regularization
                       neural-network/problem
                       neural-network/layers]
    fo/layout         [[:neural-network/name]
+                      [:neural-network/dataset]
                       [:neural-network/learning-rate]
                       [:neural-network/activation]
                       [:neural-network/regularization]
@@ -38,6 +43,14 @@
    fo/subforms       {:neural-network/layers {fo/ui          NeuralNetworkLayerForm
                                               fo/can-delete? (fn [_ _] true)
                                               fo/can-add?    (fn [_ _] true)}}
+   fo/field-styles   {:neural-network/dataset :pick-one}
+   fo/field-options  {:neural-network/dataset {::picker-options/query-key       :dataset/all-datasets
+                                               ::picker-options/query-component DatasetQuery
+                                               ::picker-options/options-xform   (fn [_ options] (mapv
+                                                                                                 (fn [{:dataset/keys [id name]}]
+                                                                                                   {:text name :value [:dataset/id id]})
+                                                                                                 (sort-by :dataset/name options)))
+                                               ::picker-options/cache-time-ms   30000}}
    fo/route-prefix   "neural-network"
    fo/title          "Edit Neural Network"})
 
