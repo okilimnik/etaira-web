@@ -1,4 +1,4 @@
-(ns etaira.model.neural-network
+(ns etaira.model.neural-network-config
   (:refer-clojure :exclude [name type])
   (:require
    #?@(:clj
@@ -11,18 +11,12 @@
    [com.fulcrologic.rad.attributes-options :as ao]
    [com.fulcrologic.rad.form-options :as fo]))
 
-(defattr id :neural-network/id :uuid
+(defattr id :neural-network-config/id :uuid
   {ao/identity? true
    ao/schema    :production})
 
-(defattr name :neural-network/name :string
-  {ao/identities #{:neural-network/id}
-   ao/required?  true
-   ao/schema     :production})
-
-(defattr dataset :neural-network/dataset :ref
-  {ao/target      :dataset/id
-   ao/identities #{:neural-network/id}
+(defattr name :neural-network-config/name :string
+  {ao/identities #{:neural-network-config/id}
    ao/required?  true
    ao/schema     :production})
 
@@ -39,8 +33,8 @@
    "3" "3"
    "10" "10"})
 
-(defattr learning-rate :neural-network/learning-rate :enum
-  {ao/identities        #{:neural-network/id}
+(defattr learning-rate :neural-network-config/learning-rate :enum
+  {ao/identities        #{:neural-network-config/id}
    ao/enumerated-values (keys learning-rates)
    ao/enumerated-labels learning-rates
    ao/schema            :production
@@ -52,8 +46,8 @@
    :sigmoid "Sigmoid"
    :linear "Linear"})
 
-(defattr activation :neural-network/activation :enum
-  {ao/identities        #{:neural-network/id}
+(defattr activation :neural-network-config/activation :enum
+  {ao/identities        #{:neural-network-config/id}
    ao/enumerated-values (keys activations)
    ao/enumerated-labels activations
    ao/schema            :production
@@ -64,8 +58,8 @@
    :l1 "L1"
    :l2 "L2"})
 
-(defattr regularization :neural-network/regularization :enum
-  {ao/identities        #{:neural-network/id}
+(defattr regularization :neural-network-config/regularization :enum
+  {ao/identities        #{:neural-network-config/id}
    ao/enumerated-values (keys regularizations)
    ao/enumerated-labels regularizations
    ao/schema            :production
@@ -75,38 +69,31 @@
   {:classification "Classification"
    :regression "Regression"})
 
-(defattr problem :neural-network/problem :enum
-  {ao/identities        #{:neural-network/id}
+(defattr problem :neural-network-config/problem :enum
+  {ao/identities        #{:neural-network-config/id}
    ao/enumerated-values (keys problems)
    ao/enumerated-labels problems
    ao/schema            :production
    fo/default-value     :classification})
 
-(defattr layers :neural-network/layers :ref
+(defattr layers :neural-network-config/layers :ref
   {ao/target      :neural-network-layer/id
    ao/cardinality :many
-   ao/identities  #{:neural-network/id}
+   ao/identities  #{:neural-network-config/id}
    ao/schema      :production})
 
-(defattr all-neural-networks :neural-network/all-neural-networks :ref
-  {ao/target     :neural-network/id
-   ao/pc-output  [{:neural-network/all-neural-networks [:neural-network/id]}]
+(defattr all-neural-network-configs :neural-network-config/all-neural-network-configs :ref
+  {ao/target     :neural-network-config/id
+   ao/pc-output  [{:neural-network-config/all-neural-network-configs [:neural-network-config/id]}]
    ao/pc-resolve (fn [{:keys [query-params] :as env} _]
                    #?(:clj
-                      {:neural-network/all-neural-networks (queries/get-all-neural-networks env query-params)}))})
+                      {:neural-network-config/all-neural-network-configs (queries/get-all-neural-network-configs env query-params)}))})
 
-#?(:cljs (defmutation delete-neural-network
-           "Mutation: Delete the neural-network with `:neural-network/id` from the list with `:list/id`"
+#?(:cljs (defmutation delete-neural-network-config
+           "Mutation: Delete the neural-network-config with `:neural-network-config/id` from the list with `:list/id`"
            [{list-id   :list/id
-             neural-network-id :neural-network/id}]
+             neural-network-config-id :neural-network-config/id}]
            (action [{:keys [state]}]
-                   (swap! state merge/remove-ident* [:neural-network/id neural-network-id] [:list/id list-id :list/neural-networks]))))
+                   (swap! state merge/remove-ident* [:neural-network-config/id neural-network-config-id] [:list/id list-id :list/neural-network-configs]))))
 
-#_(defmutation add-neural-network
-  "Mutation: Add a neural-network with `:neural-network/id` to the list with `:list/id`"
-  [{list-id   :list/id
-    neural-network-id :neural-network/id}]
-  (action [{:keys [state]}]
-          (swap! state merge/remove-ident* [:neural-network/id neural-network-id] [:list/id list-id :list/neural-networks])))
-
-(def attributes [id name dataset learning-rate activation regularization problem layers all-neural-networks])
+(def attributes [id name learning-rate activation regularization problem layers all-neural-network-configs])

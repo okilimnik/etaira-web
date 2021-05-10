@@ -6,7 +6,8 @@
    [com.fulcrologic.semantic-ui.modules.dropdown.ui-dropdown-item :refer [ui-dropdown-item]]
    [com.fulcrologic.semantic-ui.modules.tab.ui-tab :refer [ui-tab]]
    [etaira.ui.login-dialog :refer [LoginForm]]
-   [etaira.ui.advisor.training.nn :refer [NeuralNetworkForm NeuralNetworkList]]
+   [etaira.ui.advisor.training.neural-network-config :refer [NeuralNetworkConfigForm NeuralNetworkConfigList]]
+   [etaira.ui.advisor.training.neural-network-model :refer [NeuralNetworkModelForm NeuralNetworkModelList]]
    [etaira.ui.advisor.training.dataset :refer [DatasetForm DatasetList]]
    [com.fulcrologic.fulcro.application :as app]
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
@@ -20,8 +21,9 @@
 
 (defrouter MainRouter [this {:keys [current-state route-factory route-props]}]
   {:always-render-body? true
-   :router-targets      [HomePage LandingPage 
-                         NeuralNetworkForm NeuralNetworkList 
+   :router-targets      [HomePage LandingPage
+                         NeuralNetworkConfigForm NeuralNetworkConfigList
+                         NeuralNetworkModelForm NeuralNetworkModelList
                          DatasetForm DatasetList]}
   (div
    (div :.ui.loader {:classes [(when-not (= :routed current-state) "active")]})
@@ -51,14 +53,18 @@
           (div :.ui.item "Etaira")
           (if logged-in?
             (comp/fragment
-             (ui-dropdown {:className "item" :text "Neural Networks"}
+             (ui-dropdown {:className "item" :text "Neural Network Configs"}
                           (ui-dropdown-menu {}
-                                            (ui-dropdown-item {:onClick (fn [] (rroute/route-to! this NeuralNetworkList {}))} "View All")
-                                            (ui-dropdown-item {:onClick (fn [] (form/create! this NeuralNetworkForm))} "New")))
+                                            (ui-dropdown-item {:onClick (fn [] (rroute/route-to! this NeuralNetworkConfigList {}))} "View All")
+                                            (ui-dropdown-item {:onClick (fn [] (form/create! this NeuralNetworkConfigForm))} "New")))
              (ui-dropdown {:className "item" :text "Datasets"}
                           (ui-dropdown-menu {}
                                             (ui-dropdown-item {:onClick (fn [] (rroute/route-to! this DatasetList {}))} "View All")
-                                            (ui-dropdown-item {:onClick (fn [] (form/create! this DatasetForm))} "New"))))
+                                            (ui-dropdown-item {:onClick (fn [] (form/create! this DatasetForm))} "New")))
+             (ui-dropdown {:className "item" :text "Neural Network Models"}
+                          (ui-dropdown-menu {}
+                                            (ui-dropdown-item {:onClick (fn [] (rroute/route-to! this NeuralNetworkModelList {}))} "View All")
+                                            (ui-dropdown-item {:onClick (fn [] (form/create! this NeuralNetworkModelForm))} "New"))))
             (comp/fragment
              (div {:class "ui tabular menu"}
                   (a {:class "item" :data-tab "white-paper"} "White Paper")

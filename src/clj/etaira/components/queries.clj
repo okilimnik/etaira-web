@@ -16,12 +16,19 @@
            (filter :account/active?)
            (mapv #(select-keys % [:account/id]))))))
 
-(defn get-all-neural-networks
+(defn get-all-neural-network-configs
   [{::kv-key-store/keys [store]}
    query-params]
   (go
-    (->> (keys (<! (k/get-in store [:neural-network/id])))
-         (mapv (fn [id] {:neural-network/id id})))))
+    (->> (keys (<! (k/get-in store [:neural-network-config/id])))
+         (mapv (fn [id] {:neural-network-config/id id})))))
+
+(defn get-all-neural-network-models
+  [{::kv-key-store/keys [store]}
+   query-params]
+  (go
+    (->> (keys (<! (k/get-in store [:neural-network-model/id])))
+         (mapv (fn [id] {:neural-network-model/id id})))))
 
 (defn get-all-datasets
   [{::kv-key-store/keys [store]}
