@@ -28,10 +28,16 @@
    fo/attributes     [dataset/name
                       dataset/exchange
                       dataset/cryptopair
+                      dataset/interval
+                      dataset/date-from
+                      dataset/date-to
                       dataset/indicators]
    fo/layout         [[:dataset/name]
                       [:dataset/exchange]
                       [:dataset/cryptopair]
+                      [:dataset/interval]
+                      [:dataset/date-from]
+                      [:dataset/date-to]
                       [:dataset/indicators]]
    fo/triggers        {:on-change (fn [{::uism/keys [state-map fulcro-app] :as uism-env} form-ident k old-value new-value]
                                     #_(let [cls (comp/ident->any fulcro-app form-ident)

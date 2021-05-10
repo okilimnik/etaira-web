@@ -5,14 +5,13 @@
        [[etaira.components.database-queries :as queries]]
        :cljs
        [[com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]
-        [oops.core :refer [oget]]
-        ;["ccxt/dist/ccxt.browser"]
-        ])
+        [oops.core :refer [oget]]])
    [clojure.string :refer [upper-case]]
    [com.fulcrologic.fulcro.algorithms.merge :as merge]
    [com.fulcrologic.rad.attributes :as attr :refer [defattr]]
    [com.fulcrologic.rad.attributes-options :as ao]
-   [com.fulcrologic.rad.form-options :as fo]))
+   [com.fulcrologic.rad.form-options :as fo]
+   [com.fulcrologic.rad.type-support.date-time :as datetime]))
 
 (defattr id :dataset/id :uuid
   {ao/identity? true
@@ -47,14 +46,18 @@
    fo/default-value "BTC/USDT"})
 
 (defattr date-from :dataset/date-from :instant
-  {ao/identities    #{:dataset/id}
-   ao/required?     true
-   ao/schema        :production})
+  {ao/identities               #{:dataset/id}
+   ao/required?                true
+   fo/field-style              :date-at-noon
+   ::datetime/default-time-zone "America/Los_Angeles"
+   ao/schema                   :production})
 
 (defattr date-to :dataset/date-to :instant
-  {ao/identities    #{:dataset/id}
-   ao/required?     true
-   ao/schema        :production})
+  {ao/identities               #{:dataset/id}
+   ao/required?                true
+   fo/field-style              :date-at-noon
+   ::datetime/default-time-zone "America/Los_Angeles"
+   ao/schema                   :production})
 
 (def intervals 
   ["1m"
@@ -91,12 +94,6 @@
    ao/cardinality :many
    ao/enumerated-values (keys available-indicators)
    ao/enumerated-labels available-indicators
-   ao/schema      :production})
-
-(defattr outputs :dataset/outputs :ref
-  {ao/identities  #{:dataset/id}
-   ao/cardinality :many
-   ao/required?   true
    ao/schema      :production})
 
 (defattr all-datasets :dataset/all-datasets :ref
