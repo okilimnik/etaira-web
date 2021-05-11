@@ -4,18 +4,25 @@
            com.fulcrologic/fulcro-rad             {:mvn/version "1.0.8"}
            com.fulcrologic/fulcro-rad-semantic-ui {:mvn/version "1.0.3"}
            com.fulcrologic/fulcro-i18n            {:mvn/version "0.0.5-alpha"}
-           com.wsscode/pathom                     {:mvn/version "2.3.0-alpha17"}
+           com.wsscode/pathom                     {:mvn/version "2.3.1"}
            edn-query-language/eql                 {:mvn/version "1.0.1"}
            com.taoensso/encore                    {:mvn/version "3.1.0"}
            com.fulcrologic/guardrails             {:mvn/version "0.0.12"}
            binaryage/oops                         {:mvn/version "0.7.0"}
 
-           com.fulcrologic/fulcro-rad-kvstore     {:mvn/version "1.0.0-RC1"}
+           okilimnik/konserve-fire                {:git/url "https://github.com/okilimnik/konserve-fire"
+                                                   :sha     "3f41ef3df7302ca6ce5849fc177fadf0ae3ff6bc"}
+           okilimnik/fire                         {:git/url "https://github.com/okilimnik/fire"
+                                                   :sha     "73dab9295ff9f390e37826d4c69b4efea2547a43"}
+           okilimnik/fulcro-rad-kvstore           {:git/url "https://github.com/okilimnik/fulcro-rad-kvstore"
+                                                   :sha     "69a5a57e5547a81fd0c12b5924b59659e80a223f"}
+           
            io.replikativ/konserve                 {:mvn/version "0.6.0-alpha2"}
-           com.google.firebase/firebase-admin     {:mvn/version "7.1.0" :exclusions [com.google.guava/guava]}
+           com.google.firebase/firebase-admin     {:mvn/version "7.1.0"
+                                                   :exclusions  [com.google.guava/guava]}
 
            cheshire/cheshire                      {:mvn/version "5.10.0"}
-           
+
            ;; Performance checks
            com.taoensso/tufte                     {:mvn/version "2.1.0"}
 

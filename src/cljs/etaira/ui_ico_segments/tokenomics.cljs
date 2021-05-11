@@ -2,7 +2,7 @@
   (:require
    [com.fulcrologic.fulcro.dom :as dom :refer [div span br h3]]
    [com.fulcrologic.semantic-ui.modules.accordion.ui-accordion :refer [ui-accordion]]
-   ["victory" :refer [ VictoryPie]]
+   ["victory" :refer [VictoryPie]]
    [com.fulcrologic.fulcro.algorithms.react-interop :as interop]
    [oops.core :refer [oget]]))
 
