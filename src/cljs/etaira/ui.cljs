@@ -66,9 +66,9 @@
                                             (ui-dropdown-item {:onClick (fn [] (rroute/route-to! this NeuralNetworkModelList {}))} "View All")
                                             (ui-dropdown-item {:onClick (fn [] (form/create! this NeuralNetworkModelForm))} "New"))))
             (comp/fragment
-             (div {:class "ui tabular menu"}
-                  (a {:class "item" :data-tab "white-paper"} "White Paper")
-                  (a {:class "item" :data-tab "docs"} "docs"))))
+             (div {:className "ui tabular menu"}
+                  (a {:className "item" :data-tab "white-paper"} "White Paper")
+                  (a {:className "item" :data-tab "docs"} "docs"))))
           (div :.right.menu
 
              

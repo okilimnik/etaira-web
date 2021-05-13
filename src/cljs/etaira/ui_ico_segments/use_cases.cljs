@@ -40,7 +40,7 @@
                 "Use Cases"))
 
        (for [item use-cases-content]
-         (div :.six.wide.centered.column
+         (div :.six.wide.centered.column {:key (:key item)}
               (div :.two.column.ui.grid
                    (div :.right.aligned.four.wide.column
                         

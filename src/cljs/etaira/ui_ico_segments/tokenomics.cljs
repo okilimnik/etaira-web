@@ -114,25 +114,25 @@
               :labelRadius 45
               :padAngle 1})))
 
-(def tokenomics (fn []
-                  (div :.stackable.ui.grid
-                       {:style {:backgroundColor "#00ffff"
-                                :width "100%"
-                                :minHeight "800px"
-                                :padding "100px 0"}}
-                       (div :.one.column.centered.row
-                            (h3 {:style
-                                 {:color "#013220"
-                                  :fontSize "250%"}}
-                                "Tokenomics"))
-                       (div :.two.column.centered.row
-                            (div :.six.wide.column
-                                 (ui-accordion {;;:defaultActiveIndex 
-                                                :panels tokenomics-content
-                                                :exclusive false}))
-                            (div :.six.wide.left.aligned.column
-                                 {:style {:margin "-100px -50px 0 0"}}
-                                 (chart))))))
+(defn tokenomics []
+  (div :.stackable.ui.grid
+       {:style {:backgroundColor "#00ffff"
+                :width "100%"
+                :minHeight "800px"
+                :padding "100px 0"}}
+       (div :.one.column.centered.row
+            (h3 {:style
+                 {:color "#013220"
+                  :fontSize "250%"}}
+                "Tokenomics"))
+       (div :.two.column.centered.row
+            (div :.six.wide.column
+                 (ui-accordion {;;:defaultActiveIndex 
+                                :panels tokenomics-content
+                                :exclusive false}))
+            (div :.six.wide.left.aligned.column
+                 {:style {:margin "-100px -50px 0 0"}}
+                 (chart)))))
 
 
 
