@@ -16,7 +16,8 @@ compiled
 datahub.log*
 node_modules
 out
-resources/public/js
+resources/public/js/main
+resources/public/js/test
 *.class
 .cpcache/
 .shadow-cljs
