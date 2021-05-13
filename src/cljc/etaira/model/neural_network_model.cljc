@@ -61,17 +61,16 @@
                    (swap! state merge/remove-ident* [:neural-network-model/id neural-network-model-id] [:list/id list-id :list/neural-network-models]))))
 
 #?(:clj
-   (defmutation train-model [env {:neural-network-model/keys [id]}]
+   (defmutation train-model [env {:neural-network-model/keys [id state]}]
      {::pc/params #{:neural-network-model/id}
       ::pc/output [:neural-network-model/id]}
      (form/save-form* env {::form/id        id
                            ::form/master-pk :neural-network-model/id
-                           ::form/delta     {[:neural-network-model/id id] {:neural-network-model/state {:before "not-trained" :after "trained"}}}}))
+                           ::form/delta     {[:neural-network-model/id id] {:neural-network-model/state {:before "not-trained" :after "training"}}}}))
    :cljs
    (defmutation train-model [{:neural-network-model/keys [id]}]
 
      (action [{:keys [state]}]
-             (println "training2")
              (swap! state assoc-in [:neural-network-model/id id :neural-network-model/state] "training"))
      (remote [_] true)))
 

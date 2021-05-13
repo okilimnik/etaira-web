@@ -49,7 +49,8 @@
   {ro/title               "All Neural Network Models"
    ro/source-attribute    :neural-network-model/all-neural-network-models
    ro/row-pk              neural-network-model/id
-   ro/columns             [neural-network-model/name]
+   ro/columns             [neural-network-model/name
+                           neural-network-model/state]
 
    ro/column-headings     {:neural-network-model/name "Name"}
 
@@ -75,13 +76,9 @@
 
    ro/row-actions         [{:label "Train"
                             :action    (fn [report-instance {:neural-network-model/keys [id]}]
-                                         (println "training1")
                                          (comp/transact! report-instance [(neural-network-model/train-model {:neural-network-model/id id})]))
-                            :visible?  (fn [_ row-props] 
-                                         (println (:neural-network-model/state row-props))
-                                         (not= "trained" (:neural-network-model/state row-props)))
-                            ;:disabled? (fn [_ row-props] (= "trained" (:new-neural-network-model/state row-props)))
-                            }
+                            :visible?  (fn [_ row-props] true)
+                            :disabled? (fn [_ row-props] (contains? #{"trained" "training"} (:neural-network-model/state row-props)))}
 
                            {:label  "Delete"
                             :action (fn [this {:neural-network-model/keys [id] :as row}] (form/delete! this :neural-network-model/id id))}
