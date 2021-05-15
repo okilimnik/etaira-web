@@ -51,34 +51,42 @@
    ro/row-pk              neural-network-model/id
    ro/columns             [neural-network-model/name
                            neural-network-model/state]
-
+   ro/column-formatters   {:neural-network-model/state (fn [this v] (get neural-network-model/states v ""))}
    ro/column-headings     {:neural-network-model/name "Name"}
-
    ro/controls            {::new-neural-network-model {:label  "New Neural Network Model"
                                                        :type   :button
                                                        :action (fn [this] (form/create! this NeuralNetworkModelForm))}
                            ;::search!       
                            #_{:type   :button
-                                            :local? true
-                                            :label  "Filter"
-                                            :class "ui basic compact mini red button"
-                                            :action (fn [this _] (report/filter-rows! this))}
+                              :local? true
+                              :label  "Filter"
+                              :class "ui basic compact mini red button"
+                              :action (fn [this _] (report/filter-rows! this))}
                            ;::filter-name   
                            #_{:type        :string
-                                            :local?      true
-                                            :placeholder "Type a partial name and press enter."
-                                            :onChange    (fn [this _] (report/filter-rows! this))}}
+                              :local?      true
+                              :placeholder "Type a partial name and press enter."
+                              :onChange    (fn [this _] (report/filter-rows! this))}}
 
-   ro/control-layout      {:action-buttons [::new-neural-network-model] 
+   ro/control-layout      {:action-buttons [::new-neural-network-model]
                            ;:inputs         [[::filter-name ::search! :_]]
                            }
 
 
    ro/row-actions         [{:label "Train"
                             :action    (fn [report-instance {:neural-network-model/keys [id]}]
-                                         (comp/transact! report-instance [(neural-network-model/train-model {:neural-network-model/id id})]))
-                            :visible?  (fn [_ row-props] true)
-                            :disabled? (fn [_ row-props] (contains? #{"trained" "training"} (:neural-network-model/state row-props)))}
+                                         (comp/transact! report-instance [(neural-network-model/set-state {:neural-network-model/id id
+                                                                                                           :neural-network-model/state :training})]))
+                            :visible?  (fn [_ row-props] (not (contains? #{:trained :training} (:neural-network-model/state row-props))))
+                            ;:disabled? (fn [_ row-props] (contains? #{"trained" "training"} (:neural-network-model/state row-props)))
+                            }
+                           {:label "Stop"
+                            :action    (fn [report-instance {:neural-network-model/keys [id]}]
+                                         (comp/transact! report-instance [(neural-network-model/set-state {:neural-network-model/id id
+                                                                                                           :neural-network-model/state :not-trained})]))
+                            :visible?  (fn [_ row-props] (contains? #{:trained :training} (:neural-network-model/state row-props)))
+                            ;:disabled? (fn [_ row-props] (not (contains? #{"trained" "training"} (:neural-network-model/state row-props))))
+                            }
 
                            {:label  "Delete"
                             :action (fn [this {:neural-network-model/keys [id] :as row}] (form/delete! this :neural-network-model/id id))}

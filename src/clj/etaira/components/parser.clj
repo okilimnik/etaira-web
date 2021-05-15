@@ -8,6 +8,7 @@
    [etaira.model :refer [all-attributes]]
    [etaira.model.account :as account]
    [etaira.model.timezone :as timezone]
+   [etaira.model.neural-network-model :as neural-network-model]
    [com.fulcrologic.rad.attributes :as attr]
    [com.fulcrologic.rad.form :as form]
    [com.fulcrologic.rad.pathom :as pathom]
@@ -35,4 +36,5 @@
    [automatic-resolvers
     form/resolvers
     account/resolvers
-    timezone/resolvers]))
+    timezone/resolvers
+    neural-network-model/resolvers]))

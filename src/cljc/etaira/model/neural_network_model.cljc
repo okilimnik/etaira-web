@@ -34,17 +34,17 @@
    ao/required?  true
    ao/schema     :production})
 
-(def states 
-  {"training"    "Training"
-   "trained"     "Trained"
-   "not-trained" "Not trained"})
+(def states
+  {:training    "Training"
+   :trained     "Trained"
+   :not-trained "Not trained"})
 
 (defattr state :neural-network-model/state :enum
   {ao/identities        #{:neural-network-model/id}
    ao/enumerated-values (keys states)
    ao/enumerated-labels states
    ao/schema            :production
-   fo/default-value     "not-trained"})
+   fo/default-value     :not-trained})
 
 (defattr all-neural-network-models :neural-network-model/all-neural-network-models :ref
   {ao/target     :neural-network-model/id
@@ -61,18 +61,21 @@
                    (swap! state merge/remove-ident* [:neural-network-model/id neural-network-model-id] [:list/id list-id :list/neural-network-models]))))
 
 #?(:clj
-   (defmutation train-model [env {:neural-network-model/keys [id state]}]
+   (defmutation set-state [env {:neural-network-model/keys [id] :as props}]
      {::pc/params #{:neural-network-model/id}
       ::pc/output [:neural-network-model/id]}
      (form/save-form* env {::form/id        id
                            ::form/master-pk :neural-network-model/id
-                           ::form/delta     {[:neural-network-model/id id] {:neural-network-model/state {:before "not-trained" :after "training"}}}}))
+                           ::form/delta     {[:neural-network-model/id id] {:neural-network-model/state {:before :not-trained :after (:neural-network-model/state props)}}}}))
    :cljs
-   (defmutation train-model [{:neural-network-model/keys [id]}]
+   (defmutation set-state [{:neural-network-model/keys [id] :as props}]
 
      (action [{:keys [state]}]
-             (swap! state assoc-in [:neural-network-model/id id :neural-network-model/state] "training"))
+             (swap! state assoc-in [:neural-network-model/id id :neural-network-model/state] (:neural-network-model/state props)))
      (remote [_] true)))
 
 
-(def attributes [id name config dataset all-neural-network-models train-model])
+(def attributes [id name config dataset all-neural-network-models set-state])
+
+#?(:clj
+   (def resolvers [set-state]))
