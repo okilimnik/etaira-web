@@ -2,12 +2,11 @@
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require
    [oops.core :refer [oget+ oget ocall]]
-   [etaira.interop.async :refer [async await]]
    [konserve.indexeddb :refer [new-indexeddb-store]]
    [konserve.protocols :refer [PEDNAsyncKeyValueStore -exists? -get -update-in -assoc-in -get-meta
                                PBinaryAsyncKeyValueStore -bget -bassoc
                                PStoreSerializer -serialize -deserialize]]
-   [cljs.core.async :as async :refer [<!]]
+   [cljs.core.async :as async :refer [<! timeout put! chan]]
    [com.wsscode.pathom.connect :as pc]
    [com.fulcrologic.fulcro.data-fetch :as df]
    [etaira.app :refer [etaira-app]]
@@ -15,29 +14,35 @@
 
 (def training-models (atom {}))
 
-(def sleep #(js/Promise. (fn [resolve] (js/setTimeout resolve %))))
-
 (def db (atom nil))
 
-#_(defn fetch-ohlcv [model exchange symbol timeframe date-from date-to]
-  (async
-   (go
-     (reset! db (<! (new-indexeddb-store (str "history-data-" (:neural-network-model/id model)))))
-     (-assoc-in @db ["rows"] [] [])
-     (loop [date-from! date-from]
-       (await (sleep (oget exchange :rateLimit)))
-       (when (< date-from! date-to)
-         (let [data (await (ocall exchange :fetchOHLCV symbol timeframe date-from 500))]
-           (-update-in @db ["rows"] conj data [])
-           (println data)
-           (recur date-from!)))))))
+(defn fetch-ohlcv [model exchange symbol timeframe date-from date-to]
+  (go
+    (reset! db (<! (new-indexeddb-store (str "history-data-" (:neural-network-model/id model)))))
+    ;(-assoc-in @db ["rows"] [] [])
+    (loop [date-from! date-from]
+      (<! (timeout (oget exchange :rateLimit)))
+      (when (and date-from! (= -1 (compare date-from! date-to)))
+        (println "date-from: " date-from!)
+        (let [ch (chan)]
+          (-> (ocall exchange :fetchOHLCV symbol timeframe (.getTime date-from) 500)
+              (.then (fn [data]
+                       (put! ch (js->clj data)))))
+          (let [data (<! ch)
+                new-date-from (js/Date. (first (last data)))]
+            (println "data: " data)
+            (<! (-assoc-in @db ["rows"] (fn [_] {:meta "META"}) {:a 1}))
+            (when (= (count data) 500)
+              (recur new-date-from))))))
+    (println "Finished history download")
+    (println "from indexeddb: " (<! (-get @db "rows")))))
 
 (defn download-history-data [model]
   (let [{:dataset/keys [exchange cryptopair date-from date-to interval]} (:neural-network-model/dataset model)
         exchange-class (oget+ js/ccxt exchange)
         exchange-obj (exchange-class.)]
     (if (oget exchange-obj "has.fetchOHLCV")
-      ;(fetch-ohlcv model exchange-obj cryptopair interval date-from date-to)
+      (fetch-ohlcv model exchange-obj cryptopair interval date-from date-to)
       (println "exchange doesn't provide history data"))))
 
 
