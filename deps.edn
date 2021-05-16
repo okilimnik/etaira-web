@@ -17,7 +17,8 @@
            okilimnik/fulcro-rad-kvstore           {:git/url "https://github.com/okilimnik/fulcro-rad-kvstore"
                                                    :sha     "69a5a57e5547a81fd0c12b5924b59659e80a223f"}
 
-           io.replikativ/konserve                 {:mvn/version "0.6.0-alpha2"}
+           io.replikativ/konserve                 {:mvn/version "0.6.0-alpha2"
+                                                   :exclusions [com.cognitect/fress]}
            com.google.firebase/firebase-admin     {:mvn/version "7.1.0"
                                                    :exclusions  [com.google.guava/guava]}
 
@@ -53,8 +54,7 @@
            :cljs       {:replace-paths ["src/cljs" "src/cljc" "src/css"]
                         :extra-deps  {thheller/shadow-cljs                {:mvn/version "2.11.4"}
                                       io.replikativ/incognito             {:mvn/version "0.2.7"
-                                                                           :exclusions [com.cognitect/transit-cljs]}
-                                      com.cognitect/transit-cljs          {:mvn/version "0.8.264"}
+                                                                           :exclusions [com.cognitect/fress]}
                                       com.fulcrologic/semantic-ui-wrapper {:mvn/version "1.0.1"}
                                       org.clojure/tools.namespace         {:mvn/version "1.0.0"}
                                       org.clojure/clojurescript           {:mvn/version "1.10.773"}}
