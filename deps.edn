@@ -16,7 +16,7 @@
                                                    :sha     "73dab9295ff9f390e37826d4c69b4efea2547a43"}
            okilimnik/fulcro-rad-kvstore           {:git/url "https://github.com/okilimnik/fulcro-rad-kvstore"
                                                    :sha     "69a5a57e5547a81fd0c12b5924b59659e80a223f"}
-           
+
            io.replikativ/konserve                 {:mvn/version "0.6.0-alpha2"}
            com.google.firebase/firebase-admin     {:mvn/version "7.1.0"
                                                    :exclusions  [com.google.guava/guava]}
@@ -39,7 +39,7 @@
            org.slf4j/jul-to-slf4j                 {:mvn/version "1.7.30"} ; auto sends java.util.logging to slf4j
            org.slf4j/jcl-over-slf4j               {:mvn/version "1.7.30"} ; auto-sends java.common.logging to slf4j
            com.fzakaria/slf4j-timbre              {:mvn/version "0.3.19"} ; hooks slf4j to timbre
-
+           
            org.clojure/clojure                    {:mvn/version "1.10.1"}}
 
  :aliases {:app {:extra-deps {uberdeps/uberdeps {:mvn/version "1.0.2"}}

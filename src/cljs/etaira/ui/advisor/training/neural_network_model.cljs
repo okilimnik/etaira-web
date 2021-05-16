@@ -6,7 +6,8 @@
    [com.fulcrologic.rad.form-options :as fo]
    [com.fulcrologic.rad.report :as report]
    [com.fulcrologic.rad.report-options :as ro]
-   [etaira.model.neural-network-model :as neural-network-model]))
+   [etaira.model.neural-network-model :as neural-network-model]
+   [etaira.ui.advisor.training.training :as model-training]))
 
 (defsc DatasetQuery [_ _]
   {:query [:dataset/id :dataset/name]
@@ -76,14 +77,16 @@
    ro/row-actions         [{:label "Train"
                             :action    (fn [report-instance {:neural-network-model/keys [id]}]
                                          (comp/transact! report-instance [(neural-network-model/set-state {:neural-network-model/id id
-                                                                                                           :neural-network-model/state :training})]))
+                                                                                                           :neural-network-model/state :training})])
+                                         (model-training/train! id))
                             :visible?  (fn [_ row-props] (not (contains? #{:trained :training} (:neural-network-model/state row-props))))
                             ;:disabled? (fn [_ row-props] (contains? #{"trained" "training"} (:neural-network-model/state row-props)))
                             }
                            {:label "Stop"
-                            :action    (fn [report-instance {:neural-network-model/keys [id]}]
+                            :action    (fn [report-instance {:neural-network-model/keys [id] :as row-props}]
                                          (comp/transact! report-instance [(neural-network-model/set-state {:neural-network-model/id id
-                                                                                                           :neural-network-model/state :not-trained})]))
+                                                                                                           :neural-network-model/state :not-trained})])
+                                         (model-training/stop! id))
                             :visible?  (fn [_ row-props] (contains? #{:trained :training} (:neural-network-model/state row-props)))
                             ;:disabled? (fn [_ row-props] (not (contains? #{"trained" "training"} (:neural-network-model/state row-props))))
                             }

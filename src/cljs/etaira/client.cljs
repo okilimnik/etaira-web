@@ -6,6 +6,7 @@
    [com.fulcrologic.fulcro.components :as comp]
    [com.fulcrologic.fulcro.mutations :as m]
    [com.fulcrologic.rad.application :as rad-app]
+   [etaira.app :refer [etaira-app]]
    [com.fulcrologic.rad.report :as report]
    [com.fulcrologic.rad.authorization :as auth]
    [com.fulcrologic.rad.rendering.semantic-ui.semantic-ui-controls :as sui]
@@ -37,15 +38,12 @@
   (rad-app/install-ui-controls! app sui/all-controls)
   (report/install-formatter! app :boolean :affirmation (fn [_ value] (if value "yes" "no"))))
 
-
-(defonce app (rad-app/fulcro-rad-app {}))
-
 (defn refresh []
   ;; hot code reload of installed controls
   (log/info "Reinstalling controls")
-  (setup-RAD app)
-  (comp/refresh-dynamic-queries! app)
-  (app/mount! app Root "app"))
+  (setup-RAD etaira-app)
+  (comp/refresh-dynamic-queries! etaira-app)
+  (app/mount! etaira-app Root "app"))
 
 (defn init []
   (log/merge-config! {:output-fn prefix-output-fn
@@ -54,13 +52,13 @@
   ;; default time zone (should be changed at login for given user)
   (datetime/set-timezone! "America/Los_Angeles")
   ;; Avoid startup async timing issues by pre-initializing things before mount
-  (app/set-root! app Root {:initialize-state? true})
-  (dr/initialize! app)
-  (setup-RAD app)
-  (app/mount! app Root "app" {:initialize-state? false})
-  (dr/change-route! app ["landing-page"])
-  (history/install-route-history! app (html5-history))
-  (auth/start! app [LoginForm] {:after-session-check `fix-route}))
+  (app/set-root! etaira-app Root {:initialize-state? true})
+  (dr/initialize! etaira-app)
+  (setup-RAD etaira-app)
+  (app/mount! etaira-app Root "app" {:initialize-state? false})
+  (dr/change-route! etaira-app ["landing-page"])
+  (history/install-route-history! etaira-app (html5-history))
+  (auth/start! etaira-app [LoginForm] {:after-session-check `fix-route}))
 
 (comment)
 

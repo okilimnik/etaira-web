@@ -74,7 +74,6 @@
              (swap! state assoc-in [:neural-network-model/id id :neural-network-model/state] (:neural-network-model/state props)))
      (remote [_] true)))
 
-
 (def attributes [id name config dataset all-neural-network-models set-state])
 
 #?(:clj
