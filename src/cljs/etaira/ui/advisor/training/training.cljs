@@ -3,10 +3,7 @@
   (:require
    ["@tensorflow/tfjs" :as tf]
    [oops.core :refer [oget+ oget ocall]]
-   [konserve.indexeddb :refer [new-indexeddb-store]]
-   [konserve.protocols :refer [PEDNAsyncKeyValueStore -exists? -get -update-in -assoc-in -get-meta
-                               PBinaryAsyncKeyValueStore -bget -bassoc
-                               PStoreSerializer -serialize -deserialize]]
+   ["dexie" :refer [Dexie]]
    [cljs.core.async :as async :refer [<! timeout put! chan]]
    [com.wsscode.pathom.connect :as pc]
    [com.fulcrologic.fulcro.data-fetch :as df]
@@ -20,9 +17,10 @@
 
 (defn fetch-ohlcv [model exchange symbol timeframe date-from date-to]
   (go
-    (reset! db (<! (new-indexeddb-store (str "history-data-" (:neural-network-model/id model)))))
-    (<! (-assoc-in @db [(:neural-network-model/id model)] (fn [] {:meta "META"}) []))
-    ;(-assoc-in @db ["rows"] [] [])
+    (reset! db (Dexie. (:neural-network-model/id model)))
+    (-> @db
+        (ocall :version 1)
+        (ocall :stores #js {:dataset "++id, open-time, open, high, low, close, volume"}))
     (loop [date-from! date-from]
       (<! (timeout (oget exchange :rateLimit)))
       (when (and date-from! (= -1 (compare date-from! date-to)))
@@ -34,11 +32,21 @@
           (let [data (<! ch)
                 new-date-from (js/Date. (first (last data)))]
             (println "data: " data)
-            (<! (-update-in @db [(:neural-network-model/id model)] (fn [] {:meta "META"}) #(vec (concat % data)) []))
+            (-> @db
+                (oget :dataset)
+                (ocall :bulkPut
+                       (clj->js
+                        (vec
+                         (for [row data]
+                           {:open-time (get row 0)
+                            :open (get row 1)
+                            :high (get row 2)
+                            :low (get row 3)
+                            :close (get row 4)
+                            :volume (get row 5)})))))
             (when (= (count data) 500)
               (recur new-date-from))))))
-    (println "Finished history download")
-    (println "from indexeddb: " (<! (-get @db (:neural-network-model/id model))))))
+    (println "Finished history download")))
 
 (defn download-history-data [model]
   (let [{:dataset/keys [exchange cryptopair date-from date-to interval]} (:neural-network-model/dataset model)
@@ -89,27 +97,53 @@
 (def EPOCHS 100)
 (def BATCH-SIZE 20)
 
-(defn get-trade-results [data-id batch-index])
+(def STOP-LOSS 20)
+(def STOP-PROFIT 20)
+
+
+(defn get-trade-results [data-id data-index]
+  (let [data (<! (-get @db data-id))]
+    (for [feature data]
+      (let [timestamp (first feature)
+            close-price (get feature 4)]
+        (loop [next-features (subvec data (.indexOf data feature) (count data))]
+          (let [nearest-greater (first (filter #(>= (get % 4) (+ STOP-PROFIT close-price)) next-features))
+                nearest-lesser (first (filter #(<= (get % 4) (+ STOP-LOSS close-price)) next-features))]
+            (cond
+              (> (- (get nearest-greater 0)
+                    (get nearest-lesser 0))
+                 (* 1000 60 5)) ;; 5 minutes diff
+              1
+              (< (- (get nearest-greater 0)
+                    (get nearest-lesser 0))
+                 (* 1000 60 5)) ;; 5 minutes diff
+              -1
+              :else 0)))))))
 
 (def batch-number (atom {}))
 (defn get-next-batch-fn [data-id feature-length batches-per-epoch training-total validation?]
   (swap! batch-number assoc data-id 1)
   (let [initial-offset (if validation? (int (/ training-total 500)) 0)]
-    #js {:next #(let [data (<! (-get @db (str data-id "-" (+ (dec @batch-number) initial-offset))))
-                      samples (ocall tf :buffer #js [BATCH-SIZE 1 feature-length])
-                      targets (ocall tf :buffer #js [BATCH-SIZE 1])
-                      epoch-end? (= batches-per-epoch (dec @batch-number))
-                      trade-results (get-trade-results data-id (+ (dec @batch-number) initial-offset))]
-                  (when-not epoch-end?
-                    (swap! batch-number update data-id inc))
-                  (doseq [[sample-index features] (map-indexed (fn [idx itm] [idx itm]) data)]
-                    (dotimes [i (count features)]
-                      (let [feature-value (get features i)]
-                        (ocall samples :set feature-value sample-index 0 i)))
-                    (ocall targets :set (get trade-results sample-index) sample-index 0))
-                  #js {:value #js {:xs (ocall samples :toTensor)
-                                   :ys (ocall targets :toTensor)}
-                       :done epoch-end?})}))
+    (clj->js
+     {:next
+      (fn []
+        (let [data-index (+ (dec @batch-number) initial-offset)
+              features-data-id (str data-id "-" data-index)
+              data (<! (-get @db features-data-id))
+              samples (ocall tf :buffer (clj->js [BATCH-SIZE 1 feature-length]))
+              targets (ocall tf :buffer (clj->js [BATCH-SIZE 1]))
+              epoch-end? (= batches-per-epoch (dec @batch-number))
+              trade-results (get-trade-results features-data-id data-index)]
+          (when-not epoch-end?
+            (swap! batch-number update data-id inc))
+          (doseq [[sample-index features] (map-indexed (fn [idx itm] [idx itm]) data)]
+            (dotimes [i (count features)]
+              (let [feature-value (get features i)]
+                (ocall samples :set feature-value sample-index 0 i)))
+            (ocall targets :set (get trade-results sample-index) sample-index 0))
+          (clj->js {:value {:xs (ocall samples :toTensor)
+                            :ys (ocall targets :toTensor)}
+                    :done epoch-end?})))})))
 
 (defn train [{:keys [id config dataset]}]
   (go
