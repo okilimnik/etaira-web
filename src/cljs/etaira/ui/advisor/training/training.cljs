@@ -8,6 +8,7 @@
    [com.wsscode.pathom.connect :as pc]
    [com.fulcrologic.fulcro.data-fetch :as df]
    [etaira.app :refer [etaira-app]]
+   [etaira.interop.async :refer [async await]]
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]))
 
 (def training-models (atom {}))
@@ -21,29 +22,32 @@
     (-> @db
         (ocall :version 1)
         (ocall :stores #js {:dataset "++id, open-time, open, high, low, close, volume"}))
-    (loop [date-from! date-from]
-      (<! (timeout (oget exchange :rateLimit)))
-      (when (and date-from! (= -1 (compare date-from! date-to)))
-        (println "date-from: " date-from!)
-        (let [ch (chan)]
+    (let [ch (chan)]
+      (loop [date-from! date-from]
+        (<! (timeout (oget exchange :rateLimit)))
+        (when (and date-from! (= -1 (compare date-from! date-to)))
+          (println "date-from: " date-from!)
           (-> (ocall exchange :fetchOHLCV symbol timeframe (.getTime date-from) 500)
               (.then (fn [data]
                        (put! ch (js->clj data)))))
           (let [data (<! ch)
                 new-date-from (js/Date. (first (last data)))]
             (println "data: " data)
-            (-> @db
-                (oget :dataset)
-                (ocall :bulkPut
-                       (clj->js
-                        (vec
-                         (for [row data]
-                           {:open-time (get row 0)
-                            :open (get row 1)
-                            :high (get row 2)
-                            :low (get row 3)
-                            :close (get row 4)
-                            :volume (get row 5)})))))
+            (when (seq data)
+              (-> @db
+                  (oget :dataset)
+                  (ocall :bulkPut
+                         (clj->js
+                          (vec
+                           (for [row data]
+                             {:timestamp (get row 0)
+                              ;:open (js/parseFloat (get row 1))
+                              ;:high (js/parseFloat (get row 2))
+                              ;:low (js/parseFloat (get row 3))
+                              :close (js/parseFloat (get row 4))
+                              :volume (js/parseFloat (get row 5))}))))
+                  (.then #(put! ch 1)))
+              (<! ch))
             (when (= (count data) 500)
               (recur new-date-from))))))
     (println "Finished history download")))
@@ -100,62 +104,96 @@
 (def STOP-LOSS 20)
 (def STOP-PROFIT 20)
 
+(defn query-trade-result [{:keys [timestamp close]}]
+  (let [result (atom 0)]
+    (let [profit (await (-> @db
+                            (oget :dataset)
+                            (ocall :where "timestamp")
+                            (ocall :above timestamp)
+                            (ocall :where "close")
+                            (ocall :aboveOrEqual (+ close STOP-PROFIT))
+                            (ocall :sortBy timestamp)
+                            (ocall :first)))
+          loss (await (-> @db
+                          (oget :dataset)
+                          (ocall :where "timestamp")
+                          (ocall :above timestamp)
+                          (ocall :where "close")
+                          (ocall :belowOrEqual (- close STOP-LOSS))
+                          (ocall :sortBy timestamp)
+                          (ocall :first)))]
+      (reset! result (if (< (:timestamp profit) (:timestamp loss)) 1 0)))
+    (let [profit (await (-> @db
+                            (oget :dataset)
+                            (ocall :where "timestamp")
+                            (ocall :above timestamp)
+                            (ocall :where "close")
+                            (ocall :belowOrEqual (- close STOP-PROFIT))
+                            (ocall :sortBy timestamp)
+                            (ocall :first)))
+          loss (await (-> @db
+                          (oget :dataset)
+                          (ocall :where "timestamp")
+                          (ocall :above timestamp)
+                          (ocall :where "close")
+                          (ocall :aboveOrEqual (+ close STOP-LOSS))
+                          (ocall :sortBy timestamp)
+                          (ocall :first)))]
+      (reset! result (if (< (:timestamp profit) (:timestamp loss)) -1 0)))))
 
-(defn get-trade-results [data-id data-index]
-  (let [data (<! (-get @db data-id))]
-    (for [feature data]
-      (let [timestamp (first feature)
-            close-price (get feature 4)]
-        (loop [next-features (subvec data (.indexOf data feature) (count data))]
-          (let [nearest-greater (first (filter #(>= (get % 4) (+ STOP-PROFIT close-price)) next-features))
-                nearest-lesser (first (filter #(<= (get % 4) (+ STOP-LOSS close-price)) next-features))]
-            (cond
-              (> (- (get nearest-greater 0)
-                    (get nearest-lesser 0))
-                 (* 1000 60 5)) ;; 5 minutes diff
-              1
-              (< (- (get nearest-greater 0)
-                    (get nearest-lesser 0))
-                 (* 1000 60 5)) ;; 5 minutes diff
-              -1
-              :else 0)))))))
+(defn get-trade-results [data]
+  (async
+   (vec
+    (for [features data]
+      (query-trade-result features)))))
 
 (def batch-number (atom {}))
-(defn get-next-batch-fn [data-id feature-length batches-per-epoch training-total validation?]
-  (swap! batch-number assoc data-id 1)
-  (let [initial-offset (if validation? (int (/ training-total 500)) 0)]
-    (clj->js
-     {:next
-      (fn []
-        (let [data-index (+ (dec @batch-number) initial-offset)
-              features-data-id (str data-id "-" data-index)
-              data (<! (-get @db features-data-id))
-              samples (ocall tf :buffer (clj->js [BATCH-SIZE 1 feature-length]))
-              targets (ocall tf :buffer (clj->js [BATCH-SIZE 1]))
-              epoch-end? (= batches-per-epoch (dec @batch-number))
-              trade-results (get-trade-results features-data-id data-index)]
-          (when-not epoch-end?
-            (swap! batch-number update data-id inc))
-          (doseq [[sample-index features] (map-indexed (fn [idx itm] [idx itm]) data)]
-            (dotimes [i (count features)]
-              (let [feature-value (get features i)]
-                (ocall samples :set feature-value sample-index 0 i)))
-            (ocall targets :set (get trade-results sample-index) sample-index 0))
-          (clj->js {:value {:xs (ocall samples :toTensor)
-                            :ys (ocall targets :toTensor)}
-                    :done epoch-end?})))})))
+(defn get-next-batch-fn [feature-length training-total batches-per-epoch validation?]
+  (let [initial-offset (if validation? training-total 0)]
+    #js {:next
+         (async
+          (fn []
+            (let [offset (+ initial-offset (* BATCH-SIZE (dec @batch-number)))
+                  limit BATCH-SIZE
+                  data (await (-> @db
+                                  (oget :dataset)
+                                  (ocall :offset offset)
+                                  (ocall :limit limit)
+                                  (ocall :toArray)))
+                  samples (ocall tf :buffer #js [BATCH-SIZE 1 feature-length])
+                  targets (ocall tf :buffer #js [BATCH-SIZE 1])
+                  keys-indexed (map-indexed (fn [idx itm] [idx itm])
+                                            (sort (keys (first data))))
+                  epoch-end? (= batches-per-epoch (dec @batch-number))
+                  trade-results (get-trade-results data)]
+              (when-not epoch-end?
+                (swap! batch-number inc))
+              (doseq [[item-index item] (map-indexed (fn [idx itm] [idx itm]) data)]
+                (doseq [[key-index key!] keys-indexed]
+                  (let [v (key! item)]
+                    (ocall samples :set v item-index 0 key-index)))
+                (ocall targets :set (get trade-results item-index) item-index 0))
+              #js {:value #js {:xs (ocall samples :toTensor)
+                               :ys (ocall targets :toTensor)}
+                   :done epoch-end?})))}))
 
 (defn train [{:keys [id config dataset]}]
   (go
-    (let [num-features (+ (count (first (<! (-get @db (str id "-0")))))
+    (let [num-features (+ (count (-> @db
+                                     (oget :dataset)
+                                     (ocall :first)
+                                     js->clj
+                                     keys))
                           (count (:dataset/indicators dataset)))
           model (<! (build-model config num-features))
-          training-total (int (* (<! (-get @db (str id "-total"))) 0.7))
+          training-total (int (* (-> @db
+                                     (oget :dataset)
+                                     (ocall :count)) 0.7))
           batches-per-epoch (dec (dec (int (/ training-total BATCH-SIZE))))
           train-dataset (-> (oget tf :data)
-                            (ocall :generator (fn [] (get-next-batch-fn id num-features training-total batches-per-epoch false))))
+                            (ocall :generator (fn [] (get-next-batch-fn num-features training-total batches-per-epoch false))))
           validation-dataset (-> (oget tf :data)
-                                 (ocall :generator (fn [] (get-next-batch-fn id num-features training-total batches-per-epoch true))))]
+                                 (ocall :generator (fn [] (get-next-batch-fn num-features training-total batches-per-epoch true))))]
       (ocall model :fitDataset train-dataset (clj->js {:batchesPerEpoch batches-per-epoch
                                                        :epochs          EPOCHS
                                                        :callbacks       {:onTrainBegin (fn [logs] false)
