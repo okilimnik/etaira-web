@@ -105,47 +105,48 @@
 (def STOP-PROFIT 20)
 
 (defn query-trade-result [{:keys [timestamp close]}]
-  (let [result (atom 0)]
-    (let [profit (await (-> @db
-                            (oget :dataset)
-                            (ocall :where "timestamp")
-                            (ocall :above timestamp)
-                            (ocall :where "close")
-                            (ocall :aboveOrEqual (+ close STOP-PROFIT))
-                            (ocall :sortBy timestamp)
-                            (ocall :first)))
-          loss (await (-> @db
-                          (oget :dataset)
-                          (ocall :where "timestamp")
-                          (ocall :above timestamp)
-                          (ocall :where "close")
-                          (ocall :belowOrEqual (- close STOP-LOSS))
-                          (ocall :sortBy timestamp)
-                          (ocall :first)))]
-      (reset! result (if (< (:timestamp profit) (:timestamp loss)) 1 0)))
-    (let [profit (await (-> @db
-                            (oget :dataset)
-                            (ocall :where "timestamp")
-                            (ocall :above timestamp)
-                            (ocall :where "close")
-                            (ocall :belowOrEqual (- close STOP-PROFIT))
-                            (ocall :sortBy timestamp)
-                            (ocall :first)))
-          loss (await (-> @db
-                          (oget :dataset)
-                          (ocall :where "timestamp")
-                          (ocall :above timestamp)
-                          (ocall :where "close")
-                          (ocall :aboveOrEqual (+ close STOP-LOSS))
-                          (ocall :sortBy timestamp)
-                          (ocall :first)))]
-      (reset! result (if (< (:timestamp profit) (:timestamp loss)) -1 0)))))
+  (async
+   (let [result (atom 0)]
+     (let [profit (await (-> @db
+                             (oget :dataset)
+                             (ocall :where "timestamp")
+                             (ocall :above timestamp)
+                             (ocall :where "close")
+                             (ocall :aboveOrEqual (+ close STOP-PROFIT))
+                             (ocall :sortBy timestamp)
+                             (ocall :first)))
+           loss (await (-> @db
+                           (oget :dataset)
+                           (ocall :where "timestamp")
+                           (ocall :above timestamp)
+                           (ocall :where "close")
+                           (ocall :belowOrEqual (- close STOP-LOSS))
+                           (ocall :sortBy timestamp)
+                           (ocall :first)))]
+       (reset! result (if (< (:timestamp profit) (:timestamp loss)) 1 0)))
+     (let [profit (await (-> @db
+                             (oget :dataset)
+                             (ocall :where "timestamp")
+                             (ocall :above timestamp)
+                             (ocall :where "close")
+                             (ocall :belowOrEqual (- close STOP-PROFIT))
+                             (ocall :sortBy timestamp)
+                             (ocall :first)))
+           loss (await (-> @db
+                           (oget :dataset)
+                           (ocall :where "timestamp")
+                           (ocall :above timestamp)
+                           (ocall :where "close")
+                           (ocall :aboveOrEqual (+ close STOP-LOSS))
+                           (ocall :sortBy timestamp)
+                           (ocall :first)))]
+       (reset! result (if (< (:timestamp profit) (:timestamp loss)) -1 0))))))
 
 (defn get-trade-results [data]
   (async
    (vec
     (for [features data]
-      (query-trade-result features)))))
+      (await (query-trade-result features))))))
 
 (def batch-number (atom {}))
 (defn get-next-batch-fn [feature-length training-total batches-per-epoch validation?]
@@ -165,7 +166,7 @@
                   keys-indexed (map-indexed (fn [idx itm] [idx itm])
                                             (sort (keys (first data))))
                   epoch-end? (= batches-per-epoch (dec @batch-number))
-                  trade-results (get-trade-results data)]
+                  trade-results (await (get-trade-results data))]
               (when-not epoch-end?
                 (swap! batch-number inc))
               (doseq [[item-index item] (map-indexed (fn [idx itm] [idx itm]) data)]
