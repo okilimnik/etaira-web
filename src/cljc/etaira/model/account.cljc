@@ -9,10 +9,10 @@
        [[com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]
         [com.fulcrologic.rad.routing :as routing]
         [etaira.ui.home :refer [HomePage]]
-        [etaira.ui.landing :refer [LandingPage]]])
+        [etaira.ui.landing :refer [LandingPage]]
+        [com.wsscode.pathom.connect :as pc]])
    [clojure.string :as str]
    [etaira.model.timezone :as timezone]
-   [com.wsscode.pathom.connect :as pc]
    [com.fulcrologic.rad.form :as form]
    [com.fulcrologic.rad.form-options :as fo]
    [com.fulcrologic.rad.report :as report]

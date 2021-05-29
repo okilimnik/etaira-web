@@ -1,24 +1,21 @@
 (ns etaira.ui.advisor.training.training
   (:require-macros [cljs.core.async.macros :refer [go]])
   (:require
-   ["@tensorflow/tfjs" :as tf]
-   [oops.core :refer [oget+ oget ocall]]
-   ["dexie" :refer [Dexie]]
-   [cljs.core.async :as async :refer [<! timeout put! chan]]
-   [com.wsscode.pathom.connect :as pc]
-   [com.fulcrologic.fulcro.data-fetch :as df]
-   [etaira.app :refer [etaira-app]]
-   [etaira.interop.async :refer [async await]]
-   [com.fulcrologic.fulcro.components :as comp :refer [defsc]]))
+    [etaira.interop.imports :refer [tf tf-layers dexie ccxt]]
+    [oops.core :refer [oget+ oget ocall]]
+    [cljs.core.async :refer [<! timeout put! chan]]
+    [com.fulcrologic.fulcro.data-fetch :as df]
+    [etaira.app :refer [etaira-app]]
+    [etaira.interop.async :refer [async await]]
+    [com.fulcrologic.fulcro.components :refer [defsc]]))
 
 (def training-models (atom {}))
-(def tf-layers (.-layers tf))
 
 (def db (atom nil))
 
 (defn fetch-ohlcv [model exchange symbol timeframe date-from date-to]
   (go
-    (reset! db (Dexie. (:neural-network-model/id model)))
+    (reset! db (new dexie (:neural-network-model/id model)))
     (-> @db
         (ocall :version 1)
         (ocall :stores #js {:dataset "++id, open-time, open, high, low, close, volume"}))
@@ -27,9 +24,9 @@
         (<! (timeout (oget exchange :rateLimit)))
         (when (and date-from! (= -1 (compare date-from! date-to)))
           (println "date-from: " date-from!)
-          (-> (ocall exchange :fetchOHLCV symbol timeframe (.getTime date-from) 500)
-              (.then (fn [data]
-                       (put! ch (js->clj data)))))
+          (-> (ocall exchange :fetchOHLCV symbol timeframe (ocall date-from :getTime) 500)
+              (ocall :then (fn [data]
+                             (put! ch (js->clj data)))))
           (let [data (<! ch)
                 new-date-from (js/Date. (first (last data)))]
             (println "data: " data)
@@ -38,15 +35,15 @@
                   (oget :dataset)
                   (ocall :bulkPut
                          (clj->js
-                          (vec
-                           (for [row data]
-                             {:timestamp (get row 0)
-                              ;:open (js/parseFloat (get row 1))
-                              ;:high (js/parseFloat (get row 2))
-                              ;:low (js/parseFloat (get row 3))
-                              :close (js/parseFloat (get row 4))
-                              :volume (js/parseFloat (get row 5))}))))
-                  (.then #(put! ch 1)))
+                           (vec
+                             (for [row data]
+                               {:timestamp (get row 0)
+                                ;:open (js/parseFloat (get row 1))
+                                ;:high (js/parseFloat (get row 2))
+                                ;:low (js/parseFloat (get row 3))
+                                :close     (js/parseFloat (get row 4))
+                                :volume    (js/parseFloat (get row 5))}))))
+                  (ocall :then #(put! ch 1)))
               (<! ch))
             (when (= (count data) 500)
               (recur new-date-from))))))
@@ -54,14 +51,13 @@
 
 (defn download-history-data [model]
   (let [{:dataset/keys [exchange cryptopair date-from date-to interval]} (:neural-network-model/dataset model)
-        exchange-class (oget+ js/ccxt exchange)
+        exchange-class (oget+ ccxt exchange)
         exchange-obj (exchange-class.)]
     (if (oget exchange-obj "has.fetchOHLCV")
       (fetch-ohlcv model exchange-obj cryptopair interval date-from date-to)
       (println "exchange doesn't provide history data"))))
 
-
-(defsc NeuralNetworkModelDataForTraining [this {:neural-network-model/keys [id] :as props}]
+(defsc NeuralNetworkModelDataForTraining [_ props]
   {:query [:neural-network-model/id
            {:neural-network-model/config [:neural-network-config/id
                                           :neural-network-config/learning-rate
@@ -106,77 +102,77 @@
 
 (defn query-trade-result [{:keys [timestamp close]}]
   (async
-   (let [result (atom 0)]
-     (let [profit (await (-> @db
-                             (oget :dataset)
-                             (ocall :where "timestamp")
-                             (ocall :above timestamp)
-                             (ocall :where "close")
-                             (ocall :aboveOrEqual (+ close STOP-PROFIT))
-                             (ocall :sortBy timestamp)
-                             (ocall :first)))
-           loss (await (-> @db
-                           (oget :dataset)
-                           (ocall :where "timestamp")
-                           (ocall :above timestamp)
-                           (ocall :where "close")
-                           (ocall :belowOrEqual (- close STOP-LOSS))
-                           (ocall :sortBy timestamp)
-                           (ocall :first)))]
-       (reset! result (if (< (:timestamp profit) (:timestamp loss)) 1 0)))
-     (let [profit (await (-> @db
-                             (oget :dataset)
-                             (ocall :where "timestamp")
-                             (ocall :above timestamp)
-                             (ocall :where "close")
-                             (ocall :belowOrEqual (- close STOP-PROFIT))
-                             (ocall :sortBy timestamp)
-                             (ocall :first)))
-           loss (await (-> @db
-                           (oget :dataset)
-                           (ocall :where "timestamp")
-                           (ocall :above timestamp)
-                           (ocall :where "close")
-                           (ocall :aboveOrEqual (+ close STOP-LOSS))
-                           (ocall :sortBy timestamp)
-                           (ocall :first)))]
-       (reset! result (if (< (:timestamp profit) (:timestamp loss)) -1 0))))))
+    (let [result (atom 0)]
+      (let [profit (await (-> @db
+                              (oget :dataset)
+                              (ocall :where "timestamp")
+                              (ocall :above timestamp)
+                              (ocall :where "close")
+                              (ocall :aboveOrEqual (+ close STOP-PROFIT))
+                              (ocall :sortBy timestamp)
+                              (ocall :first)))
+            loss (await (-> @db
+                            (oget :dataset)
+                            (ocall :where "timestamp")
+                            (ocall :above timestamp)
+                            (ocall :where "close")
+                            (ocall :belowOrEqual (- close STOP-LOSS))
+                            (ocall :sortBy timestamp)
+                            (ocall :first)))]
+        (reset! result (if (< (:timestamp profit) (:timestamp loss)) 1 0)))
+      (let [profit (await (-> @db
+                              (oget :dataset)
+                              (ocall :where "timestamp")
+                              (ocall :above timestamp)
+                              (ocall :where "close")
+                              (ocall :belowOrEqual (- close STOP-PROFIT))
+                              (ocall :sortBy timestamp)
+                              (ocall :first)))
+            loss (await (-> @db
+                            (oget :dataset)
+                            (ocall :where "timestamp")
+                            (ocall :above timestamp)
+                            (ocall :where "close")
+                            (ocall :aboveOrEqual (+ close STOP-LOSS))
+                            (ocall :sortBy timestamp)
+                            (ocall :first)))]
+        (reset! result (if (< (:timestamp profit) (:timestamp loss)) -1 0))))))
 
 (defn get-trade-results [data]
   (async
-   (vec
-    (for [features data]
-      (await (query-trade-result features))))))
+    (vec
+      (for [features data]
+        (await (query-trade-result features))))))
 
 (def batch-number (atom {}))
 (defn get-next-batch-fn [feature-length training-total batches-per-epoch validation?]
   (let [initial-offset (if validation? training-total 0)]
     #js {:next
          (async
-          (fn []
-            (let [offset (+ initial-offset (* BATCH-SIZE (dec @batch-number)))
-                  limit BATCH-SIZE
-                  data (await (-> @db
-                                  (oget :dataset)
-                                  (ocall :offset offset)
-                                  (ocall :limit limit)
-                                  (ocall :toArray)))
-                  samples (ocall tf :buffer #js [BATCH-SIZE 1 feature-length])
-                  targets (ocall tf :buffer #js [BATCH-SIZE 1])
-                  keys-indexed (map-indexed (fn [idx itm] [idx itm])
-                                            (sort (keys (first data))))
-                  epoch-end? (= batches-per-epoch (dec @batch-number))
-                  trade-results (await (get-trade-results data))]
-              (when-not epoch-end?
-                (swap! batch-number inc))
-              (doseq [[item-index item] (map-indexed (fn [idx itm] [idx itm]) data)]
-                (doseq [[key-index key!] keys-indexed]
-                  (let [v (key! item)]
-                    (ocall samples :set v item-index 0 key-index)))
-                (ocall targets :set (get trade-results item-index) item-index 0))
-              #js {:value #js {:xs (ocall samples :toTensor)
-                               :ys (ocall targets :toTensor)}
-                   :done epoch-end?})))}))
+           (fn []
+             (let [offset (+ initial-offset (* BATCH-SIZE (dec @batch-number)))
+                   limit BATCH-SIZE
+                   data (await (-> @db
+                                   (oget :dataset)
+                                   (ocall :offset offset)
+                                   (ocall :limit limit)
+                                   (ocall :toArray)))
+                   samples (ocall tf :buffer #js [BATCH-SIZE 1 feature-length])
+                   targets (ocall tf :buffer #js [BATCH-SIZE 1])
+                   keys-indexed (map-indexed (fn [idx itm] [idx itm])
+                                             (sort (keys (first data))))
+                   epoch-end? (= batches-per-epoch (dec @batch-number))
+                   trade-results (await (get-trade-results data))]
+               (when-not epoch-end?
+                 (swap! batch-number inc))
+               (doseq [[item-index item] (map-indexed (fn [idx itm] [idx itm]) data)]
+                 (doseq [[key-index key!] keys-indexed]
+                   (let [v (key! item)]
+                     (ocall samples :set v item-index 0 key-index)))
+                 (ocall targets :set (get trade-results item-index) item-index 0))
+               #js {:value #js {:xs (ocall samples :toTensor)
+                                :ys (ocall targets :toTensor)}
+                    :done  epoch-end?})))}))
 
 (defn train [{:keys [id config dataset]}]
   (go

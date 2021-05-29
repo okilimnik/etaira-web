@@ -40,7 +40,7 @@
            org.slf4j/jul-to-slf4j                 {:mvn/version "1.7.30"} ; auto sends java.util.logging to slf4j
            org.slf4j/jcl-over-slf4j               {:mvn/version "1.7.30"} ; auto-sends java.common.logging to slf4j
            com.fzakaria/slf4j-timbre              {:mvn/version "0.3.19"} ; hooks slf4j to timbre
-           
+
            org.clojure/clojure                    {:mvn/version "1.10.1"}}
 
  :aliases {:app {:extra-deps {uberdeps/uberdeps {:mvn/version "1.0.2"}}
@@ -64,8 +64,7 @@
                        :extra-deps  {lambdaisland/garden-watcher         {:mvn/version "1.0.27"}}
                        :main-opts ["-m" "garden-watcher.main" "etaira.css"]}
 
-           :test      {
-                       :extra-deps  {fulcrologic/fulcro-spec {:mvn/version "3.1.6"}}}
+           :test      {:extra-deps  {fulcrologic/fulcro-spec {:mvn/version "3.1.6"}}}
 
            :run-tests {:main-opts  ["-m" "kaocha.runner"]
                        :extra-deps {lambdaisland/kaocha {:mvn/version "1.0.632"}}}}}

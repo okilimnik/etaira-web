@@ -1,6 +1,6 @@
 (ns etaira.model.advisor
   (:require
-   [com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]
+   [com.fulcrologic.fulcro.mutations :refer [defmutation]]
    [com.fulcrologic.fulcro.algorithms.merge :as merge]))
 
 (defmutation delete-advisor

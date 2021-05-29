@@ -22,6 +22,7 @@ resources/public/js/test
 .cpcache/
 .shadow-cljs
 .clj-kondo/
+.idea
 log.txt
 yarn.lock
 .lsp/
