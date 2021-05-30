@@ -97,48 +97,28 @@
 (def STOP-LOSS 20)
 (def STOP-PROFIT 20)
 
+(defn query-trade-result! [timestamp filter-fn]
+  (async
+   (-> (.-dataset @db)
+       (.where "timestamp")
+       (.above timestamp)
+       (.and filter-fn)
+       (.first)
+       await
+       (js->clj :keywordize-keys true))))
+
 (defn query-trade-result [{:keys [timestamp close]}]
   (async
     (let [result (atom 0)]
-      (let [profit (-> @db
-                       (.-dataset)
-                       (.where "timestamp")
-                       (.above timestamp)
-                       (.and (fn [item]
-                               (>= (.-close item) (+ close STOP-PROFIT))))
-                       (.sortBy "timestamp")
-                       (.first)
-                       await)
-            loss (-> @db
-                     (.-dataset)
-                     (.where "timestamp")
-                     (.above timestamp)
-                     (.and "close")
-                     (.and (fn [item]
-                             (<= (.-close item) (- close STOP-LOSS))))
-                     (.sortBy "timestamp")
-                     (.first)
-                     await)]
+      (let [profit (await (query-trade-result! timestamp (fn [item]
+                                                           (>= (.-close item) (+ close STOP-PROFIT)))))
+            loss (await (query-trade-result! timestamp (fn [item]
+                                                         (<= (.-close item) (- close STOP-LOSS)))))]
         (reset! result (if (< (:timestamp profit) (:timestamp loss)) 1 0)))
-      (let [profit (-> @db
-                       (.-dataset)
-                       (.where "timestamp")
-                       (.above timestamp)
-                       (.and (fn [item]
-                               (<= (.-close item) (- close STOP-PROFIT))))
-                       (.sortBy "timestamp")
-                       (.first)
-                       await)
-            loss (-> @db
-                     (.-dataset)
-                     (.where "timestamp")
-                     (.above timestamp)
-                     (.and "close")
-                     (.and (fn [item]
-                             (>= (.-close item) (+ close STOP-LOSS))))
-                     (.sortBy "timestamp")
-                     (.first)
-                     await)]
+      (let [profit (await (query-trade-result! timestamp (fn [item]
+                                                           (<= (.-close item) (- close STOP-PROFIT)))))
+            loss (await (query-trade-result! timestamp (fn [item]
+                                                         (>= (.-close item) (+ close STOP-LOSS)))))]
         (reset! result (if (< (:timestamp profit) (:timestamp loss)) -1 0))))))
 
 (defn get-trade-results [data]
@@ -181,18 +161,15 @@
 
 (defn train [{:keys [id config dataset]}]
   (async
-    (let [_ (js/console.log (oget @db :dataset))
-          num-features (+ (count (-> @db
-                                     (oget :dataset)
-                                     (ocall :get #js {:id 1})
+    (let [num-features (+ (count (-> (.-dataset @db)
+                                     (.get #js {:id 1})
                                      await
                                      js->clj
                                      keys))
                           (count (:dataset/indicators dataset)))
           model (build-model config num-features)
-          training-total (int (* (-> @db
-                                     (oget :dataset)
-                                     (ocall :count)
+          training-total (int (* (-> (.-dataset @db)
+                                     (.count)
                                      await) 0.7))
           batches-per-epoch (dec (dec (int (/ training-total BATCH-SIZE))))
           train-dataset (-> (.-data tfjs)
@@ -212,7 +189,6 @@
   (df/load etaira-app [:neural-network-model/id model-id] NeuralNetworkModelDataForTraining
            {:ok-action (fn [{:keys [result]}]
                          (let [model (first (vals (:body result)))]
-                           (println "model: " model)
                            (go
                              (<! (download-history-data model))
                              (train model))))}))
