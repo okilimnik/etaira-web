@@ -16,7 +16,7 @@
   "homepage": "https://github.com/fulcrologic/fulcro-rad#readme",
   "dependencies": {
     "@js-joda/locale_en-us": "2.0.1",
-    "@tensorflow/tfjs": "^3.2.0",
+    "@tensorflow/tfjs": "^3.6.0",
     "babel-polyfill": "^6.26.0",
     "big.js": "5.2.2",
     "buffer": "^6.0.3",
@@ -32,7 +32,6 @@
     "semantic-ui-react": "^0.88.2",
     "string_decoder": "^1.3.0",
     "technicalindicators": "^3.1.0",
-    "tfjs": "^0.6.0",
     "victory": "^35.4.13"
   },
   "devDependencies": {}
