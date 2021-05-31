@@ -129,7 +129,7 @@
        (query-trade-result features))))))
 
 (def batch-number (atom 1))
-(defn get-next-batch-fn [feature-length training-total batches-per-epoch validation?]
+(defn get-next-batch-fn [indicators feature-length training-total batches-per-epoch validation?]
   (let [initial-offset (if validation? training-total 0)]
     #js {:next
          (fn []
@@ -143,7 +143,6 @@
                                  (.toArray)
                                  await
                                  (js->clj :keywordize-keys true)))
-                  _ (println "feature-length: " feature-length)
                   samples (ocall tfjs :buffer #js [BATCH-SIZE 1 feature-length])
                   targets (ocall tfjs :buffer #js [BATCH-SIZE 1 1])
                   keys-indexed (map-indexed vector (sort (keys (first data))))
@@ -162,23 +161,23 @@
 
 (defn train [{:keys [id config dataset]}]
   (async
-    (let [num-features (+ (count (-> (.-dataset @db)
+    (let [
+          num-features (+ (count (-> (.-dataset @db)
                                      (.get #js {:id 1})
                                      await
                                      (js->clj :keywordize-keys true)
                                      (dissoc :id)
                                      keys))
-                         0 #_(count (:dataset/indicators dataset)))
-          _ (println "num-features: " num-features)
+                          (count (:dataset/indicators dataset)))
           model (build-model config num-features)
           training-total (int (* (-> (.-dataset @db)
                                      (.count)
                                      await) 0.7))
           batches-per-epoch (dec (dec (int (/ training-total BATCH-SIZE))))
           train-dataset (-> (.-data tfjs)
-                            (.generator (fn [] (get-next-batch-fn num-features training-total batches-per-epoch false))))
+                            (.generator (fn [] (get-next-batch-fn (:dataset/indicators dataset) num-features training-total batches-per-epoch false))))
           validation-dataset (-> (.-data tfjs)
-                                 (.generator (fn [] (get-next-batch-fn num-features training-total batches-per-epoch true))))]
+                                 (.generator (fn [] (get-next-batch-fn (:dataset/indicators dataset) num-features training-total batches-per-epoch true))))]
       (.fitDataset model train-dataset #js {:batchesPerEpoch batches-per-epoch
                                             :epochs          EPOCHS
                                             :callbacks       #js {:onTrainBegin (fn [logs] false)
