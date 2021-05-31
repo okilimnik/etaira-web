@@ -4,22 +4,18 @@
    [com.fulcrologic.semantic-ui.elements.icon.ui-icon :refer [ui-icon]]))
 
 (def use-cases-content
-  [{:key "Sed ut perspiciatis unde omnis iste natus error sit "
-    :icon "universal access"
-    :head "Sed ut perspiciatis unde omnis iste natus error sit "
-    :text "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
-   {:key "But I must explain to you how all this mistaken idea"
-    :icon "edit outline"
-    :head "But I must explain to you how all this mistaken idea"
-    :text "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
-   {:key "At vero eos et accusamus et iusto odio dignissimos ducimus "
-    :icon "share square outline"
-    :head "At vero eos et accusamus et iusto odio dignissimos ducimus "
-    :text "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
-   {:key "On the other hand, we denounce with righteous indignation"
-    :icon "balance scale"
-    :head "On the other hand, we denounce with righteous indignation"
-    :text "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}])
+  [{:icon "universal access"
+    :head "Trade your favorite asset on your favorite exchange."
+    :text "Etaira supports a large list of exchanges. The full list see <a href=''>here<a/>"}
+   {:icon "edit outline"
+    :head "Train your neural network based advisors locally in the browser or in the cloud."
+    :text "Powered by Google's Tensorflow Etaira allows you to create and train neural network models right in the browser as well as in the cloud."}
+   {:icon "share square outline"
+    :head "Sell your trained advisors to or buy them from other users."
+    :text "Are you a talented researcher? Neural network specialist? Write neural network based advisors and sell them to Etaira users at the marketplace."}
+   {:icon "balance scale"
+    :head "Invest and grow."
+    :text "Are you an investor? Buy our tokens and grow with us."}])
 
 ;;green huge
 
@@ -39,8 +35,8 @@
                   :fontSize "250%"}}
                 "Use Cases"))
 
-       (for [item use-cases-content]
-         (div :.six.wide.centered.column
+       (for [[index item] (map-indexed vector use-cases-content)]
+         (div :.six.wide.centered.column {:key index}
               (div :.two.column.ui.grid
                    (div :.right.aligned.four.wide.column
                         
