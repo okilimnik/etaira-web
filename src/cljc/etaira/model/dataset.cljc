@@ -5,9 +5,7 @@
        [[etaira.components.database-queries :as queries]]
        :cljs
        [[com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]
-        [oops.core :refer [oget]]])
-   [clojure.string :refer [upper-case]]
-   [com.fulcrologic.fulcro.algorithms.merge :as merge]
+        [com.fulcrologic.fulcro.algorithms.merge :as merge]])   
    [com.fulcrologic.rad.attributes :as attr :refer [defattr]]
    [com.fulcrologic.rad.attributes-options :as ao]
    [com.fulcrologic.rad.form-options :as fo]
@@ -83,17 +81,10 @@
    ao/enumerated-labels (apply hash-map (mapcat (fn [i] [i i]) intervals))
    ao/schema        :production})
 
-(def available-indicators
-    #?(:cljs  (->> (js->clj (js/getAvailableIndicators))
-                   (mapcat (fn [i] [i i]))
-                   (apply hash-map))
-       :clj {}))
-
-(defattr indicators :dataset/indicators :enum
-  {ao/identities  #{:dataset/id}
+(defattr indicators :dataset/indicators :ref
+  {ao/target      :indicator/id
+   ao/identities  #{:dataset/id}
    ao/cardinality :many
-   ao/enumerated-values (keys available-indicators)
-   ao/enumerated-labels available-indicators
    ao/schema      :production})
 
 (defattr all-datasets :dataset/all-datasets :ref

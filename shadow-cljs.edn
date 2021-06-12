@@ -17,7 +17,10 @@
                                      ;; Make js-joda-timezone a reasonable build size
                                     "js-joda-timezone"
                                     {:target  :npm
-                                     :require "js-joda-timezone/dist/js-joda-timezone-10-year-range.min.js"}}}
+                                     :require "js-joda-timezone/dist/js-joda-timezone-10-year-range.min.js"}
+
+                                    "talib.js" {:target :file
+                                                :file "talib.js/lib/index.cjs.js"}}}
                       :devtools   {:preloads   [com.fulcrologic.fulcro.inspect.preload]
                                    :after-load etaira.client/refresh}}
 
@@ -53,14 +56,3 @@
                                           :external-config {:guardrails {:throw? true :emit-spec? true}}}
                        :output-to        "target/ci.js"
                        :ns-regexp        "-spec$"}}}
-
-:test {:target     :node-test
-       :output-to "test/cljs/videra_web/node-tests.js"
-       :compiler-options {:output-feature-set :es6
-                          :static-fns false}} ; Allows re-defs in testing
-  ; Need a separate build for :autorun b/c when that is set, the process code is not returned, and thus the buildspec can't detect failure
-:test-auto {:target     :node-test
-            :autorun true
-            :output-to "test/cljs/videra_web/node-tests.js"
-            :compiler-options {:output-feature-set :es6
-                               :static-fns false}} ; Allows re-defs in testing

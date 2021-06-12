@@ -8,7 +8,8 @@
    [com.fulcrologic.fulcro.data-fetch :as df]
    [etaira.app :refer [etaira-app]]
    [etaira.interop.async :refer [async await await-all]]
-   [com.fulcrologic.fulcro.components :refer [defsc]]))
+   [com.fulcrologic.fulcro.components :refer [defsc]]
+   #_[etaira.indicators.talib.api :as talib]))
 
 (def db (atom nil))
 (def dense (.. tfjs -layers -dense))
@@ -128,6 +129,16 @@
      (for [features data]
        (query-trade-result features))))))
 
+(def talib-inited? (atom false))
+
+(defn get-indicators-data [data indicators]
+  #_(async
+   (when-not @talib-inited?
+     (await (.init talib)))
+   (-> (for [indicator indicators]
+         {indicator (ocall talib indicator (clj->js data))})
+       (mapv ))))
+
 (def batch-number (atom 1))
 (defn get-next-batch-fn [indicators feature-length training-total batches-per-epoch validation?]
   (let [initial-offset (if validation? training-total 0)]
@@ -145,8 +156,10 @@
                                  (js->clj :keywordize-keys true)))
                   samples (ocall tfjs :buffer #js [BATCH-SIZE 1 feature-length])
                   targets (ocall tfjs :buffer #js [BATCH-SIZE 1 1])
-                  keys-indexed (map-indexed vector (sort (keys (first data))))
                   epoch-end? (= batches-per-epoch (dec @batch-number))
+                  indicators-data (await (get-indicators-data data indicators))
+                  data (vec (map-indexed (fn [idx itm] (merge itm (get indicators-data idx))) data))
+                  keys-indexed (map-indexed vector (sort (keys (first data))))
                   trade-results (await (get-trade-results data))]
               (when-not epoch-end?
                 (swap! batch-number inc))
@@ -192,6 +205,7 @@
                                             :validationData  validation-dataset}))))
 
 (defn train! [model-id]
+  ;(println "talib/api: " talib/api)
   (df/load etaira-app [:neural-network-model/id model-id] NeuralNetworkModelDataForTraining
            {:ok-action (fn [{:keys [result]}]
                          (let [model (first (vals (:body result)))]

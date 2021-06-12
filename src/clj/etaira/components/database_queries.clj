@@ -24,6 +24,18 @@
     (<!!
      (queries/get-all-neural-network-models key-store query-params))))
 
+(defn get-all-indicators
+  [env query-params]
+  (when-let [key-store (kv-pathom/env->key-store env)]
+    (<!!
+     (queries/get-all-indicators key-store query-params))))
+
+(defn get-all-indicator-groups
+  [env query-params]
+  (when-let [key-store (kv-pathom/env->key-store env)]
+    (<!!
+     (queries/get-all-indicator-groups key-store query-params))))
+
 (defn get-all-datasets
   [env query-params]
   (when-let [key-store (kv-pathom/env->key-store env)]

@@ -8,18 +8,18 @@
    [com.fulcrologic.rad.report :as report]
    [com.fulcrologic.rad.report-options :as ro]
    [etaira.model.dataset :as dataset]
-   [etaira.model.cryptopair :as cryptopair]
-   [com.fulcrologic.fulcro.ui-state-machines :as uism]
-   [com.fulcrologic.fulcro.algorithms.normalized-state :as fns]
-   [oops.core :refer [oget+ ocall]]
-   ;["ccxt/dist/ccxt.browser"]
-   [etaira.interop.async :refer [async await]]))
+   [etaira.ui.advisor.training.indicator :refer [IndicatorForm]]
+   [com.fulcrologic.fulcro.ui-state-machines :as uism]))
 
 #_(defn fetch-symbols [exchange-id callback]
   (let [exchange-class (oget+ js/ccxt exchange-id)
         exchange (exchange-class.)]
     (-> (ocall exchange :loadMarkets)
         (.then callback))))
+
+(defsc IndicatorQuery [_ _]
+  {:query [:indicator/id :indicator/name]
+   :ident :indicator/id})
 
 (form/defsc-form DatasetForm [this props]
   {fo/id             dataset/id
@@ -41,19 +41,30 @@
                       [:dataset/indicators]]
    fo/triggers        {:on-change (fn [{::uism/keys [state-map fulcro-app] :as uism-env} form-ident k old-value new-value]
                                     #_(let [cls (comp/ident->any fulcro-app form-ident)
-                                          exchange-name new-value]
-                                      (case k
-                                        :dataset/exchange
-                                        (fetch-symbols exchange-name
-                                                       #(let [cryptopairs (mapv (fn [x]
-                                                                                  {:text x
-                                                                                   :value x}) (keys (js->clj %)))]
+                                            exchange-name new-value]
+                                        (case k
+                                          :dataset/exchange
+                                          (fetch-symbols exchange-name
+                                                         #(let [cryptopairs (mapv (fn [x]
+                                                                                    {:text x
+                                                                                     :value x}) (keys (js->clj %)))]
                                                           ;(println "cryptopair: " cryptopairs)
-                                                          (comp/transact! cls [(cryptopair/load-cryptopairs {:cryptopairs cryptopairs})])))
-                                        "do nothing"))
+                                                            (comp/transact! cls [(cryptopair/load-cryptopairs {:cryptopairs cryptopairs})])))
+                                          "do nothing"))
                                     uism-env)}
    fo/field-styles  {:dataset/cryptopair :sorted-set}
    fo/field-style-configs {:dataset/cryptopair {:sorted-set/valid-values #{"BTC/USDT"}}}
+   fo/field-options {:dataset/indicators {::picker-options/query-key       :indicator/all-indicators
+                                          ::picker-options/query-component IndicatorForm
+                                          ::picker-options/options-xform   (fn [_ options]
+                                                                             (mapv
+                                                                              (fn [{:indicator/keys [id name]}]
+                                                                                {:text name :value [:indicator/id id]})
+                                                                              (sort-by :indicator/name options)))
+                                          ::picker-options/cache-time-ms   30000}}
+   fo/subforms       {:dataset/indicators {fo/ui          IndicatorForm
+                                           fo/can-delete? (fn [_ _] true)
+                                           fo/can-add?    (fn [_ _] true)}}
    fo/route-prefix   "dataset"
    fo/title          "Edit Dataset"})
 

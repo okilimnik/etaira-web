@@ -28,7 +28,6 @@
               :rel  "stylesheet"}]
       [:link {:rel "shortcut icon" :href "data:image/x-icon;" :type "image/x-icon"}]
       [:script {:src "/js/third-party/polyfill.js"}]
-      [:script {:src "/js/third-party/indicators.js"}]
       [:script {:src "/js/third-party/ccxt.js"}]
       [:script (str "var fulcro_network_csrf_token = '" csrf-token "';")]]
      [:body

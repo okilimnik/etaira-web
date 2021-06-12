@@ -30,6 +30,20 @@
     (->> (keys (<! (k/get-in store [:neural-network-model/id])))
          (mapv (fn [id] {:neural-network-model/id id})))))
 
+(defn get-all-indicators
+  [{::kv-key-store/keys [store]}
+   query-params]
+  (go
+    (->> (keys (<! (k/get-in store [:indicator/id])))
+         (mapv (fn [id] {:indicator/id id})))))
+
+(defn get-all-indicator-groups
+  [{::kv-key-store/keys [store]}
+   query-params]
+  (go
+    (->> (keys (<! (k/get-in store [:indicator-group/id])))
+         (mapv (fn [id] {:indicator-group/id id})))))
+
 (defn get-all-datasets
   [{::kv-key-store/keys [store]}
    query-params]
