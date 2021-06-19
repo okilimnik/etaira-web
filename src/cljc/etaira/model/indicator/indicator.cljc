@@ -51,7 +51,8 @@
 
 (defattr all-indicators :indicator/all-indicators :ref
   {ao/target     :indicator/id
-   ao/pc-output  [{:indicator/all-indicators [:indicator/id]}]
+   ao/pc-output  [{:indicator/all-indicators [:indicator/id
+                                              :indicator/name]}]
    ao/pc-resolve (fn [{:keys [query-params] :as env} _]
                    #?(:clj
                       {:indicator/all-indicators (queries/get-all-indicators env query-params)}))})

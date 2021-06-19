@@ -48,7 +48,9 @@
 
 (defattr all-neural-network-models :neural-network-model/all-neural-network-models :ref
   {ao/target     :neural-network-model/id
-   ao/pc-output  [{:neural-network-model/all-neural-network-models [:neural-network-model/id]}]
+   ao/pc-output  [{:neural-network-model/all-neural-network-models [:neural-network-model/id
+                                                                    :neural-network-model/name
+                                                                    :neural-network-model/state]}]
    ao/pc-resolve (fn [{:keys [query-params] :as env} _]
                    #?(:clj
                       {:neural-network-model/all-neural-network-models (queries/get-all-neural-network-models env query-params)}))})

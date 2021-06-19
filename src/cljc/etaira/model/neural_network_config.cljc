@@ -84,8 +84,9 @@
 
 (defattr all-neural-network-configs :neural-network-config/all-neural-network-configs :ref
   {ao/target     :neural-network-config/id
-   ao/pc-output  [{:neural-network-config/all-neural-network-configs [:neural-network-config/id]}]
-   ao/pc-resolve (fn [{:keys [query-params] :as env} _]
+   ao/pc-output  [{:neural-network-config/all-neural-network-configs [:neural-network-config/id
+                                                                      :neural-network-config/name]}]
+   ao/pc-resolve (fn [{:keys [query-params] :as env} e]
                    #?(:clj
                       {:neural-network-config/all-neural-network-configs (queries/get-all-neural-network-configs env query-params)}))})
 

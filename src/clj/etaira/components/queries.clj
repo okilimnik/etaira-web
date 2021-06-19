@@ -3,7 +3,10 @@
     [com.fulcrologic.rad.database-adapters.key-value.key-store :as kv-key-store]
     [taoensso.timbre :as log]
     [konserve.core :as k]
-    [clojure.core.async :refer [<! <!! go]]))
+    [clojure.core.async :refer [<! go]]))
+
+(defn query! [store idents]
+  (go (vals (<! (k/get-in store idents)))))
 
 (defn get-all-accounts
   [{::kv-key-store/keys [store]}
@@ -17,39 +20,24 @@
            (mapv #(select-keys % [:account/id]))))))
 
 (defn get-all-neural-network-configs
-  [{::kv-key-store/keys [store]}
-   query-params]
-  (go
-    (->> (keys (<! (k/get-in store [:neural-network-config/id])))
-         (mapv (fn [id] {:neural-network-config/id id})))))
+  [{::kv-key-store/keys [store]} _]
+  (query! store [:neural-network-config/id]))
 
 (defn get-all-neural-network-models
-  [{::kv-key-store/keys [store]}
-   query-params]
-  (go
-    (->> (keys (<! (k/get-in store [:neural-network-model/id])))
-         (mapv (fn [id] {:neural-network-model/id id})))))
+  [{::kv-key-store/keys [store]} _]
+  (query! store [:neural-network-model/id]))
 
 (defn get-all-indicators
-  [{::kv-key-store/keys [store]}
-   query-params]
-  (go
-    (->> (keys (<! (k/get-in store [:indicator/id])))
-         (mapv (fn [id] {:indicator/id id})))))
+  [{::kv-key-store/keys [store]} _]
+  (query! store [:indicator/id]))
 
 (defn get-all-indicator-groups
-  [{::kv-key-store/keys [store]}
-   query-params]
-  (go
-    (->> (keys (<! (k/get-in store [:indicator-group/id])))
-         (mapv (fn [id] {:indicator-group/id id})))))
+  [{::kv-key-store/keys [store]} _]
+  (query! store [:indicator-group/id]))
 
 (defn get-all-datasets
-  [{::kv-key-store/keys [store]}
-   query-params]
-  (go
-    (->> (keys (<! (k/get-in store [:dataset/id])))
-         (mapv (fn [id] {:dataset/id id})))))
+  [{::kv-key-store/keys [store]} _]
+  (query! store [:dataset/id]))
 
 (defn get-login-info
   "Get the account name, time zone, and password info via a username (email)."

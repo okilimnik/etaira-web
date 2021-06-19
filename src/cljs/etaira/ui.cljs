@@ -9,6 +9,7 @@
    [etaira.ui.advisor.training.neural-network-config :refer [NeuralNetworkConfigForm NeuralNetworkConfigList]]
    [etaira.ui.advisor.training.neural-network-model :refer [NeuralNetworkModelForm NeuralNetworkModelList]]
    [etaira.ui.advisor.training.dataset :refer [DatasetForm DatasetList]]
+   [etaira.ui.advisor.training.indicator :refer [IndicatorForm IndicatorList]]
    [com.fulcrologic.fulcro.application :as app]
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
    [com.fulcrologic.fulcro.dom.html-entities :as ent]
@@ -24,7 +25,8 @@
    :router-targets      [HomePage LandingPage
                          NeuralNetworkConfigForm NeuralNetworkConfigList
                          NeuralNetworkModelForm NeuralNetworkModelList
-                         DatasetForm DatasetList]}
+                         DatasetForm DatasetList
+                         IndicatorForm IndicatorList]}
   (div
    (div :.ui.loader {:classes [(when-not (= :routed current-state) "active")]})
    (when route-factory
@@ -61,6 +63,10 @@
                           (ui-dropdown-menu {}
                                             (ui-dropdown-item {:onClick (fn [] (rroute/route-to! this DatasetList {}))} "View All")
                                             (ui-dropdown-item {:onClick (fn [] (form/create! this DatasetForm))} "New")))
+             (ui-dropdown {:className "item" :text "Indicators"}
+                          (ui-dropdown-menu {}
+                                            (ui-dropdown-item {:onClick (fn [] (rroute/route-to! this IndicatorList {}))} "View All")
+                                            (ui-dropdown-item {:onClick (fn [] (form/create! this IndicatorForm))} "New")))
              (ui-dropdown {:className "item" :text "Neural Network Models"}
                           (ui-dropdown-menu {}
                                             (ui-dropdown-item {:onClick (fn [] (rroute/route-to! this NeuralNetworkModelList {}))} "View All")

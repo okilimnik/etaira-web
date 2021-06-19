@@ -37,35 +37,35 @@
   (let [indicators (json/parse-string (slurp (io/resource "talib/api.json")) true)
         indicator-groups (mapv :group indicators)
         groups-tx (for [group indicator-groups]
-                    {:indicator-group/id (new-uuid 103)
+                    {:indicator-group/id (new-uuid)
                      :indicator-group/name group})
         indicators-tx (vec
                        (concat
                         groups-tx
                         (for [indicator indicators]
-                          (merge {:indicator/id (new-uuid 102)
+                          (merge {:indicator/id (new-uuid)
                                   :indicator/name (:name indicator)
                                   :indicator/description (:description indicator)
                                   :indicator/group [:indicator-group/id (:indicator-group/id (first (filter #(= (:indicator-group/name %) (:group indicator)) groups-tx)))]
                                   :indicator/inputs (mapv (fn [input]
-                                                            {:indicator-input/id (new-uuid 106)
+                                                            {:indicator-input/id (new-uuid)
                                                              :indicator-input/name (:name input)
                                                              :indicator-input/type (:type input)})
                                                           (:inputs indicator))
                                   :indicator/outputs (mapv (fn [output]
-                                                             {:indicator-output/id (new-uuid 107)
+                                                             {:indicator-output/id (new-uuid)
                                                               :indicator-output/name (:name output)
                                                               :indicator-output/type (:type output)})
                                                            (:outputs indicator))}
                                  (when (seq (:indicator/options indicator))
                                    {:indicator/options (mapv (fn [option]
-                                                               (merge {:indicator-option/id (new-uuid 104)
+                                                               (merge {:indicator-option/id (new-uuid)
                                                                        :indicator-option/name (:name option)
                                                                        :indicator-option/display-name (:displayName option)
                                                                        :indicator-option/hint (:hint option)
                                                                        :indicator-option/type (:type option)}
                                                                       (when (:range option)
-                                                                        {:indicator-option/range {:indicator-option-range/id (new-uuid 105)
+                                                                        {:indicator-option/range {:indicator-option-range/id (new-uuid)
                                                                                                   :indicator-option-range/min (str (-> option :range :min))
                                                                                                   :indicator-option-range/max (str (-> option :range :max))}})
                                                                       (when (:defaultValue option)
@@ -87,20 +87,23 @@
 (defn migrations
   "The list of all migrations."
   []
-  [{:name     "initial"
-    :entities (first-accounts)}
-   {:name     "default indicators"
-    :entities (default-indicators)}])
+  [{:name     :initial
+    :entities first-accounts}
+   {:name     :default-indicators
+    :entities default-indicators}])
 
 (>defn migrate!
        "Database migrations launcher."
        [{::kv-key-store/keys [instance-name] :as key-store}]
        [::key-value/key-store => any?]
        (println "Running migrations for " instance-name)
+       ;(kv-write/remove-table-rows key-store {} :indicator/id)
+       (kv-write/write-tree key-store (new-migration :initial))
+       (kv-write/write-tree key-store (new-migration :default-indicators))
        (let [applied-migrations (query-applied-migrations-names key-store)
              new-migrations (filterv #(not (contains? applied-migrations (:name %))) (migrations))]
          (doseq [migration new-migrations]
-           (doseq [entity (:entities migration)]
+           (doseq [entity ((:entities migration))]
              (kv-write/write-tree key-store entity))
            (kv-write/write-tree key-store (new-migration (:name migration))))))
 
