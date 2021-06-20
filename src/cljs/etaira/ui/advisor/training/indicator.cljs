@@ -22,7 +22,6 @@
                       indicator/description]
    fo/layout         [[:indicator/name]
                       [:indicator/description]]
-
    fo/route-prefix   "indicator"
    fo/title          "Edit Indicator"})
 

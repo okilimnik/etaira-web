@@ -88,22 +88,19 @@
   "The list of all migrations."
   []
   [{:name     :initial
-    :entities first-accounts}
+    :entities (first-accounts)}
    {:name     :default-indicators
-    :entities default-indicators}])
+    :entities (default-indicators)}])
 
 (>defn migrate!
        "Database migrations launcher."
        [{::kv-key-store/keys [instance-name] :as key-store}]
        [::key-value/key-store => any?]
        (println "Running migrations for " instance-name)
-       ;(kv-write/remove-table-rows key-store {} :indicator/id)
-       (kv-write/write-tree key-store (new-migration :initial))
-       (kv-write/write-tree key-store (new-migration :default-indicators))
        (let [applied-migrations (query-applied-migrations-names key-store)
              new-migrations (filterv #(not (contains? applied-migrations (:name %))) (migrations))]
          (doseq [migration new-migrations]
-           (doseq [entity ((:entities migration))]
+           (doseq [entity (:entities migration)]
              (kv-write/write-tree key-store entity))
            (kv-write/write-tree key-store (new-migration (:name migration))))))
 

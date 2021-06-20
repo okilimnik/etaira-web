@@ -52,19 +52,18 @@
                                                             (comp/transact! cls [(cryptopair/load-cryptopairs {:cryptopairs cryptopairs})])))
                                           "do nothing"))
                                     uism-env)}
-   fo/field-styles  {:dataset/cryptopair :sorted-set}
+   fo/field-styles  {:dataset/cryptopair :sorted-set
+                     :dataset/indicators :pick-many}
    fo/field-style-configs {:dataset/cryptopair {:sorted-set/valid-values #{"BTC/USDT"}}}
    fo/field-options {:dataset/indicators {::picker-options/query-key       :indicator/all-indicators
-                                          ::picker-options/query-component IndicatorForm
+                                          ::picker-options/query-component IndicatorQuery
                                           ::picker-options/options-xform   (fn [_ options]
+                                                                             (println "all-indicators: " options)
                                                                              (mapv
                                                                               (fn [{:indicator/keys [id name]}]
                                                                                 {:text name :value [:indicator/id id]})
                                                                               (sort-by :indicator/name options)))
                                           ::picker-options/cache-time-ms   30000}}
-   fo/subforms       {:dataset/indicators {fo/ui          IndicatorForm
-                                           fo/can-delete? (fn [_ _] true)
-                                           fo/can-add?    (fn [_ _] true)}}
    fo/route-prefix   "dataset"
    fo/title          "Edit Dataset"})
 
