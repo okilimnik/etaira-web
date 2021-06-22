@@ -58,7 +58,6 @@
    fo/field-options {:dataset/indicators {::picker-options/query-key       :indicator/all-indicators
                                           ::picker-options/query-component IndicatorQuery
                                           ::picker-options/options-xform   (fn [_ options]
-                                                                             (println "all-indicators: " options)
                                                                              (mapv
                                                                               (fn [{:indicator/keys [id name]}]
                                                                                 {:text name :value [:indicator/id id]})

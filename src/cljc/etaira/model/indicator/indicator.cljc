@@ -20,15 +20,18 @@
 (defattr name :indicator/name :string
   {ao/identities #{:indicator/id}
    ao/required?  true
+   ao/read-only? true
    ao/schema     :production})
 
 (defattr description :indicator/description :string
   {ao/identities #{:indicator/id}
+   ao/read-only? true
    ao/schema     :production})
 
 (defattr group :indicator/group :ref
   {ao/target      :indicator-group/id
    ao/identities #{:indicator/id}
+   ao/read-only? true
    ao/schema     :production})
 
 (defattr options :indicator/options :ref
@@ -52,8 +55,16 @@
 (defattr all-indicators :indicator/all-indicators :ref
   {ao/target     :indicator/id
    ao/pc-output  [{:indicator/all-indicators [:indicator/id
-                                              ;:indicator/name
-                                              ]}]
+                                              :indicator/name
+                                              {:indicator/options [:indicator-option/id
+                                                                   :indicator-option/name
+                                                                   :indicator-option/display-name
+                                                                   :indicator-option/hint
+                                                                   :indicator-option/default-value]
+                                               :indicator/inputs [:indicator-input/id
+                                                                  :indicator-input/name]
+                                               :indicator/outputs [:indicator-output/id
+                                                                   :indicator-output/name]}]}]
    ao/pc-resolve (fn [{:keys [query-params] :as env} _]
                    #?(:clj
                       {:indicator/all-indicators (queries/get-all-indicators env query-params)}))})

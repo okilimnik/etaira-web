@@ -11,14 +11,18 @@
 (defattr name :indicator-option/name :string
   {ao/identities #{:indicator-option/id}
    ao/required?  true
+   ao/read-only? true
    ao/schema     :production})
 
 (defattr display-name :indicator-option/display-name :string
   {ao/identities #{:indicator-option/id}
+   ao/read-only? true
    ao/schema     :production})
 
 (defattr hint :indicator-option/hint :string
   {ao/identities #{:indicator-option/id}
+   ao/required?  true
+   ao/read-only? true
    ao/schema     :production})
 
 (def types
@@ -28,6 +32,7 @@
 (defattr type :indicator-option/type :enum
   {ao/identities #{:indicator-option/id}
    ao/required?     true
+   ao/read-only? true
    ao/enumerated-values (keys types)
    ao/enumerated-labels types
    ao/schema     :production})
@@ -40,6 +45,7 @@
 (defattr range :indicator-option/range :ref
   {ao/target      :indicator-option-range/id
    ao/identities #{:indicator-option/id}
+   ao/read-only? true
    ao/schema     :production})
 
 (def attributes [id name display-name hint type default-value range])

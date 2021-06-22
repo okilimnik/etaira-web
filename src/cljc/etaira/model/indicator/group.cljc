@@ -20,7 +20,8 @@
 
 (defattr all-indicator-groups :indicator-group/all-indicator-groups :ref
   {ao/target     :indicator-group/id
-   ao/pc-output  [{:indicator-group/all-indicator-groups [:indicator-group/id]}]
+   ao/pc-output  [{:indicator-group/all-indicator-groups [:indicator-group/id
+                                                          :indicator-group/name]}]
    ao/pc-resolve (fn [{:keys [query-params] :as env} _]
                    #?(:clj
                       {:indicator-group/all-indicator-groups (queries/get-all-indicator-groups env query-params)}))})

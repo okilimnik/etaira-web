@@ -36,9 +36,10 @@
 (defn default-indicators []
   (let [indicators (json/parse-string (slurp (io/resource "talib/api.json")) true)
         indicator-groups (mapv :group indicators)
-        groups-tx (for [group indicator-groups]
-                    {:indicator-group/id (new-uuid)
-                     :indicator-group/name group})
+        groups-tx (->> (for [group indicator-groups]
+                         {:indicator-group/name group})
+                       set
+                       (mapv #(assoc % :indicator-group/id (new-uuid))))
         indicators-tx (vec
                        (concat
                         groups-tx
@@ -57,7 +58,7 @@
                                                               :indicator-output/name (:name output)
                                                               :indicator-output/type (:type output)})
                                                            (:outputs indicator))}
-                                 (when (seq (:indicator/options indicator))
+                                 (when (seq (:options indicator))
                                    {:indicator/options (mapv (fn [option]
                                                                (merge {:indicator-option/id (new-uuid)
                                                                        :indicator-option/name (:name option)
