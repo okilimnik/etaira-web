@@ -1,4 +1,4 @@
-(ns etaira.model.indicator.option-range
+(ns etaira.schema.indicator.option-range
   (:refer-clojure :exclude [min max])
   (:require
    [com.fulcrologic.rad.attributes :as attr :refer [defattr]]

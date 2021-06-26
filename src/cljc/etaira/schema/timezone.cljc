@@ -1,4 +1,4 @@
-(ns etaira.model.timezone
+(ns etaira.schema.timezone
   (:require
     [clojure.spec.alpha :as s]
     [clojure.string :as str]

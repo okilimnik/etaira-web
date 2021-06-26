@@ -1,26 +1,26 @@
-(ns etaira.model.neural-network-layer
+(ns etaira.schema.ai.layer
   (:refer-clojure :exclude [type])
   (:require
    [com.fulcrologic.rad.attributes :as attr :refer [defattr]]
    [com.fulcrologic.rad.attributes-options :as ao]
    [com.fulcrologic.rad.form-options :as fo]))
 
-(defattr id :neural-network-layer/id :uuid
+(defattr id :ai-layer/id :uuid
   {ao/identity? true
    ao/schema    :production})
 
-(defattr number :neural-network-layer/number :int
-  {ao/identities #{:neural-network-layer/id}
+(defattr number :ai-layer/number :int
+  {ao/identities #{:ai-layer/id}
    ao/required?  true
    ao/schema     :production})
 
-(defattr number-of-neurons :neural-network-layer/number-of-neurons :int
-  {ao/identities    #{:neural-network-layer/id}
+(defattr number-of-neurons :ai-layer/number-of-neurons :int
+  {ao/identities    #{:ai-layer/id}
    ao/required?     true
    ao/schema        :production
    fo/default-value 1})
 
-(def neural-network-layer-types
+(def ai-layer-types
   {:dense "Dense"
    :rnn "RNN"
    :lstm "LSTM"
@@ -31,10 +31,10 @@
    :conv-lstm-2d "ConvLSTM2D"
    :dropout "Dropout"})
 
-(defattr type :neural-network-layer/type :enum
-  {ao/identities    #{:neural-network-layer/id}
-   ao/enumerated-values (keys neural-network-layer-types)
-   ao/enumerated-labels neural-network-layer-types
+(defattr type :ai-layer/type :enum
+  {ao/identities    #{:ai-layer/id}
+   ao/enumerated-values (keys ai-layer-types)
+   ao/enumerated-labels ai-layer-types
    ao/required?     true
    ao/schema        :production
    fo/default-value :dense})

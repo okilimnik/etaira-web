@@ -1,4 +1,4 @@
-(ns etaira.ui.advisor.training.dataset
+(ns etaira.ui.dataset
   (:require
    [clojure.walk]
    [com.fulcrologic.rad.form :as form]
@@ -7,15 +7,14 @@
    [com.fulcrologic.rad.form-options :as fo]
    [com.fulcrologic.rad.report :as report]
    [com.fulcrologic.rad.report-options :as ro]
-   [etaira.model.dataset :as dataset]
-   [etaira.ui.advisor.training.indicator :refer [IndicatorForm]]
+   [etaira.schema.dataset :as dataset]
    [com.fulcrologic.fulcro.ui-state-machines :as uism]))
 
 #_(defn fetch-symbols [exchange-id callback]
-  (let [exchange-class (oget+ js/ccxt exchange-id)
-        exchange (exchange-class.)]
-    (-> (ocall exchange :loadMarkets)
-        (.then callback))))
+    (let [exchange-class (oget+ js/ccxt exchange-id)
+          exchange (exchange-class.)]
+      (-> (ocall exchange :loadMarkets)
+          (.then callback))))
 
 (defsc IndicatorQuery [_ _]
   {:query [:indicator/id :indicator/name]

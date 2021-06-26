@@ -1,4 +1,4 @@
-(ns etaira.model.dataset
+(ns etaira.schema.dataset
   (:refer-clojure :exclude [name])
   (:require
    #?@(:clj

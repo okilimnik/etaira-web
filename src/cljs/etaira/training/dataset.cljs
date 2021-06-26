@@ -1,4 +1,4 @@
-(ns etaira.ui.advisor.training.exchange
+(ns etaira.ai.dataset.exchange
   (:require
    [oops.core :refer [oget ocall]]
    [etaira.interop.async :refer [sleep async await]]))

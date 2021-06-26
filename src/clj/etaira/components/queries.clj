@@ -19,13 +19,13 @@
            (filter :account/active?)
            (mapv #(select-keys % [:account/id]))))))
 
-(defn get-all-neural-network-configs
+(defn get-all-ai-configs
   [{::kv-key-store/keys [store]} _]
-  (query! store [:neural-network-config/id]))
+  (query! store [:ai-config/id]))
 
-(defn get-all-neural-network-models
+(defn get-all-ai-models
   [{::kv-key-store/keys [store]} _]
-  (query! store [:neural-network-model/id]))
+  (query! store [:ai-model/id]))
 
 (defn get-all-indicators
   [{::kv-key-store/keys [store]} _]

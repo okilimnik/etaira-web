@@ -1,6 +1,6 @@
 (ns etaira.ui.login-dialog
   (:require
-   [etaira.model.account :as account]
+   [etaira.schema.account :as account]
    [com.fulcrologic.semantic-ui.modules.modal.ui-modal :refer [ui-modal]]
    [com.fulcrologic.semantic-ui.modules.modal.ui-modal-header :refer [ui-modal-header]]
    [com.fulcrologic.semantic-ui.modules.modal.ui-modal-content :refer [ui-modal-content]]

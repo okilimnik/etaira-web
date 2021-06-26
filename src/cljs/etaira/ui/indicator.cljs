@@ -1,4 +1,4 @@
-(ns etaira.ui.advisor.training.indicator
+(ns etaira.ai.indicator
   (:require
    [clojure.walk]
    [com.fulcrologic.rad.form :as form]
@@ -7,10 +7,10 @@
    [com.fulcrologic.rad.form-options :as fo]
    [com.fulcrologic.rad.report :as report]
    [com.fulcrologic.rad.report-options :as ro]
-   [etaira.model.indicator.indicator :as indicator]
-   [etaira.model.indicator.option :as indicator-option]
-   [etaira.model.indicator.input :as indicator-input]
-   [etaira.model.indicator.output :as indicator-output]))
+   [etaira.schema.indicator :as indicator]
+   [etaira.schema.indicator.option :as indicator-option]
+   [etaira.schema.indicator.input :as indicator-input]
+   [etaira.schema.indicator.output :as indicator-output]))
 
 (defsc IndicatorGroupQuery [_ _]
   {:query [:indicator-group/id :indicator-group/name]

@@ -1,4 +1,4 @@
-(ns etaira.model.indicator.option
+(ns etaira.schema.indicator.option
   (:refer-clojure :exclude [name type range])
   (:require
    [com.fulcrologic.rad.attributes :as attr :refer [defattr]]

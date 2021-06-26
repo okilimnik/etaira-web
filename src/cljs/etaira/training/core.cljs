@@ -1,4 +1,4 @@
-(ns etaira.ui.advisor.training.training
+(ns etaira.components.ai.training
   (:require
    ["dexie" :refer [Dexie]]
    [oops.core :refer [oget+ oget]]

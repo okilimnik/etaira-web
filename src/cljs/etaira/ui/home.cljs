@@ -1,8 +1,7 @@
 (ns etaira.ui.home
   (:require
    [com.fulcrologic.fulcro.dom :as dom :refer [div]]
-   [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
-   #_[etaira.ui.nn :refer [ui-neural-network]]))
+   [com.fulcrologic.fulcro.components :as comp :refer [defsc]]))
 
 (defsc HomePage [this props]
   {:query         ['*]
@@ -10,5 +9,4 @@
    :initial-state {}
    :route-segment ["home-page"]}
   (div
-   (div "Welcome to Etaira.")
-   #_(ui-neural-network)))
+   (div "Welcome to Etaira.")))

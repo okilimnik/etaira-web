@@ -1,4 +1,4 @@
-(ns etaira.model.authorization
+(ns etaira.schema.authorization
   (:require
     [com.fulcrologic.fulcro.server.api-middleware :as fmw]
     [com.fulcrologic.rad.authorization :as auth]
@@ -6,7 +6,7 @@
     [etaira.components.database-queries :as queries]
     [taoensso.encore :as enc]
     [taoensso.timbre :as log]
-    [etaira.model.timezone :as timezone]))
+    [etaira.schema.timezone :as timezone]))
 
 (defn login!
   "Implementation of login. This is database-specific and is not further generalized for the demo."

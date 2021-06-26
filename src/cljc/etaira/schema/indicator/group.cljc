@@ -1,4 +1,4 @@
-(ns etaira.model.indicator.group
+(ns etaira.schema.indicator.group
   (:refer-clojure :exclude [name])
   (:require
    #?@(:clj

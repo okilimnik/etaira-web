@@ -1,8 +1,7 @@
 (ns etaira.ui.landing
   (:require
    [com.fulcrologic.fulcro.dom :as dom]
-   [etaira.ui-ico :refer [ui-main-page]]
-   [com.fulcrologic.rad.routing :as rroute]
+   [etaira.ui.ico.ico :refer [ui-ico-page]]
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]))
 
 (defsc LandingPage [this props]
@@ -10,4 +9,4 @@
    :ident         (fn [] [:component/id ::LandingPage])
    :initial-state {}
    :route-segment ["landing-page"]}
-  (dom/div (ui-main-page)))
+  (dom/div (ui-ico-page)))

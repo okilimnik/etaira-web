@@ -1,6 +1,6 @@
 (ns etaira.components.auto-resolvers
   (:require
-    [etaira.model :refer [all-attributes]]
+    [etaira.schema :refer [all-attributes]]
     [mount.core :refer [defstate]]
     [com.fulcrologic.rad.resolvers :as res]
     [com.fulcrologic.rad.database-adapters.key-value.pathom :as kv-pathom]))

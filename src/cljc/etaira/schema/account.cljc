@@ -1,9 +1,9 @@
-(ns etaira.model.account
+(ns etaira.schema.account
   (:refer-clojure :exclude [name])
   (:require
    #?@(:clj
        [[com.wsscode.pathom.connect :as pc :refer [defmutation]]
-        [etaira.model.authorization :as exauth]
+        [etaira.schema.authorization :as exauth]
         [etaira.components.database-queries :as queries]]
        :cljs
        [[com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]
@@ -12,7 +12,7 @@
         [etaira.ui.landing :refer [LandingPage]]
         [com.wsscode.pathom.connect :as pc]])
    [clojure.string :as str]
-   [etaira.model.timezone :as timezone]
+   [etaira.schema.timezone :as timezone]
    [com.fulcrologic.rad.form :as form]
    [com.fulcrologic.rad.form-options :as fo]
    [com.fulcrologic.rad.report :as report]
