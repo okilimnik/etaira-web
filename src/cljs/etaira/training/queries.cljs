@@ -1,12 +1,12 @@
-(ns etaira.components.ai.dataset.queries
+(ns etaira.training.queries
   (:require
    ["dexie" :refer [Dexie]]
    [oops.core :refer [oget+ oget ocall]]
    [etaira.interop.async :refer [async await await-all]]))
 
-(defn query-trade-result! [id timestamp filter-fn]
+(defn query-trade-result! [db timestamp filter-fn]
   (async
-   (-> (get-dataset id)
+   (-> db
        (.where "timestamp")
        (.above timestamp)
        (.and filter-fn)
@@ -28,10 +28,9 @@
                                                            (>= (.-close item) (+ close stop-loss)))))]
        (reset! result (if (< (:timestamp profit) (:timestamp loss)) -1 0))))))
 
-
-(defn query-trade-results [data]
+(defn query-trade-results [db stop-profit stop-loss data]
   (async
    (await-all
     (vec
      (for [features data]
-       (query-trade-result features))))))
+       (query-trade-result db stop-profit stop-loss features))))))

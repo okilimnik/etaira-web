@@ -1,4 +1,4 @@
-(ns etaira.components.ai.training
+(ns etaira.training.core
   (:require
    ["dexie" :refer [Dexie]]
    [oops.core :refer [oget+ oget]]
@@ -6,46 +6,47 @@
    [etaira.app :refer [etaira-app]]
    [etaira.interop.async :refer [async await]]
    [com.fulcrologic.fulcro.components :refer [defsc]]
-   [etaira.ui.advisor.training.exchange :refer [download-history-data!]]
-   [etaira.ui.advisor.training.model :refer [train!]]))
+   [etaira.training.dataset :refer [download-history-data!]]
+   [etaira.training.model :as model]))
 
 (def history (atom {}))
 
 (defn download-history-data-from-exchange! [model]
   (async
-   (let [{:dataset/keys [exchange cryptopair date-from date-to interval]} (:neural-network-model/dataset model)
+   (let [{:dataset/keys [exchange cryptopair date-from date-to interval]} (:ai-model/dataset model)
+         _ (println "exchange: " exchange)
          exchange-class (oget+ js/ccxt exchange)
          exchange-obj (exchange-class.)
-         model-id (:neural-network-model/id model)]
+         model-id (:ai-model/id model)]
      (if (oget exchange-obj "has.fetchOHLCV")
        (do (swap! history assoc model-id (Dexie. model-id))
            (await (download-history-data! (get @history model-id) exchange-obj cryptopair interval date-from date-to)))
        (println "exchange doesn't provide history data")))))
 
-(defsc NeuralNetworkModelDataForTraining [_ props]
-  {:query [:neural-network-model/id
-           {:neural-network-model/config [:neural-network-config/id
-                                          :neural-network-config/learning-rate
-                                          :neural-network-config/activation
-                                          :neural-network-config/regularization
-                                          :neural-network-config/problem
-                                          {:neural-network-config/layers [:neural-network-layer/id
-                                                                          :neural-network-layer/number
-                                                                          :neural-network-layer/number-of-neurons
-                                                                          :neural-network-layer/type]}]}
-           {:neural-network-model/dataset [:dataset/id
+(defsc AIModelDataForTraining [_ props]
+  {:query [:ai-model/id
+           {:ai-model/config [:ai-config/id
+                              :ai-config/learning-rate
+                              :ai-config/activation
+                              :ai-config/regularization
+                              :ai-config/problem
+                              {:ai-config/layers [:ai-layer/id
+                                                  :ai-layer/number
+                                                  :ai-layer/number-of-neurons
+                                                  :ai-layer/type]}]}
+           {:ai-model/dataset [:dataset/id
                                            :dataset/exchange
                                            :dataset/cryptopair
                                            :dataset/date-from
                                            :dataset/date-to
                                            :dataset/interval
                                            :dataset/indicators]}]
-   :ident (fn [] [:neural-network-model/id (:neural-network-model/id props)])})
+   :ident (fn [] [:ai-model/id (:ai-model/id props)])})
 
 (defn query-model-from-database! [model-id]
   (js/Promise.
    (fn [resolve]
-     (df/load etaira-app [:neural-network-model/id model-id] NeuralNetworkModelDataForTraining
+     (df/load etaira-app [:ai-model/id model-id] AIModelDataForTraining
               {:ok-action (fn [{:keys [result]}]
                             (let [model (first (vals (:body result)))]
                               (resolve model)))}))))
@@ -59,7 +60,7 @@
   (async
    (let [model (await (query-model-from-database! model-id))]
      (await (download-history-data-from-exchange! model))
-     (await (train! model (get-dataset-db model-id))))))
+     (await (model/train! model (get-dataset-db model-id))))))
 
 (defn stop! [model-id]
   true)

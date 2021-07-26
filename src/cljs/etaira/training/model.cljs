@@ -1,9 +1,9 @@
-(ns etaira.components.ai.model.model
+(ns etaira.training.model
   (:require
    ["@tensorflow/tfjs" :as tfjs]
    [oops.core :refer [oget+ oget ocall]]
    [etaira.interop.async :refer [async await await-all]]
-   [etaira.indicators.talib.api :as talib]))
+   [etaira.training.batch :refer [get-next-batch-fn]]))
 
 (def dense (.. tfjs -layers -dense))
 (def tdata (.-data tfjs))
@@ -28,6 +28,8 @@
 
 (def EPOCHS 100)
 (def BATCH-SIZE 20)
+(def STOP-PROFIT 20) 
+(def STOP-LOSS 20)
 
 (defn calculate-number-of-features [dataset-db indicators]
   (async
@@ -38,7 +40,7 @@
       (count (mapcat :indicator/outputs indicators)))))
 
 (defn calc-training-total [dataset-db]
-  (int (* (await (.count dataset-db)) 0.7)))
+  (async (int (* (await (.count dataset-db)) 0.7))))
 
 (defn calc-batches-per-epoch [training-total]
   (dec (dec (int (/ training-total BATCH-SIZE)))))
@@ -46,7 +48,7 @@
 (defn create-dataset [next-batch-fn]
   (.generator tdata next-batch-fn))
 
-(def callbacks
+(defn callbacks [batch-number]
   #js {:onTrainBegin (fn [logs] false)
        :onTrainEnd   (fn [logs]
                        (println "train end."))
@@ -57,21 +59,22 @@
        :onBatchEnd   (fn [batch logs]
                        (js/console.log logs))})
 
-(defn create-training-options [batches-per-epoch validation-dataset]
+(defn create-training-options [batches-per-epoch validation-dataset batch-number]
   #js {:batchesPerEpoch batches-per-epoch
        :epochs          EPOCHS
-       :callbacks       callbacks
+       :callbacks       (callbacks batch-number)
        :validationData  validation-dataset})
 
 (defn train! [{:keys [id config dataset]} dataset-db]
   (async
-   (let [indicators (:dataset/indicators dataset)
+   (let [batch-number (atom 1)
+         indicators (:dataset/indicators dataset)
          num-features (await (calculate-number-of-features dataset-db indicators))
          model (build-model config num-features)
-         training-total (calc-training-total dataset-db)
+         training-total (await (calc-training-total dataset-db))
          batches-per-epoch (calc-batches-per-epoch training-total)
-         get-next-batch-fn' (partial get-next-batch-fn dataset-db indicators num-features training-total batches-per-epoch)
+         get-next-batch-fn' (partial get-next-batch-fn dataset-db indicators num-features training-total batches-per-epoch batch-number BATCH-SIZE STOP-PROFIT STOP-LOSS)
          train-dataset (create-dataset #(get-next-batch-fn' false))
          validation-dataset (create-dataset #(get-next-batch-fn' true))
-         options (create-training-options batches-per-epoch validation-dataset)]
+         options (create-training-options batches-per-epoch validation-dataset batch-number)]
      (.fitDataset model train-dataset options))))

@@ -12,17 +12,17 @@
     (<!!
       (queries/get-all-accounts key-store query-params))))
 
-(defn get-all-neural-network-configs
+(defn get-all-ai-configs
   [env query-params]
   (when-let [key-store (kv-pathom/env->key-store env)]
     (<!!
-     (queries/get-all-neural-network-configs key-store query-params))))
+     (queries/get-all-ai-configs key-store query-params))))
 
-(defn get-all-neural-network-models
+(defn get-all-ai-models
   [env query-params]
   (when-let [key-store (kv-pathom/env->key-store env)]
     (<!!
-     (queries/get-all-neural-network-models key-store query-params))))
+     (queries/get-all-ai-models key-store query-params))))
 
 (defn get-all-indicators
   [env query-params]

@@ -1,7 +1,7 @@
 (ns etaira.ui.landing
   (:require
    [com.fulcrologic.fulcro.dom :as dom]
-   [etaira.ui.ico.ico :refer [ui-ico-page]]
+   [etaira.ui.ico :refer [ui-ico-page]]
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]))
 
 (defsc LandingPage [this props]

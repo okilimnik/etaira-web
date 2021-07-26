@@ -1,4 +1,4 @@
-(ns etaira.ai.indicator
+(ns etaira.ui.indicator
   (:require
    [clojure.walk]
    [com.fulcrologic.rad.form :as form]
