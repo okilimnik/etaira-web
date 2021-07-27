@@ -8,7 +8,7 @@
    [com.fulcrologic.semantic-ui.modules.dropdown.ui-dropdown-menu :refer [ui-dropdown-menu]]
    [com.fulcrologic.semantic-ui.modules.dropdown.ui-dropdown-divider :refer [ui-dropdown-divider]]
    [com.fulcrologic.fulcro.components :as comp :refer [defsc]]
-   [com.fulcrologic.fulcro.mutations :refer [defmutation]]
+   [com.fulcrologic.fulcro.mutations :refer [defmutation] :as m]
    [com.fulcrologic.rad.application :as rad-app]
    [com.fulcrologic.fulcro.algorithms.react-interop :as interop]
    [oops.core :refer [oget]]
@@ -19,30 +19,16 @@
    [com.fulcrologic.semantic-ui.collections.grid.ui-grid-row :refer [ui-grid-row]]
    [com.fulcrologic.semantic-ui.elements.image.ui-image :refer [ui-image]]))
 
-(defmutation bump-number [ignored]
-  (action [{:keys [state]}]
-          (swap! state update :rom/numb inc)))
-
-(defsc Rom [this {:rom/keys [numb] :as props} {:keys [visible?]}]
-  {:query         [:rom/numb]
-   :initial-state {:rom/numb 0}
-;;    even we put initial state :rom/numb 2, it is starting with 0. why?????????
-   :ident               (fn [] [:component/id ::Rom])}
+(defsc Rom [this {:ui/keys [number] :as props}]
+  {:query         [:ui/number]
+   :initial-state {:ui/number 1}
+   :ident (fn [] [:component/id :etaira.ui.landing/LandingPage])}
   (dom/div
    (dom/h4 "This is an example.")
-   (dom/button {:onClick #(comp/transact! this [(bump-number {})])}
-               "You've clicked this button " numb " times.")))
+   (dom/button {:onClick #(m/set-integer! this :ui/number :value (inc number))}
+               "You've clicked this button " number " times.")))
 
  (def ui-rom (comp/factory Rom))
-
-(defsc SomeApp [this props]
-  
-  (div
-   (ui-rom {:rom/numb 1})))
-
-(def ui-some-app (comp/factory SomeApp))
-
-
 
 (defonce pair (atom {:ara 1000
                      :aeth 1}))
