@@ -25,5 +25,6 @@ resources/public/js/test
 .idea
 log.txt
 yarn.lock
+package-lock.json
 .lsp/
 resources/public/css/main.css
