@@ -1,4 +1,4 @@
-(ns etaira.ui-ico-segments.whitepaper
+(ns etaira.ui.ico.whitepaper
   (:require
    [com.fulcrologic.fulcro.dom :as dom :refer [div span br button h3 p a h2 img]]
    [com.fulcrologic.fulcro.algorithms.react-interop :as interop]

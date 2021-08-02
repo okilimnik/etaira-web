@@ -1,4 +1,4 @@
-(ns etaira.ui-ico-segments.tokenomics
+(ns etaira.ui.ico.tokenomics
   (:require
    [com.fulcrologic.fulcro.dom :as dom :refer [div span br h3]]
    [com.fulcrologic.semantic-ui.modules.accordion.ui-accordion :refer [ui-accordion]]
