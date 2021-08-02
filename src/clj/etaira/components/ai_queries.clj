@@ -28,8 +28,7 @@
                       (.setMetadataSchemaUri metadataSchemaUri)
                       (.setMetadata metaData)
                       (.build))
-          datasetFuture (-> @client
-                            (.createDatasetAsync locationName dataset))
+          datasetFuture (.createDatasetAsync @client locationName dataset)
           _ (println "Waiting for operation to finish...")
           datasetResponse (.get datasetFuture 300 TimeUnit/SECONDS)]
       (println "Create Dataset Table GCS sample")
