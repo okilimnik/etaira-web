@@ -1,4 +1,4 @@
-(ns etaira.components.queries
+(ns etaira.components.firebase-queries
   (:require
     [com.fulcrologic.rad.database-adapters.key-value.key-store :as kv-key-store]
     [taoensso.timbre :as log]

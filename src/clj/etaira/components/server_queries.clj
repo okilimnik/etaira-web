@@ -2,8 +2,8 @@
   "`server-queries` would be a better name but constrained by no alterations to model allowed, so we can always easily
   copy over the latest RAD Demo"
   (:require
-   [etaira.components.queries :as queries]
-   [etaira.components.ai :as ai]
+   [etaira.components.firebase-queries :as queries]
+   [etaira.components.ai-queries :as ai-queries]
    [clojure.core.async :refer [<!!]]
    [com.fulcrologic.rad.database-adapters.key-value.pathom :as kv-pathom]))
 
@@ -39,4 +39,4 @@
      (queries/get-login-info key-store username))))
 
 (defn create-dataset []
-  (ai/create-dataset))
+  (ai-queries/create-dataset))
