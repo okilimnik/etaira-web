@@ -1,4 +1,4 @@
-(ns etaira.ui-ico-segments.use-cases
+(ns etaira.ui.ico.use-cases
 (:require
    [com.fulcrologic.fulcro.dom :refer [div p h3]]
    [com.fulcrologic.semantic-ui.elements.icon.ui-icon :refer [ui-icon]]))

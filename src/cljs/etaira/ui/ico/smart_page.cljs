@@ -1,4 +1,4 @@
-(ns etaira.ui-ico-segments.smart-page
+(ns etaira.ui.ico.smart-page
   (:require
    [com.fulcrologic.fulcro.dom :as dom :refer [div p img h3]]
    [com.fulcrologic.semantic-ui.collections.grid.ui-grid :refer [ui-grid]]
