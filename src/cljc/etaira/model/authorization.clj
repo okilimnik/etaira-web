@@ -3,7 +3,7 @@
     [com.fulcrologic.fulcro.server.api-middleware :as fmw]
     [com.fulcrologic.rad.authorization :as auth]
     [com.fulcrologic.rad.attributes :as attr]
-    [etaira.components.database-queries :as queries]
+    [etaira.components.server-queries :as queries]
     [taoensso.encore :as enc]
     [taoensso.timbre :as log]
     [etaira.model.timezone :as timezone]))

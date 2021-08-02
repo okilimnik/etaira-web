@@ -4,7 +4,7 @@
    #?@(:clj
        [[com.wsscode.pathom.connect :as pc :refer [defmutation]]
         [etaira.model.authorization :as exauth]
-        [etaira.components.database-queries :as queries]]
+        [etaira.components.server-queries :as queries]]
        :cljs
        [[com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]
         [com.fulcrologic.rad.routing :as routing]

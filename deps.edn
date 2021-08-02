@@ -34,6 +34,9 @@
            ring/ring-core                         {:mvn/version "1.8.1"}
            aleph/aleph                            {:mvn/version "0.4.6"}
 
+
+           com.google.cloud/google-cloud-aiplatform {:mvn/version "0.4.0"}
+
            ;; Unified logging for server
            com.taoensso/timbre                    {:mvn/version "4.10.0"}
            org.slf4j/log4j-over-slf4j             {:mvn/version "1.7.30"} ; auto sends log4j to slf4j

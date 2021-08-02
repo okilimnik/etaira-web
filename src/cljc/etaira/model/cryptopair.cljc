@@ -2,7 +2,7 @@
   (:refer-clojure :exclude [name])
   (:require
    #?@(:clj
-       [[etaira.components.database-queries :as queries]]
+       [[etaira.components.server-queries :as queries]]
        :cljs
        [[com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]
         [oops.core :refer [oget]]])

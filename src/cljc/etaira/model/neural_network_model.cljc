@@ -3,7 +3,7 @@
   (:require
    #?@(:clj
        [[com.wsscode.pathom.connect :as pc :refer [defmutation]]
-        [etaira.components.database-queries :as queries]]
+        [etaira.components.server-queries :as queries]]
        :cljs
        [[com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]])
    [com.fulcrologic.fulcro.algorithms.merge :as merge]
